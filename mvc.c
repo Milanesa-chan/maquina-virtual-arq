@@ -10,6 +10,9 @@ typedef struct rotulo{
 
 typedef rotulo *listaRotulos;
 
+typedef t_string50 char[50];
+typedef t_string200 char[200];
+
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
 int esRotulo(char*);
