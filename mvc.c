@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct rotulo{
     char rot[50];
@@ -9,9 +10,6 @@ typedef struct rotulo{
 } rotulo;
 
 typedef rotulo *listaRotulos;
-
-typedef t_string50 char[50];
-typedef t_string200 char[200];
 
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
@@ -46,6 +44,11 @@ void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
             rotulo *nextRotulo = (rotulo*)malloc(sizeof(rotulo));
             nextRotulo->sig = NULL;
             next[strlen(next)-1] = '\0';
+            char *s = next;
+            while(*s){
+                *s = toupper((unsigned char) *s);
+                s++;
+            }
             strcpy(nextRotulo->rot, next);
             nextRotulo->pos = linea;
 
