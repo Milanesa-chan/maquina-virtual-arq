@@ -31,6 +31,8 @@ int main(int carg, char *args[]){
 }
 
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
+    if(mostrar) printf("\nLista de Rotulos:\n----------------\n");
+
     int linea = 0;
     char nextLinea[200];
     char next[50];
@@ -59,7 +61,7 @@ void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
             }
             ult = nextRotulo;
 
-            if(mostrar) printf("%d, %s\n", linea, next);
+            if(mostrar) printf("%d: %s\n", linea, next);
         }
         linea++;
     }
@@ -79,6 +81,7 @@ int buscarRotulo(listaRotulos rotulos, char* rot){
         if(!strcmp(aux->rot, rot)){
             return aux->pos;
         }
+        aux = aux->sig;
     }
     printf("No se encontro el rotulo %s", rot);
     exit(1);
@@ -92,3 +95,5 @@ int contieneArg(int argc, char* args[], char* busca){
     }
     return 0;
 }
+
+
