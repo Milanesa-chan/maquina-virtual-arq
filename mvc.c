@@ -73,6 +73,17 @@ int esRotulo(char *string){
     return 0;
 }
 
+int buscarRotulo(listaRotulos rotulos, char* rot){
+    listaRotulos aux = rotulos;
+    while(aux != NULL){
+        if(!strcmp(aux->rot, rot)){
+            return aux->pos;
+        }
+    }
+    printf("No se encontro el rotulo %s", rot);
+    exit(1);
+}
+
 int contieneArg(int argc, char* args[], char* busca){
     for(int i=0; i<argc; i++){
         if(!strcmp(args[i], busca)){
