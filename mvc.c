@@ -31,7 +31,7 @@ int main(int carg, char *args[]){
 }
 
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
-    if(mostrar) printf("\nLista de Rotulos:\n----------------\n");
+    if(mostrar) printf("\nLista de Rotulos:\n-----------------\n");
 
     int linea = 0;
     char nextLinea[200];
