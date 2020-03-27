@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1585273496 source:c:\users\lucag\desktop\chotodemono\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
