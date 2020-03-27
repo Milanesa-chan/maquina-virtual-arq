@@ -11,6 +11,7 @@ typedef struct rotulo{
 typedef rotulo *listaRotulos;
 //caca
 
+
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
 int esRotulo(char*);
