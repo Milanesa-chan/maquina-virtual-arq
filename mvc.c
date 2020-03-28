@@ -2,9 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdint.h>
 #include "tdacazorla.h"
 
 char listaMnemonicos[144][5];
+int32_t memoria[2000];
+int32_t registros[16];
 
 int main(int carg, char *args[]){
     printf("%d\n", carg);
@@ -14,16 +17,24 @@ int main(int carg, char *args[]){
         listaRotulos rotulos;
         FILE* arch;
         crearListaMnemonicos(listaMnemonicos);
-        //int memoria[2016];
 
         arch = fopen(args[1], "rt");
         mostrar = !contieneArg(carg, args, "-o");
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
-        rewind(arch); //Vuelve el archivo al principio
+
 
     }
     return 0;
+}
+
+void traduce(FILE* arch){
+    rewind(arch);
+    while(!feof(arch)){
+        char nextLinea[200];
+        fgets(nextLinea, sizeof(nextLinea), arch);
+
+    }
 }
 
 void crearListaMnemonicos(char lista[][5]){
