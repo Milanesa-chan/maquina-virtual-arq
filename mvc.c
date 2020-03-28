@@ -19,6 +19,8 @@ int contieneArg(int, char* [], char*);
 
 void crearListaMnemonicos(char[][5]);
 
+int esMnemonico(char[][5], char[]);
+
 int main(int carg, char *args[]){
     printf("%d\n", carg);
 
@@ -29,9 +31,9 @@ int main(int carg, char *args[]){
         int memoria[2016];
         char listaMnemonicos[144][5];
         crearListaMnemonicos(listaMnemonicos);
-        printf("%s\n", listaMnemonicos[1]);
-        printf("%s\n", listaMnemonicos[0]);
-        printf("%s\n", listaMnemonicos[143]);
+        printf("%s\n %d", listaMnemonicos[1], esMnemonico(listaMnemonicos, "MOV"));
+        printf("%s\n %d", "ASD", esMnemonico(listaMnemonicos, "ASD"));
+        printf("%s\n %d", listaMnemonicos[143], esMnemonico(listaMnemonicos, "STOP"));
         exit(0);
         arch = fopen(args[1], "rt");
         mostrar = !contieneArg(carg, args, "-o");
@@ -144,8 +146,9 @@ int contieneArg(int argc, char* args[], char* busca){
 
 int esMnemonico(char listaMnemonicos[][5], char mnemonico[]){
     for(int i=0; i<144; i++){
-        if(strcmp(listaMnemonicos[i], mnemonico))
+        if(!strcmp(listaMnemonicos[i], mnemonico)) return 1;
     }
+    return 0;
 }
 
 int esValido(char *linea){
