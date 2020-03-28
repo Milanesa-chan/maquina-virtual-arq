@@ -14,12 +14,14 @@ int main(int carg, char *args[]){
         listaRotulos rotulos;
         FILE* arch;
         crearListaMnemonicos(listaMnemonicos);
+        //int memoria[2016];
 
         arch = fopen(args[1], "rt");
         mostrar = !contieneArg(carg, args, "-o");
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
         rewind(arch); //Vuelve el archivo al principio
+
     }
     return 0;
 }
