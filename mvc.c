@@ -89,29 +89,31 @@ void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
 
     while(!feof(arch)){
         fgets(nextLinea, sizeof(nextLinea), arch);
-        sscanf(nextLinea, "%s", next);
-        if(esRotulo(next)){
-            rotulo *nextRotulo = (rotulo*)malloc(sizeof(rotulo));
-            nextRotulo->sig = NULL;
-            next[strlen(next)-1] = '\0';
-            char *s = next;
-            while(*s){
-                *s = toupper((unsigned char) *s);
-                s++;
-            }
-            strcpy(nextRotulo->rot, next);
-            nextRotulo->pos = linea;
+        if(esValido(nextLinea)){
+            sscanf(nextLinea, "%s", next);
+            if(esRotulo(next)){
+                rotulo *nextRotulo = (rotulo*)malloc(sizeof(rotulo));
+                nextRotulo->sig = NULL;
+                next[strlen(next)-1] = '\0';
+                char *s = next;
+                while(*s){
+                    *s = toupper((unsigned char) *s);
+                    s++;
+                }
+                strcpy(nextRotulo->rot, next);
+                nextRotulo->pos = linea;
 
-            if(*rotulos == NULL){
-                *rotulos = nextRotulo;
-            }else{
-                ult->sig = nextRotulo;
-            }
-            ult = nextRotulo;
+                if(*rotulos == NULL){
+                    *rotulos = nextRotulo;
+                }else{
+                    ult->sig = nextRotulo;
+                }
+                ult = nextRotulo;
 
-            if(mostrar) printf("%d: %s\n", linea, next);
+                if(mostrar) printf("%d: %s\n", linea, next);
+            }
+            linea++;
         }
-        linea++;
     }
 }
 
@@ -151,6 +153,8 @@ int esMnemonico(char listaMnemonicos[][5], char mnemonico[]){
     return 0;
 }
 
-int esValido(char *linea){
-    return *linea!='\n' && !(*linea=='/' && *(++linea)=='/');
+int esValido(char listaMnemonicos[][5], char *linea){
+    char string[50];
+    sscanf(linea, "%s", string);
+    return esRotulo(string) || esMnemonico(listaMnemonicos, string);
 }
