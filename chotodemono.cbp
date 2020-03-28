@@ -19,9 +19,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="mvc.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="tdacazorla.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tdacazorla.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

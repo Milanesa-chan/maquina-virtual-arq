@@ -2,24 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "tdacazorla.h"
 
-typedef struct rotulo{
-    char rot[50];
-    int pos;
-    struct rotulo* sig;
-} rotulo;
-
-typedef rotulo *listaRotulos;
-
-void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
-
-int esRotulo(char*);
-
-int contieneArg(int, char* [], char*);
-
-void crearListaMnemonicos(char[][5]);
-
-int esMnemonico(char[][5], char[]);
+char listaMnemonicos[144][5];
 
 int main(int carg, char *args[]){
     printf("%d\n", carg);
@@ -28,19 +13,13 @@ int main(int carg, char *args[]){
         int mostrar;
         listaRotulos rotulos;
         FILE* arch;
-        int memoria[2016];
-        char listaMnemonicos[144][5];
         crearListaMnemonicos(listaMnemonicos);
-        printf("%s\n %d", listaMnemonicos[1], esMnemonico(listaMnemonicos, "MOV"));
-        printf("%s\n %d", "ASD", esMnemonico(listaMnemonicos, "ASD"));
-        printf("%s\n %d", listaMnemonicos[143], esMnemonico(listaMnemonicos, "STOP"));
-        exit(0);
+
         arch = fopen(args[1], "rt");
         mostrar = !contieneArg(carg, args, "-o");
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
         rewind(arch); //Vuelve el archivo al principio
-
     }
     return 0;
 }
@@ -115,46 +94,4 @@ void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar){
             linea++;
         }
     }
-}
-
-int esRotulo(char *string){
-    if(!string) return 0;
-
-    int len = strlen(string);
-    if(string[len-1] == ':') return 1;
-    return 0;
-}
-
-int buscarRotulo(listaRotulos rotulos, char* rot){
-    listaRotulos aux = rotulos;
-    while(aux != NULL){
-        if(!strcmp(aux->rot, rot)){
-            return aux->pos;
-        }
-        aux = aux->sig;
-    }
-    printf("No se encontro el rotulo %s", rot);
-    exit(1);
-}
-
-int contieneArg(int argc, char* args[], char* busca){
-    for(int i=0; i<argc; i++){
-        if(!strcmp(args[i], busca)){
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int esMnemonico(char listaMnemonicos[][5], char mnemonico[]){
-    for(int i=0; i<144; i++){
-        if(!strcmp(listaMnemonicos[i], mnemonico)) return 1;
-    }
-    return 0;
-}
-
-int esValido(char listaMnemonicos[][5], char *linea){
-    char string[50];
-    sscanf(linea, "%s", string);
-    return esRotulo(string) || esMnemonico(listaMnemonicos, string);
 }
