@@ -1,36 +1,19 @@
 # depslib dependency file v1.0
-1585450463 source:c:\users\lucag\desktop\chotodemono\mvc.c
+1585455098 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585455098 d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.h
+
+1585502697 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<ctype.h>
 	<stdint.h>
 	<ctype.h>
-	"tdacazorla.h"
-
-1585451114 source:c:\users\lucag\desktop\chotodemono\tdacazorla.c
-	<stdlib.h>
-	<stdio.h>
-	<string.h>
-	<ctype.h>
-	"tdacazorla.h"
-
-1585448033 c:\users\lucag\desktop\chotodemono\tdacazorla.h
-
-1585444352 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.c
-	<stdlib.h>
-	<stdio.h>
-	<string.h>
-	<ctype.h>
-	"tdacazorla.h"
-
-1585425706 d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.h
-
-1585444355 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc.c
-	<stdlib.h>
-	<stdio.h>
-	<string.h>
-	<ctype.h>
-	<stdint.h>
 	"tdacazorla.h"
 

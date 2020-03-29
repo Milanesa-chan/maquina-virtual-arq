@@ -131,7 +131,7 @@ void traduce(FILE* arch, int muestra)
                 }
                 if(mostrarLinea)
                 {
-                    printf(" %d : ", linea);
+                    printf(" %4d:", linea);
                 }
                 printf(" %s", lineaSinFiltrar);
             }
