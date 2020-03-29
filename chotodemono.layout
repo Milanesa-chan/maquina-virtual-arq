@@ -9,7 +9,11 @@
 	</File>
 	<File name="tdacazorla.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="150" topLine="0" />
+=======
+			<Cursor1 position="3898" topLine="119" />
+>>>>>>> e74653a4eebeff1427b13fcdad4a6dde75b11f45
 		</Cursor>
 	</File>
 	<File name="tdacazorla.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
