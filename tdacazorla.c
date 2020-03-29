@@ -37,9 +37,9 @@ int contieneArg(int argc, char* args[], char* busca){
 
 int esMnemonico(char mnemonico[]){
     for(int i=0; i<144; i++){
-        if(!strcmp(listaMnemonicos[i], mnemonico)) return 1;
+        if(!strcmp(listaMnemonicos[i], mnemonico)) return i;
     }
-    return 0;
+    return -1;
 }
 
 int esValido(char *linea){

@@ -15,3 +15,20 @@
 
 1585357419 c:\users\lucag\desktop\chotodemono\tdacazorla.h
 
+1585444352 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585425706 d:\juegos y programas\programacion\git\maquina-virtual-arq\tdacazorla.h
+
+1585444355 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
