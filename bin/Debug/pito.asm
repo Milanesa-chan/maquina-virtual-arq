@@ -3,6 +3,10 @@ MOV [2],0  //inicializo en 0 acumulador
 OTRO: MOV AX,%0001  //leer decimal
 
 MOV DX,1
+JE 0, OTRO
+JE 1, CACA
+JMP CACA
+JMP OTRO
 MOV CX,1  //uso una sola celda para leer
 SYS 1
 CMP [1],0  //se fija si es negativo
@@ -10,6 +14,7 @@ JNP SIGUE  //si es negativo salta
 ADD [2],[1]  //acumulador
 ADD FX,1  //contador
 JMP OTRO
+TPS
 
 SIGUE: CMP 0,FX  //me fijo si el contador esta en 0
 

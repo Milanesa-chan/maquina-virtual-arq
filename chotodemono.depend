@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1585447997 source:c:\users\lucag\desktop\chotodemono\mvc.c
+1585450463 source:c:\users\lucag\desktop\chotodemono\mvc.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -8,7 +8,7 @@
 	<ctype.h>
 	"tdacazorla.h"
 
-1585447630 source:c:\users\lucag\desktop\chotodemono\tdacazorla.c
+1585451114 source:c:\users\lucag\desktop\chotodemono\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>

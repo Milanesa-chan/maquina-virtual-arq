@@ -7,7 +7,7 @@
 #include "tdacazorla.h"
 
 int32_t memoria[2000];
-int32_t registros[16]={0};
+int32_t registros[16]= {0};
 listaRotulos rotulos;
 
 void traduce(FILE* arch, int muestra);
@@ -41,9 +41,20 @@ void traduce(FILE* arch, int muestra)
     int pos;
     char nextLinea[200];
     char *palabra;
+    int arg;
+    int errorsin = 0;
+    int errorrot = 0;
+    char lineaSinFiltrar[200];
+    int mostrarLinea;
+
     while(!feof(arch))
     {
+        mostrarLinea = 1;
+        arg = 0;
         fgets(nextLinea, sizeof(nextLinea), arch);
+        strcpy(lineaSinFiltrar, nextLinea);
+        strcpy(nextLinea,strtok(nextLinea,"/"));
+
         if(esValido(nextLinea))
         {
             palabra=strtok(nextLinea," ,\n");
@@ -51,40 +62,90 @@ void traduce(FILE* arch, int muestra)
             {
                 if(!esRotulo(palabra))
                 {
-                    if((pos=esMnemonico(palabra))!=-1)
+                    char *s = palabra;
+                    while(*s)
                     {
-                        memoria[linea]=pos<<16;
-                    }else{
-                        if(*palabra=='['){
-
-                        }else if(*palabra == '\''||
-                                 *palabra == '%' ||
-                                 *palabra == '@' ||
-                                 *palabra == '#' ||
-                                 ('0'<=*palabra && '9'>=*palabra)){
-
-
-
-                        }else if(strlen(palabra)==2){
-
-                        }else if(buscarRotulo(rotulos, palabra)!=-1){
-
+                        *s = toupper((unsigned char) *s);
+                        s++;
+                    }
+                    pos = esMnemonico(palabra);
+                    if(pos!=-1)
+                    {
+                        memoria[linea*3]=pos<<16;
+                    }
+                    else
+                    {
+                        if(*palabra=='[')
+                        {
+                            //Es directo
+                        }
+                        else if(*palabra == '\''||
+                                *palabra == '%' ||
+                                *palabra == '@' ||
+                                *palabra == '#' ||
+                                ('0'<=*palabra && '9'>=*palabra))
+                        {
+                            //Es inmediato
+                        }
+                        else if(strlen(palabra)==2)
+                        {
+                            //Es registro
+                        }
+                        else if(buscarRotulo(rotulos, palabra)!=-1)
+                        {
+                            //Es rotulo
+                        }
+                        else
+                        {
+                            if(arg == 0)
+                            {
+                                errorsin = 1;
+                                for(int i=0; i<3; i++)
+                                {
+                                    memoria[linea*3 + i] = 0xFFFFFFFF;
+                                }
+                            }
+                            else
+                            {
+                                errorrot = 1;
+                                memoria[linea*3 + arg] = 0xFFFFFFFF;
+                            }
                         }
                     }
+                    arg++;
                 }
+                else
+                    mostrarLinea = 0;
                 palabra=strtok(NULL," ,\n");
             }
 
             if(muestra)
             {
-                strcpy(nextLinea,strtok(nextLinea,"/"));
-                printf("%d : %s\n",linea,nextLinea);
                 printf("[");
                 mostrarCelda(linea*3);
                 printf("]: ");
+                for(int i=0; i<3; i++)
+                {
+                    mostrarCelda(memoria[linea*3+i]);
+                    printf(" ");
+                }
+                if(mostrarLinea)
+                {
+                    printf(" %d : ", linea);
+                }
+                printf(" %s", lineaSinFiltrar);
             }
             linea++;
         }
+    }
+
+    if(muestra && errorsin)
+    {
+        printf("\nError de sintaxis.");
+    }
+    if(muestra && errorrot)
+    {
+        printf("\nError: no se encontro el rotulo.");
     }
 }
 

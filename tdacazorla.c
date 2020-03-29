@@ -81,5 +81,5 @@ int esMnemonico(char mnemonico[]){
 int esValido(char *linea){
     char string[50];
     sscanf(linea, "%s", string);
-    return esRotulo(string) || esMnemonico(string);
+    return (*linea != '\0' && *linea != '\n') && (esRotulo(string) || esMnemonico(string));
 }
