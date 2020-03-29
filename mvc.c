@@ -77,27 +77,32 @@ void traduce(FILE* arch, int muestra)
                     {
                         if(*palabra=='[')
                         {
-                            char aux[5];
+                            memoria[linea*3] |= (2<<((2-arg)*8));
+                            char aux[50];
+                            strcpy(aux, palabra);
+                            char *p = aux;
+                            aux[strlen(aux)-1] = '\0';
 
-                            [11]  ó     [DS:11]//estas dos opciones//
-                                        [ES:11]//esta tambien//
-                            if(*palabra[1]>='0'  && *palabra[1]<='9')//es un numero
+                            if(palabra[1]>='0' && palabra[1]<='9')
                             {
-                                strcpy(aux,strtok(palabra,"[]"));
-
+                                p++;
+                                memoria[linea*3+arg] = atoi(p);
                             }
-                            else//es un registro
+                            else //es un registro
                             {
-                                if(*palabra[1]=='D')
+                                if(palabra[1]=='D')
                                 {
-
+                                    p+=4;
+                                    memoria[linea*3+arg] = atoi(p);
+                                    memoria[linea*3+arg] |= (2<<28);
                                 }
                                 else
                                 {
-
+                                    p+=4;
+                                    memoria[linea*3+arg] = atoi(p);
+                                    memoria[linea*3+arg] |= (3<<28);
                                 }
                             }
-                            //Es directo
                         }
                         else if(*palabra == '\''||
                                 *palabra == '%' ||
@@ -105,11 +110,11 @@ void traduce(FILE* arch, int muestra)
                                 *palabra == '#' ||
                                 ('0'<=*palabra && '9'>=*palabra))
                         {
-                            //Es inmediato
+
                         }
                         else if(strlen(palabra)==2)
                         {
-                            //Es registro
+                            memoria[linea*3] |= (1<<((2-arg)*8));
                         }
                         else if(buscarRotulo(rotulos, palabra)!=-1)
                         {

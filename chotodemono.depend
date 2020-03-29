@@ -35,3 +35,21 @@
 	<ctype.h>
 	"tdacazorla.h"
 
+1585451114 source:c:\users\lucag\desktop\chotodemono\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585448033 c:\users\lucag\desktop\chotodemono\tdacazorla.h
+
+1585524084 source:c:\users\lucag\desktop\chotodemono\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	<ctype.h>
+	"tdacazorla.h"
+
