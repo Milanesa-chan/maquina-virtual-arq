@@ -59,8 +59,7 @@ int buscarRotulo(listaRotulos rotulos, char* rot){
         }
         aux = aux->sig;
     }
-    printf("No se encontro el rotulo %s", rot);
-    exit(1);
+    return -1;
 }
 
 int contieneArg(int argc, char* args[], char* busca){

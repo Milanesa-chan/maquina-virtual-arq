@@ -17,3 +17,5 @@ void crearListaMnemonicos();
 int esMnemonico(char[]);
 
 int esValido(char[]);
+
+int buscarRotulo(listaRotulos rotulos, char* rot);

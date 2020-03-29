@@ -57,8 +57,17 @@ void traduce(FILE* arch, int muestra)
                     }else{
                         if(*palabra=='['){
 
-                        }else if(*palabra == '\'' || *palabra == '%' || *palabra == '@' ||*palabra == '#' || ('0'<=*palabra && '9'>=*palabra)){
-                        }else if(isalpha(*palabra)){
+                        }else if(*palabra == '\''||
+                                 *palabra == '%' ||
+                                 *palabra == '@' ||
+                                 *palabra == '#' ||
+                                 ('0'<=*palabra && '9'>=*palabra)){
+
+
+
+                        }else if(strlen(palabra)==2){
+
+                        }else if(buscarRotulo(rotulos, palabra)!=-1){
 
                         }
                     }
