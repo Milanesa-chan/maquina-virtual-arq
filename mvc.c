@@ -77,6 +77,26 @@ void traduce(FILE* arch, int muestra)
                     {
                         if(*palabra=='[')
                         {
+                            char aux[5];
+
+                            [11]  ó     [DS:11]//estas dos opciones//
+                                        [ES:11]//esta tambien//
+                            if(*palabra[1]>='0'  && *palabra[1]<='9')//es un numero
+                            {
+                                strcpy(aux,strtok(palabra,"[]"));
+
+                            }
+                            else//es un registro
+                            {
+                                if(*palabra[1]=='D')
+                                {
+
+                                }
+                                else
+                                {
+
+                                }
+                            }
                             //Es directo
                         }
                         else if(*palabra == '\''||
