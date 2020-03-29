@@ -139,11 +139,11 @@ void traduce(FILE* arch, int muestra)
         }
     }
 
-    if(muestra && errorsin)
+    if(errorsin)
     {
         printf("\nError de sintaxis.");
     }
-    if(muestra && errorrot)
+    if(errorrot)
     {
         printf("\nError: no se encontro el rotulo.");
     }
