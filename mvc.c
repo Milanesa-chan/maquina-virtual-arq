@@ -3,11 +3,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <ctype.h>
 #include "tdacazorla.h"
 
-char listaMnemonicos[144][5];
 int32_t memoria[2000];
 int32_t registros[16]={0};
+listaRotulos rotulos;
 
 void traduce(FILE* arch, int muestra);
 
@@ -20,9 +21,8 @@ int main(int carg, char *args[])
     if(carg > 1)
     {
         int mostrar;
-        listaRotulos rotulos;
         FILE* arch;
-        crearListaMnemonicos(listaMnemonicos);
+        crearListaMnemonicos();
 
         arch = fopen(args[1], "rt");
         mostrar = !contieneArg(carg, args, "-o");
@@ -51,9 +51,16 @@ void traduce(FILE* arch, int muestra)
             {
                 if(!esRotulo(palabra))
                 {
-                    if(pos=esMnemonico(palabra)!=-1)
+                    if((pos=esMnemonico(palabra))!=-1)
                     {
                         memoria[linea]=pos<<16;
+                    }else{
+                        if(*palabra=='['){
+
+                        }else if(*palabra == '\'' || *palabra == '%' || *palabra == '@' ||*palabra == '#' || ('0'<=*palabra && '9'>=*palabra)){
+                        }else if(isalpha(*palabra)){
+
+                        }
                     }
                 }
                 palabra=strtok(NULL," ,\n");
@@ -70,41 +77,6 @@ void traduce(FILE* arch, int muestra)
             linea++;
         }
     }
-}
-void crearListaMnemonicos(char lista[][5])
-{
-    for(int i=0; i<144; i++)
-    {
-        strcpy(lista[i], "");
-    }
-
-    strcpy(lista[1], "MOV");
-    strcpy(lista[2], "ADD");
-    strcpy(lista[3], "SUB");
-    strcpy(lista[4], "MUL");
-    strcpy(lista[5], "DIV");
-    strcpy(lista[6], "MOD");
-    strcpy(lista[19], "CMP");
-    strcpy(lista[23], "SWAP");
-    strcpy(lista[25], "RND");
-    strcpy(lista[49], "AND");
-    strcpy(lista[50], "OR");
-    strcpy(lista[51], "NOT");
-    strcpy(lista[52], "XOR");
-    strcpy(lista[55], "SHL");
-    strcpy(lista[56], "SHR");
-    strcpy(lista[32], "JMP");
-    strcpy(lista[33], "JE");
-    strcpy(lista[34], "JG");
-    strcpy(lista[35], "JL");
-    strcpy(lista[36], "JZ");
-    strcpy(lista[37], "JP");
-    strcpy(lista[38], "JN");
-    strcpy(lista[39], "JNZ");
-    strcpy(lista[40], "JNP");
-    strcpy(lista[41], "JNN");
-    strcpy(lista[129], "SYS");
-    strcpy(lista[143], "STOP");
 }
 
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int mostrar)

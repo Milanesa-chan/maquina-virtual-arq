@@ -14,6 +14,43 @@ int esRotulo(char *string){
     return 0;
 }
 
+
+void crearListaMnemonicos()
+{
+    for(int i=0; i<144; i++)
+    {
+        strcpy(listaMnemonicos[i], "");
+    }
+
+    strcpy(listaMnemonicos[1], "MOV");
+    strcpy(listaMnemonicos[2], "ADD");
+    strcpy(listaMnemonicos[3], "SUB");
+    strcpy(listaMnemonicos[4], "MUL");
+    strcpy(listaMnemonicos[5], "DIV");
+    strcpy(listaMnemonicos[6], "MOD");
+    strcpy(listaMnemonicos[19], "CMP");
+    strcpy(listaMnemonicos[23], "SWAP");
+    strcpy(listaMnemonicos[25], "RND");
+    strcpy(listaMnemonicos[49], "AND");
+    strcpy(listaMnemonicos[50], "OR");
+    strcpy(listaMnemonicos[51], "NOT");
+    strcpy(listaMnemonicos[52], "XOR");
+    strcpy(listaMnemonicos[55], "SHL");
+    strcpy(listaMnemonicos[56], "SHR");
+    strcpy(listaMnemonicos[32], "JMP");
+    strcpy(listaMnemonicos[33], "JE");
+    strcpy(listaMnemonicos[34], "JG");
+    strcpy(listaMnemonicos[35], "JL");
+    strcpy(listaMnemonicos[36], "JZ");
+    strcpy(listaMnemonicos[37], "JP");
+    strcpy(listaMnemonicos[38], "JN");
+    strcpy(listaMnemonicos[39], "JNZ");
+    strcpy(listaMnemonicos[40], "JNP");
+    strcpy(listaMnemonicos[41], "JNN");
+    strcpy(listaMnemonicos[129], "SYS");
+    strcpy(listaMnemonicos[143], "STOP");
+}
+
 int buscarRotulo(listaRotulos rotulos, char* rot){
     listaRotulos aux = rotulos;
     while(aux != NULL){

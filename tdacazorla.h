@@ -12,7 +12,7 @@ int esRotulo(char*);
 
 int contieneArg(int, char* [], char*);
 
-void crearListaMnemonicos(char[][5]);
+void crearListaMnemonicos();
 
 int esMnemonico(char[]);
 
