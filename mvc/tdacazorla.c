@@ -84,3 +84,14 @@ int esValido(char *linea){
     sscanf(linea, "%s", string);
     return (*linea != '\0' && *linea != '\n') && (esRotulo(string) || esMnemonico(string));
 }
+
+
+void mostrarCelda(int dato)
+{
+    int a=dato;
+    int b=0;
+    b=a>>16;
+    b=b&0x0000FFFF;
+    a=a&0x0000FFFF;
+    printf("%04X %04X",b,a);
+}

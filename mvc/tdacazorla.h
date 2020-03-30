@@ -12,6 +12,8 @@ int esRotulo(char*);
 
 int contieneArg(int, char* [], char*);
 
+void mostrarCelda(int dato);
+
 void crearListaMnemonicos();
 
 int esMnemonico(char[]);
