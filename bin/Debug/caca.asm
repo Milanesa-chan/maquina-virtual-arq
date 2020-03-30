@@ -1,0 +1,7 @@
+ADD [DS:1],[ES:3]
+MOV AX, 16
+MOV AX, #16
+MOV AX, @20
+MOV AX, %7aaaaaaa
+MOV AX, 'H
+MOV AX, 'H'

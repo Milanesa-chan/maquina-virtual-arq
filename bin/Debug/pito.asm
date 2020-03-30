@@ -16,6 +16,12 @@ ADD FX,1  //contador
 JMP OTRO
 TPS
 
+ADD AX, 'F'
+ADD AX, %A
+
+ADD AX, @1001010
+
+
 SIGUE: CMP 0,FX  //me fijo si el contador esta en 0
 
 JZ fin  //si es 0 salta a fin

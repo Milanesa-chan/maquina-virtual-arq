@@ -110,7 +110,30 @@ void traduce(FILE* arch, int muestra)
                                 *palabra == '#' ||
                                 ('0'<=*palabra && '9'>=*palabra))
                         {
+                            char aux[1000];
+                            strcpy(aux, palabra);
+                            char *p = aux;
 
+                            switch(*palabra)
+                            {
+                            case '\'':
+                                p++;
+                                memoria[linea*3+arg] = aux[1];
+                                break;
+                            case '%':
+                                p++;
+                                memoria[linea*3+arg] = strtol(p, NULL, 16);
+                                break;
+                            case '@':
+                                p++;
+                                memoria[linea*3+arg] = strtol(p, NULL, 8);
+                                break;
+                            case '#':
+                                p++;
+                            default:
+                                memoria[linea*3+arg] = atoi(p);
+                                break;
+                            }
                         }
                         else if(strlen(palabra)==2)
                         {
