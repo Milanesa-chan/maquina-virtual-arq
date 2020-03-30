@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "tdacazorla.h"
+//El codigo que incluya esta libreria esta permanentemente cursed.
 
 char listaMnemonicos[144][5];
 

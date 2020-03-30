@@ -46,6 +46,7 @@ void traduce(FILE* arch, int muestra)
     int errorrot = 0;
     char lineaSinFiltrar[200];
     int mostrarLinea;
+    int rot;
 
     while(!feof(arch))
     {
@@ -138,10 +139,12 @@ void traduce(FILE* arch, int muestra)
                         else if(strlen(palabra)==2)
                         {
                             memoria[linea*3] |= (1<<((2-arg)*8));
+
+                            memoria[linea*3+arg] = strtol(&palabra[0], NULL, 16);
                         }
-                        else if(buscarRotulo(rotulos, palabra)!=-1)
+                        else if((rot = buscarRotulo(rotulos, palabra))!=-1)
                         {
-                            //Es rotulo
+                            memoria[linea*3+arg] = rot;
                         }
                         else
                         {

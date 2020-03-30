@@ -1,7 +1,8 @@
-ADD [DS:1],[ES:3]
-MOV AX, 16
-MOV AX, #16
-MOV AX, @20
-MOV AX, %7aaaaaaa
-MOV AX, 'H
-MOV AX, 'H'
+MOV EX, 1001
+MOV BX, 100
+ADD EX, BX //suma
+copia: MOV [DS:1], EX
+MOV AX, %1101
+MOV DX, 1
+MOV CX, 1
+SYS 2
