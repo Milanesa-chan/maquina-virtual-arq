@@ -46,6 +46,7 @@ void traduce(FILE* arch, int muestra)
     int errorrot = 0;
     char lineaSinFiltrar[200];
     int mostrarLinea;
+    int rot;
 
     while(!feof(arch))
     {
@@ -77,7 +78,32 @@ void traduce(FILE* arch, int muestra)
                     {
                         if(*palabra=='[')
                         {
-                            //Es directo
+                            memoria[linea*3] |= (2<<((2-arg)*8));
+                            char aux[50];
+                            strcpy(aux, palabra);
+                            char *p = aux;
+                            aux[strlen(aux)-1] = '\0';
+
+                            if(palabra[1]>='0' && palabra[1]<='9')
+                            {
+                                p++;
+                                memoria[linea*3+arg] = atoi(p);
+                            }
+                            else //es un registro
+                            {
+                                if(palabra[1]=='D')
+                                {
+                                    p+=4;
+                                    memoria[linea*3+arg] = atoi(p);
+                                    memoria[linea*3+arg] |= (2<<28);
+                                }
+                                else
+                                {
+                                    p+=4;
+                                    memoria[linea*3+arg] = atoi(p);
+                                    memoria[linea*3+arg] |= (3<<28);
+                                }
+                            }
                         }
                         else if(*palabra == '\''||
                                 *palabra == '%' ||
@@ -85,15 +111,40 @@ void traduce(FILE* arch, int muestra)
                                 *palabra == '#' ||
                                 ('0'<=*palabra && '9'>=*palabra))
                         {
-                            //Es inmediato
+                            char aux[1000];
+                            strcpy(aux, palabra);
+                            char *p = aux;
+
+                            switch(*palabra)
+                            {
+                            case '\'':
+                                p++;
+                                memoria[linea*3+arg] = aux[1];
+                                break;
+                            case '%':
+                                p++;
+                                memoria[linea*3+arg] = strtol(p, NULL, 16);
+                                break;
+                            case '@':
+                                p++;
+                                memoria[linea*3+arg] = strtol(p, NULL, 8);
+                                break;
+                            case '#':
+                                p++;
+                            default:
+                                memoria[linea*3+arg] = atoi(p);
+                                break;
+                            }
                         }
                         else if(strlen(palabra)==2)
                         {
-                            //Es registro
+                            memoria[linea*3] |= (1<<((2-arg)*8));
+
+                            memoria[linea*3+arg] = strtol(&palabra[0], NULL, 16);
                         }
-                        else if(buscarRotulo(rotulos, palabra)!=-1)
+                        else if((rot = buscarRotulo(rotulos, palabra))!=-1)
                         {
-                            //Es rotulo
+                            memoria[linea*3+arg] = rot;
                         }
                         else
                         {
@@ -139,11 +190,11 @@ void traduce(FILE* arch, int muestra)
         }
     }
 
-    if(muestra && errorsin)
+    if(errorsin)
     {
         printf("\nError de sintaxis.");
     }
-    if(muestra && errorrot)
+    if(errorrot)
     {
         printf("\nError: no se encontro el rotulo.");
     }
