@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdint.h>
-#include <ctype.h>
 #include "tdacazorla.h"
 
 int32_t memoria[2000];
@@ -253,10 +252,10 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 }
 
 void generaImg(FILE* archImg){
-    char *string;
+    char string[1000];
     for (int i=0;i<16;i++){
         itoa(registros[i],string,2);
         fputs(string,archImg);
     }
-    
+    //for(int i=0;i<registros[2];i++)
 }   
