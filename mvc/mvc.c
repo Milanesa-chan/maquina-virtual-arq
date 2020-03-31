@@ -9,7 +9,7 @@ int32_t memoria[2000];
 int32_t registros[16] = {0};
 listaRotulos rotulos;
 
-void traduce(FILE *arch, int muestra);
+int traduce(FILE *arch, int muestra);
 
 void generaImg(FILE*);
 
@@ -19,23 +19,26 @@ int main(int carg, char *args[])
 
     if (carg > 1)
     {
-        int mostrar;
+        int mostrar,traducir;
         FILE *arch, *archImg;
         crearListaMnemonicos();
         arch = fopen(args[1], "rt");
-        archImg = fopen(args[2], "wt");
+        
         mostrar = !contieneArg(carg, args, "-o");
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
-        traduce(arch, mostrar);
-        generaImg(archImg);
+        traducir=traduce(arch, mostrar);
+        if (!traducir){
+			archImg = fopen(args[2], "wt");
+			generaImg(archImg);
+			fclose(archImg);
+		}
         fclose(arch);
-        fclose(archImg);
     }
     return 0;
 }
 
-void traduce(FILE *arch, int muestra)
+int traduce(FILE *arch, int muestra)
 {
     rewind(arch);
     int linea = 0;
@@ -201,6 +204,7 @@ void traduce(FILE *arch, int muestra)
     }
     registros[2] = linea*3;
     registros[3] = 1000;
+	return (errorsin || errorrot);
 }
 
 void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
