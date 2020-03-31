@@ -70,3 +70,20 @@
 	<stdint.h>
 	"tdacazorla.h"
 
+1585692935 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1585612557 d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.h
+
+1585612557 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
