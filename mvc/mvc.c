@@ -252,13 +252,24 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 }
 
 void generaImg(FILE* archImg){
-    char string[33];
+    char string[50];
+    char num[50];
     for (int i=0;i<16;i++){
         itoa(registros[i],string,2);
-        fprintf(archImg, "%032s\n", string);
+        for(int j=0;j<32-strlen(string);j++){
+            num[j] = '0';
+        }
+        num[32-strlen(string)]='\0';
+        strcat(num, string);
+        fprintf(archImg, "%s\n", num);
     }
     for(int i=0;i<registros[2];i++){
         itoa(memoria[i], string, 2);
-        fprintf(archImg, "%032s\n", string);
+        for(int j=0;j<32-strlen(string);j++){
+            num[j] = '0';
+        }
+        num[32-strlen(string)]='\0';
+        strcat(num, string);
+        fprintf(archImg, "%s\n", num);
     }
 }
