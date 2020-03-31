@@ -255,7 +255,7 @@ void generaImg(FILE* archImg){
     char string[1000];
     for (int i=0;i<16;i++){
         itoa(registros[i],string,2);
-        fputs(string,archImg);
+        fprintf(archImg,"%032s\n",string);
     }
     //for(int i=0;i<registros[2];i++)
 }   
