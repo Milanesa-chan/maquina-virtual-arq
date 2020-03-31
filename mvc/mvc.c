@@ -199,7 +199,7 @@ void traduce(FILE *arch, int muestra)
     {
         printf("\nError: no se encontro el rotulo.");
     }
-    registros[2] = linea;
+    registros[2] = linea*3;
     registros[3] = 1000;
 }
 
@@ -252,10 +252,13 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 }
 
 void generaImg(FILE* archImg){
-    char string[1000];
+    char string[33];
     for (int i=0;i<16;i++){
         itoa(registros[i],string,2);
-        fprintf(archImg,"%032s\n",string);
+        fprintf(archImg, "%032s\n", string);
     }
-    //for(int i=0;i<registros[2];i++)
-}   
+    for(int i=0;i<registros[2];i++){
+        itoa(memoria[i], string, 2);
+        fprintf(archImg, "%032s\n", string);
+    }
+}
