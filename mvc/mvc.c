@@ -23,7 +23,7 @@ int main(int carg, char *args[])
         FILE *arch, *archImg;
         crearListaMnemonicos();
         arch = fopen(args[1], "rt");
-        
+
         mostrar = !contieneArg(carg, args, "-o");
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
@@ -148,7 +148,7 @@ int traduce(FILE *arch, int muestra)
                         }
                         else if ((rot = buscarRotulo(rotulos, palabra)) != -1)
                         {
-                            memoria[linea * 3 + arg] = rot;
+                            memoria[linea * 3 + arg] = rot*3;
                         }
                         else
                         {
