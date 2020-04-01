@@ -19,7 +19,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../mvx.c">
+		<Unit filename="../mvc/tdacazorla.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../mvc/tdacazorla.h" />
+		<Unit filename="mvx.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
