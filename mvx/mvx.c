@@ -50,10 +50,14 @@ int main(int argc, char *args[])
 }
 
 void cargarArchivo(char nombre[]){
-    FILE *arch = fopen(nombre, "rt");
+    FILE *arch = fopen(nombre, "rb");
     //for(int i=0;)
     while(!feof(arch)){
-
+        int temp;
+        for(int i=0; i<32; i++){
+            fread(&temp, sizeof(int), 1, arch);
+            printf("%08X\n", temp);
+        }
     }
 }
 

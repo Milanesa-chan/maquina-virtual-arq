@@ -258,13 +258,9 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 void generaImg(FILE* archImg){
     for(int i=0; i<16; i++){
         fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
-        printf("%d\n", registros[i]);
     }
     for(int i=0; i<2000; i++){
         fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
-        if(i<registros[2]){
-            printf("%d\n", memoria[i]);
-        }
     }
 
     /*
