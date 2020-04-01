@@ -69,12 +69,14 @@ void cargarArchivo(char nombre[])
     }
 }
 
-void ejecutar(){
+void ejecutar()
+{
     int celdainst, param1, param2, tipo1, tipo2;
     int maskarg1 = 0x0000FF00, maskarg2 = 0x000000FF;
     int shiftinst = 16, shift1 = 8;
 
-    while(ejecutando){
+    while(ejecutando)
+    {
         jump = 0;
         celdainst = memoria[registros[4]];
         param1 = memoria[registros[4]+1];
@@ -83,8 +85,9 @@ void ejecutar(){
         tipo2 = (celdainst & maskarg2);
         funciones[celdainst>>shiftinst](tipo1, tipo2, param1, param2);
 
-        if(!jump) registros[4]+=3; //Si no hubo un salto, aumenta el IP
-        ejecutando = registros[4] < registros[2]; //Si IP < DS sigue ejecutando
+        if(!jump)
+            registros[4]+=3; //Si no hubo un salto, aumenta el IP
+        ejecutando = (registros[4] < registros[2])&&ejecutando; //Si IP < DS sigue ejecutando
     }
 }
 
@@ -121,14 +124,12 @@ void agregarFunciones(void (*funciones[])(int, int, int, int))
 
 void mov(int t1, int t2, int par1, int par2)
 {
-
-}
-void add(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
-    int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
 
-    switch(t2){
+    switch(t2)
+    {
     case 0:
         b = par2;
         break;
@@ -136,38 +137,69 @@ void add(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        if(baseb){
-            b = memoria[registros[baseb]+(par2 & ~mask)];
-        }else{
-            b = memoria[registros[2]+(par2 & ~mask)];
-        }
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
     }
 
-    switch(t1){
+    switch(t1)
+    {
+    case 1: //Registro
+        registros[par1] = b;
+        break;
+    case 2: //Directo
+        memoria[registros[basea]+(par1 & ~mask)] = b;
+        break;
+    }
+    printf("Funciono el MOV");
+}
+void add(int t1, int t2, int par1, int par2)
+{
+    int mask = 0xF0000000;
+    int shift = 28;
+    int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+
+    switch(t2)
+    {
+    case 0:
+        b = par2;
+        break;
+    case 1:
+        b = registros[par2];
+        break;
+    case 2:
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
+    }
+
+    switch(t1)
+    {
     case 1: //Registro
         registros[par1] += b;
         res = registros[par1];
         break;
     case 2: //Directo
-        if(basea){
-            memoria[registros[basea]+(par1 & ~mask)] += b;
-            res = memoria[registros[basea]+(par1 & ~mask)];
-        }
+        memoria[registros[basea]+(par1 & ~mask)] += b;
+        res = memoria[registros[basea]+(par1 & ~mask)];
+
         break;
     }
 
     registros[9] = 0;
-    if(res==0) registros[9] += 1;
-    else if(res<0) registros[9] |= (1<<31);
+    if(res==0)
+        registros[9] += 1;
+    else if(res<0)
+        registros[9] |= (1<<31);
 
-    printf("ADD: %d, cc: %d", res, registros[9]);
+    printf("ADD: %d, cc: %d\n", res, registros[9]);
 }
-void sub(int t1, int t2, int par1, int par2) {
+void sub(int t1, int t2, int par1, int par2)
+{
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
 
-    switch(t2){
+    switch(t2)
+    {
     case 0:
         b = par2;
         break;
@@ -175,39 +207,38 @@ void sub(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        if(baseb){
-            b = memoria[registros[baseb]+(par2 & ~mask)];
-        }else{
-            b = memoria[registros[2]+(par2 & ~mask)];
-        }
+        b = memoria[registros[baseb]+(par2 & ~mask)];
     }
 
-    switch(t1){
+    switch(t1)
+    {
     case 1: //Registro
         registros[par1] -= b;
         res = registros[par1];
         break;
     case 2: //Directo
-        if(basea){
-            memoria[registros[basea]+(par1 & ~mask)] -= b;
-            res = memoria[registros[basea]+(par1 & ~mask)];
-        }
+        memoria[registros[basea]+(par1 & ~mask)] -= b;
+        res = memoria[registros[basea]+(par1 & ~mask)];
         break;
     }
 
     registros[9] = 0;
-    if(res==0) registros[9] += 1;
-    else if(res<0) registros[9] |= (1<<31);
+    if(res==0)
+        registros[9] += 1;
+    else if(res<0)
+        registros[9] |= (1<<31);
 
-    printf("SUB: %d, cc: %d", res, registros[9]);
+    printf("SUB: %d, cc: %d\n", res, registros[9]);
 
 }
-void mul(int t1, int t2, int par1, int par2) {
+void mul(int t1, int t2, int par1, int par2)
+{
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
 
-    switch(t2){
+    switch(t2)
+    {
     case 0:
         b = par2;
         break;
@@ -215,38 +246,38 @@ void mul(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        if(baseb){
-            b = memoria[registros[baseb]+(par2 & ~mask)];
-        }else{
-            b = memoria[registros[2]+(par2 & ~mask)];
-        }
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
     }
 
-    switch(t1){
+    switch(t1)
+    {
     case 1: //Registro
         registros[par1] *= b;
         res = registros[par1];
         break;
     case 2: //Directo
-        if(basea){
-            memoria[registros[basea]+(par1 & ~mask)] *= b;
-            res = memoria[registros[basea]+(par1 & ~mask)];
-        }
+        memoria[registros[basea]+(par1 & ~mask)] *= b;
+        res = memoria[registros[basea]+(par1 & ~mask)];
         break;
     }
 
     registros[9] = 0;
-    if(res==0) registros[9] += 1;
-    else if(res<0) registros[9] |= (1<<31);
+    if(res==0)
+        registros[9] += 1;
+    else if(res<0)
+        registros[9] |= (1<<31);
 
-    printf("MUL: %d, cc: %d", res, registros[9]);
+    printf("MUL: %d, cc: %d\n", res, registros[9]);
 }
-void Div(int t1, int t2, int par1, int par2) {
+void Div(int t1, int t2, int par1, int par2)
+{
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
 
-    switch(t2){
+    switch(t2)
+    {
     case 0:
         b = par2;
         break;
@@ -254,39 +285,38 @@ void Div(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        if(baseb){
-            b = memoria[registros[baseb]+(par2 & ~mask)];
-        }else{
-            b = memoria[registros[2]+(par2 & ~mask)];
-        }
+        b = memoria[registros[baseb]+(par2 & ~mask)];
     }
 
-    switch(t1){
+    switch(t1)
+    {
     case 1: //Registro
         registros[par1] /= b;
         res = registros[par1];
         break;
     case 2: //Directo
-        if(basea){
-            memoria[registros[basea]+(par1 & ~mask)] /= b;
-            res = memoria[registros[basea]+(par1 & ~mask)];
-        }
+        memoria[registros[basea]+(par1 & ~mask)] /= b;
+        res = memoria[registros[basea]+(par1 & ~mask)];
         break;
     }
 
     registros[9] = 0;
-    if(res==0) registros[9] += 1;
-    else if(res<0) registros[9] |= (1<<31);
+    if(res==0)
+        registros[9] += 1;
+    else if(res<0)
+        registros[9] |= (1<<31);
 
-    printf("res: %d, cc: %d", res, registros[9]);
+    printf("res: %d, cc: %d\n", res, registros[9]);
 
 }
-void mod(int t1, int t2, int par1, int par2) {
+void mod(int t1, int t2, int par1, int par2)
+{
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
     int division;
-    switch(t2){
+    switch(t2)
+    {
     case 0:
         b = par2;
         break;
@@ -294,37 +324,117 @@ void mod(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        if(baseb){
-            b = memoria[registros[baseb]+(par2 & ~mask)];
-        }else{
-            b = memoria[registros[2]+(par2 & ~mask)];
-        }
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
     }
-    switch(t1){
+    switch(t1)
+    {
     case 1: //Registro
         division =  registros[par1]/b;
         registros[par1] %= b;
         res = registros[par1];
         break;
     case 2: //Directo
-        if(basea){
-            division = memoria[registros[basea]+(par1 & ~mask)]/b;
-            memoria[registros[basea]+(par1 & ~mask)] %= b;
-            res = memoria[registros[basea]+(par1 & ~mask)];
-        }
+        division = memoria[registros[basea]+(par1 & ~mask)]/b;
+        memoria[registros[basea]+(par1 & ~mask)] %= b;
+        res = memoria[registros[basea]+(par1 & ~mask)];
+        break;
+    }
+    registros[9] = 0;
+    if(division==0)
+        registros[9] += 1;
+    else if(division<0)
+        registros[9] |= (1<<31);
+
+    printf("MOD: %d, cc: %d\n", res, registros[9]);
+}
+
+void cmp(int t1, int t2, int par1, int par2)
+{
+    int mask = 0xF0000000;
+    int shift = 28;
+    int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+
+    switch(t2)
+    {
+    case 0:
+        b = par2;
+        break;
+    case 1:
+        b = registros[par2];
+        break;
+    case 2:
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
+
+    }
+
+    switch(t1)
+    {
+    case 1: //Registro
+        res = registros[par1] - b;
+        break;
+    case 2: //Directo
+        res = memoria[registros[basea]+(par1 & ~mask)] - b;
         break;
     }
 
     registros[9] = 0;
-    if(division==0) registros[9] += 1;
-    else if(division<0) registros[9] |= (1<<31);
+    if(res==0)
+        registros[9] += 1;
+    else if(res<0)
+        registros[9] |= (1<<31);
 
-    printf("MOD: %d, cc: %d", res, registros[9]);
+    printf("CMP: %d, cc: %d\n", res, registros[9]);
 
 }
+void swap(int t1, int t2, int par1, int par2)
+{
+    int mask = 0xF0000000;
+    int shift = 28;
+    int b,a, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
 
-void cmp(int t1, int t2, int par1, int par2) {}
-void swap(int t1, int t2, int par1, int par2) {}
+    switch(t2)
+    {
+    case 1:
+        b = registros[par2];
+        break;
+    case 2:
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
+    }
+
+    switch(t1)
+    {
+    case 1: //Registro
+        a = registros[par1];
+        break;
+    case 2: //Directo
+        a = memoria[registros[basea]+(par1 & ~mask)];
+        break;
+    }
+    switch(t1+(t2<<2))
+    {
+    case 5: //registro registro 0101
+        registros[par2]=a;
+        registros[par1]=b;
+        break;
+    case 6://memoria registro 0110
+        registros[par2]=a;
+        memoria[registros[basea]+(par1 & ~mask)]=b;
+        break;
+    case 9://registro memoria 1001
+        memoria[registros[baseb]+(par2 & ~mask)]=a;
+        registros[par1]=b;
+        break;
+    case 10://memoria memoria 1010
+        memoria[registros[basea]+(par1 & ~mask)]=b;
+        memoria[registros[baseb]+(par2 & ~mask)]=a;
+        break;
+    }
+
+    printf("SWAP: a.%d, b.%d\n", a,b);
+}
 void rnd(int t1, int t2, int par1, int par2) {}
 void and(int t1, int t2, int par1, int par2) {}
 void or(int t1, int t2, int par1, int par2) {}
@@ -332,7 +442,8 @@ void not(int t1, int t2, int par1, int par2) {}
 void xor(int t1, int t2, int par1, int par2) {}
 void shl(int t1, int t2, int par1, int par2) {}
 void shr(int t1, int t2, int par1, int par2) {}
-void jmp(int t1, int t2, int par1, int par2) {
+void jmp(int t1, int t2, int par1, int par2)
+{
     jump = 1;
     registros[4] = par1;
 }
