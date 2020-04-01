@@ -8,3 +8,19 @@
 
 1585612637 c:\users\lucag\desktop\chotodemono\mvc\tdacazorla.h
 
+1585611101 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585611100 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.h
+
+1585764255 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvx\mvx.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdint.h>
+	"../mvc/tdacazorla.h"
+
