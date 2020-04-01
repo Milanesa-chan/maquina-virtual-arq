@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1585696500 source:c:\users\lucag\desktop\chotodemono\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585612637 c:\users\lucag\desktop\chotodemono\mvc\tdacazorla.h
+

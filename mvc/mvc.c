@@ -29,7 +29,7 @@ int main(int carg, char *args[])
         buscaRotulos(arch, &rotulos, mostrar);
         traducir=traduce(arch, mostrar);
         if (!traducir){
-			archImg = fopen(args[2], "wt");
+			archImg = fopen(args[2], "wb");
 			generaImg(archImg);
 			fclose(archImg);
 		}
@@ -256,6 +256,18 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 }
 
 void generaImg(FILE* archImg){
+    for(int i=0; i<16; i++){
+        fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
+        printf("%d\n", registros[i]);
+    }
+    for(int i=0; i<2000; i++){
+        fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
+        if(i<registros[2]){
+            printf("%d\n", memoria[i]);
+        }
+    }
+
+    /*
     char string[50];
     char num[50];
     for (int i=0;i<16;i++){
@@ -267,7 +279,7 @@ void generaImg(FILE* archImg){
         strcat(num, string);
         fprintf(archImg, "%s\n", num);
     }
-    for(int i=0;i<registros[2];i++){
+    for(int i=0;i<2000;i++){
         itoa(memoria[i], string, 2);
         for(int j=0;j<32-strlen(string);j++){
             num[j] = '0';
@@ -276,4 +288,5 @@ void generaImg(FILE* archImg){
         strcat(num, string);
         fprintf(archImg, "%s\n", num);
     }
+    */
 }
