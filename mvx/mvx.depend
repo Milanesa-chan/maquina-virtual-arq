@@ -40,3 +40,12 @@
 	<stdint.h>
 	"../mvc/tdacazorla.h"
 
+1585770408 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1585770408 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
+
