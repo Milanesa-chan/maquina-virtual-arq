@@ -92,6 +92,7 @@ int traduce(FILE *arch, int muestra)
                             {
                                 p++;
                                 memoria[linea * 3 + arg] = atoi(p);
+                                memoria[linea * 3 + arg] |= (2 << 28);
                             }
                             else //es un registro
                             {
