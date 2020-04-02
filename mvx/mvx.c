@@ -1059,15 +1059,18 @@ void jnn(int t1, int t2, int par1, int par2) {
 void sys(int t1, int t2, int par1, int par2) {
     switch(par1) {
     case 1:
-        printf("SYS 1\n");
+        if(mostrar)
+            printf("SYS 1\n");
         leer();
         break;
     case 2:
-        printf("SYS 2\n");
+        if(mostrar)
+            printf("SYS 2\n");
         escribir();
         break;
     case 3:
-        printf("SYS 3\n");
+        if(mostrar)
+            printf("SYS 3\n");
         dump();
         break;
     }
