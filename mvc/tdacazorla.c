@@ -38,7 +38,7 @@ void crearRegistros()
     strcpy(vec[14],"EX");
     strcpy(vec[15],"FX");
 }
-void getReg(int i,char String[5])
+void getReg(int i ,char String[5])
 {
     strcpy(String,vec[i]);
 }
