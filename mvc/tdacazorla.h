@@ -10,6 +10,10 @@ void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
 int esRotulo(char*);
 
+void crearRegistros();
+
+void getReg(int i,char String[5]);
+
 int contieneArg(int, char* [], char*);
 
 void mostrarCelda(int dato);

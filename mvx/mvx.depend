@@ -24,20 +24,21 @@
 	<stdint.h>
 	"../mvc/tdacazorla.h"
 
-1585612557 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.c
+1585781895 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<ctype.h>
 	"tdacazorla.h"
 
-1585612557 d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.h
+1585781895 d:\juegos y programas\programacion\git\maquina-virtual-arq\mvc\tdacazorla.h
 
-1585767371 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvx\mvx.c
+1585786199 source:d:\juegos y programas\programacion\git\maquina-virtual-arq\mvx\mvx.c
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<stdint.h>
+	<time.h>
 	"../mvc/tdacazorla.h"
 
 1585770408 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c

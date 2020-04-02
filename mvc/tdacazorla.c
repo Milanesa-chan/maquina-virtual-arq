@@ -7,15 +7,41 @@
 
 char listaMnemonicos[144][5];
 
-int esRotulo(char *string){
-    if(!string) return 0;
+char vec[16][5];
+
+int esRotulo(char *string)
+{
+    if(!string)
+        return 0;
 
     int len = strlen(string);
-    if(string[0]  != '/' && string[len-1] == ':') return 1;
+    if(string[0]  != '/' && string[len-1] == ':')
+        return 1;
     return 0;
 }
 
-
+void crearRegistros()
+{
+    for(int i=0; i<16; i++)
+    {
+        strcpy(vec[i], "");
+    }
+    strcpy(vec[2],"DS");
+    strcpy(vec[3],"ES");
+    strcpy(vec[4],"IP");
+    strcpy(vec[8],"AC");
+    strcpy(vec[9],"CC");
+    strcpy(vec[10],"AX");
+    strcpy(vec[11],"BX");
+    strcpy(vec[12],"CX");
+    strcpy(vec[13],"DX");
+    strcpy(vec[14],"EX");
+    strcpy(vec[15],"FX");
+}
+void getReg(int i,char String[5])
+{
+    strcpy(String,vec[i]);
+}
 void crearListaMnemonicos()
 {
     for(int i=0; i<144; i++)
@@ -52,10 +78,13 @@ void crearListaMnemonicos()
     strcpy(listaMnemonicos[143], "STOP");
 }
 
-int buscarRotulo(listaRotulos rotulos, char* rot){
+int buscarRotulo(listaRotulos rotulos, char* rot)
+{
     listaRotulos aux = rotulos;
-    while(aux != NULL){
-        if(!strcmp(aux->rot, rot)){
+    while(aux != NULL)
+    {
+        if(!strcmp(aux->rot, rot))
+        {
             return aux->pos;
         }
         aux = aux->sig;
@@ -63,23 +92,30 @@ int buscarRotulo(listaRotulos rotulos, char* rot){
     return -1;
 }
 
-int contieneArg(int argc, char* args[], char* busca){
-    for(int i=0; i<argc; i++){
-        if(!strcmp(args[i], busca)){
+int contieneArg(int argc, char* args[], char* busca)
+{
+    for(int i=0; i<argc; i++)
+    {
+        if(!strcmp(args[i], busca))
+        {
             return 1;
         }
     }
     return 0;
 }
 
-int esMnemonico(char mnemonico[]){
-    for(int i=0; i<144; i++){
-        if(!strcmp(listaMnemonicos[i], mnemonico)) return i;
+int esMnemonico(char mnemonico[])
+{
+    for(int i=0; i<144; i++)
+    {
+        if(!strcmp(listaMnemonicos[i], mnemonico))
+            return i;
     }
     return -1;
 }
 
-int esValido(char *linea){
+int esValido(char *linea)
+{
     char string[50];
     sscanf(linea, "%s", string);
     return (*linea != '\0' && *linea != '\n') && (esRotulo(string) || esMnemonico(string));
