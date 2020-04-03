@@ -6,6 +6,9 @@ MOV BX,[1]  //uso el registro BX para eficiencia
 MOV EX,1  //inicializo EX en 1
 CMP BX, 2
 JZ PRIMO
+ 
+	
+//djksadjaskdjaksdj
 
 LOOP: ADD EX,1 //loop para encontrar raiz de BX 
 MOV FX,EX  //FX es un registro auxiliar

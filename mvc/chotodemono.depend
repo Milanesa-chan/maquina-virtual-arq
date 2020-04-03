@@ -87,3 +87,13 @@
 	<ctype.h>
 	"tdacazorla.h"
 
+1585770408 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1585786431 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
+

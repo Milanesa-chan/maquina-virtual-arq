@@ -60,7 +60,7 @@ int traduce(FILE *arch, int muestra)
         strcpy(lineaSinFiltrar, nextLinea);
         strcpy(nextLinea, strtok(nextLinea, "/"));
 
-        if (esValido(nextLinea))
+        if (esValido(lineaSinFiltrar))
         {
             palabra = strtok(nextLinea, " ,\n");
             while (palabra != NULL)

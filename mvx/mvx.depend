@@ -50,3 +50,11 @@
 
 1585786431 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
 
+1585871461 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvx\mvx.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdint.h>
+	<time.h>
+	"../mvc/tdacazorla.h"
+
