@@ -122,6 +122,10 @@ int esValido(char *linea)
         && (esRotulo(string) || esMnemonico(string));
 }
 
+void getMnemonico(int cod, char retorna[10]){
+    strcpy(retorna, listaMnemonicos[cod]);
+    //printf("GET MNEMONICO: %s %d", listaMnemonicos[cod], cod);
+}
 
 void mostrarCelda(int dato)
 {
