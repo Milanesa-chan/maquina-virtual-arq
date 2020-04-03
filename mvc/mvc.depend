@@ -104,3 +104,20 @@
 	<ctype.h>
 	"tdacazorla.h"
 
+1585879150 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1585877779 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.h
+
+1585877779 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
