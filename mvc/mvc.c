@@ -56,6 +56,7 @@ int traduce(FILE *arch, int muestra)
     {
         mostrarLinea = 1;
         arg = 0;
+        strcpy(nextLinea, "");
         fgets(nextLinea, sizeof(nextLinea), arch);
         strcpy(lineaSinFiltrar, nextLinea);
         strcpy(nextLinea, strtok(nextLinea, "/"));
