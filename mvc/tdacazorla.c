@@ -15,7 +15,7 @@ int esRotulo(char *string)
         return 0;
 
     int len = strlen(string);
-    if(string[0]  != '/' && string[len-1] == ':')
+    if(string[0] != '/' && string[len-1] == ':')
         return 1;
     return 0;
 }
@@ -118,9 +118,14 @@ int esValido(char *linea)
 {
     char string[50];
     sscanf(linea, "%s", string);
-    return (*linea != '\0' && *linea != '\n') && (esRotulo(string) || esMnemonico(string));
+    return (linea[0] != '\t' && linea[0] != ' ' && linea != NULL && linea[0] != '\0' && linea[0] != '\n' && linea[0] != '/')
+        && (esRotulo(string) || esMnemonico(string));
 }
 
+void getMnemonico(int cod, char retorna[10]){
+    strcpy(retorna, listaMnemonicos[cod]);
+    //printf("GET MNEMONICO: %s %d", listaMnemonicos[cod], cod);
+}
 
 void mostrarCelda(int dato)
 {

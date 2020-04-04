@@ -42,6 +42,7 @@ void ejecutar();
 void dump();
 void escribir();
 void leer();
+void getBuffer(int, int, int, int, char[], char[]);
 
 int32_t registros[16];
 int32_t memoria[2000];
@@ -50,6 +51,7 @@ int mostrar = 0;
 
 int main(int argc, char *args[]) {
     if(argc>1) {
+        crearListaMnemonicos();
         mostrar = contieneArg(argc, args, "-d");
         crearRegistros();
         srand(time(NULL));
@@ -77,7 +79,27 @@ void ejecutar() {
     int celdainst, param1, param2, tipo1, tipo2;
     int maskarg1 = 0x0000FF00, maskarg2 = 0x000000FF;
     int shiftinst = 16, shift1 = 8;
+    char mnemonico[10], buffer1[10], buffer2[10];
 
+    for(int i=0; i<registros[2]-1; i+=3) {
+        jump = 0;
+
+        celdainst = memoria[registros[4]];
+        param1 = memoria[registros[4]+1];
+        param2 = memoria[registros[4]+2];
+        tipo1 = (celdainst & maskarg1)>>shift1;
+        tipo2 = (celdainst & maskarg2);
+        param1 &= 0x0FFFFFFF;
+        param2 &= 0x0FFFFFFF;
+
+        getMnemonico(celdainst>>shiftinst, mnemonico);
+
+        getBuffer(tipo1, tipo2, param1, param2, buffer1, buffer2);
+        printf("%s %s , %s\n", mnemonico, buffer1, buffer2);
+        registros[4]+=3;
+    }
+
+    /*
     while(ejecutando) {
         jump = 0;
         celdainst = memoria[registros[4]];
@@ -91,6 +113,7 @@ void ejecutar() {
             registros[4]+=3; //Si no hubo un salto, aumenta el IP
         ejecutando = (registros[4] < registros[2])&&ejecutando; //Si IP < DS sigue ejecutando
     }
+    */
 }
 
 void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer2[10]) {
@@ -104,7 +127,7 @@ void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer
         getReg(par1, buffer1);
         break;
     case 2:
-        buffer2[0]='[';
+        strcpy(buffer1, "[");
         itoa(par1, aux, 10);
         strcat(buffer1, aux);
         strcat(buffer1, "]");
@@ -119,7 +142,7 @@ void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer
         getReg(par2, buffer2);
         break;
     case 2:
-        buffer2[0]='[';
+        strcpy(buffer2, "[");
         itoa(par2, aux, 10);
         strcat(buffer2, aux);
         strcat(buffer2, "]");
@@ -1077,7 +1100,7 @@ void sys(int t1, int t2, int par1, int par2) {
 }
 
 void stop(int t1, int t2, int par1, int par2) {
-    printf("STOP\n");
+    if(mostrar) printf("STOP\n");
     ejecutando = 0;
 }
 
