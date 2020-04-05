@@ -19,7 +19,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Tests">
-				<Option output="mvx" prefix_auto="1" extension_auto="1" />
+				<Option output="../tests/mvx" prefix_auto="1" extension_auto="1" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 			</Target>

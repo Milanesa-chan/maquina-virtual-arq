@@ -24,7 +24,7 @@ void crearRegistros()
 {
     for(int i=0; i<16; i++)
     {
-        strcpy(vec[i], "");
+        strcpy(vec[i], " ");
     }
     strcpy(vec[2],"DS");
     strcpy(vec[3],"ES");

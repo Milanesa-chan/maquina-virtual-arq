@@ -7,6 +7,6 @@ echo ====================
 echo TRADUCCION TERMINADA
 echo EJECUCION
 echo ====================
-mvx.exe codigo.img
+mvx.exe codigo.img -d
 echo.
 pause

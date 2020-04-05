@@ -13,12 +13,10 @@ int traduce(FILE *arch, int muestra);
 
 void generaImg(FILE*);
 
-int main(int carg, char *args[])
-{
+int main(int carg, char *args[]) {
     printf("%d\n", carg);
 
-    if (carg > 1)
-    {
+    if (carg > 1) {
         int mostrar,traducir;
         FILE *arch, *archImg;
         crearListaMnemonicos();
@@ -28,18 +26,17 @@ int main(int carg, char *args[])
         rotulos = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
         traducir=traduce(arch, mostrar);
-        if (!traducir){
-			archImg = fopen(args[2], "wb");
-			generaImg(archImg);
-			fclose(archImg);
-		}
+        if (!traducir) {
+            archImg = fopen(args[2], "wb");
+            generaImg(archImg);
+            fclose(archImg);
+        }
         fclose(arch);
     }
     return 0;
 }
 
-int traduce(FILE *arch, int muestra)
-{
+int traduce(FILE *arch, int muestra) {
     rewind(arch);
     int linea = 0;
     int pos;
@@ -52,8 +49,7 @@ int traduce(FILE *arch, int muestra)
     int mostrarLinea;
     int rot;
 
-    while (!feof(arch))
-    {
+    while (!feof(arch)) {
         mostrarLinea = 1;
         arg = 0;
         strcpy(nextLinea, " ");
@@ -61,68 +57,51 @@ int traduce(FILE *arch, int muestra)
         strcpy(lineaSinFiltrar, nextLinea);
         strcpy(nextLinea, strtok(nextLinea, "/"));
 
-        if (esValido(lineaSinFiltrar))
-        {
+        if (esValido(lineaSinFiltrar)) {
             palabra = strtok(nextLinea, " ,\n");
-            while (palabra != NULL)
-            {
-                if (!esRotulo(palabra))
-                {
+            while (palabra != NULL) {
+                if (!esRotulo(palabra)) {
                     char *s = palabra;
-                    while (*s)
-                    {
+                    while (*s) {
                         *s = toupper((unsigned char)*s);
                         s++;
                     }
                     pos = esMnemonico(palabra);
-                    if (pos != -1)
-                    {
+                    if (pos != -1) {
                         memoria[linea * 3] = pos << 16;
-                    }
-                    else
-                    {
-                        if (*palabra == '[')
-                        {
+                    } else {
+                        if (*palabra == '[') {
                             memoria[linea * 3] |= (2 << ((2 - arg) * 8));
                             char aux[50];
                             strcpy(aux, palabra);
                             char *p = aux;
                             aux[strlen(aux) - 1] = '\0';
 
-                            if (palabra[1] >= '0' && palabra[1] <= '9')
-                            {
+                            if (palabra[1] >= '0' && palabra[1] <= '9') {
                                 p++;
                                 memoria[linea * 3 + arg] = atoi(p);
                                 memoria[linea * 3 + arg] |= (2 << 28);
-                            }
-                            else //es un registro
-                            {
-                                if (palabra[1] == 'D')
-                                {
+                            } else { //es un registro
+                                if (palabra[1] == 'D') {
                                     p += 4;
                                     memoria[linea * 3 + arg] = atoi(p);
                                     memoria[linea * 3 + arg] |= (2 << 28);
-                                }
-                                else
-                                {
+                                } else {
                                     p += 4;
                                     memoria[linea * 3 + arg] = atoi(p);
                                     memoria[linea * 3 + arg] |= (3 << 28);
                                 }
                             }
-                        }
-                        else if (*palabra == '\'' ||
-                                 *palabra == '%' ||
-                                 *palabra == '@' ||
-                                 *palabra == '#' ||
-                                 ('0' <= *palabra && '9' >= *palabra))
-                        {
+                        } else if (*palabra == '\'' ||
+                                   *palabra == '%' ||
+                                   *palabra == '@' ||
+                                   *palabra == '#' ||
+                                   ('0' <= *palabra && '9' >= *palabra)) {
                             char aux[1000];
                             strcpy(aux, palabra);
                             char *p = aux;
 
-                            switch (*palabra)
-                            {
+                            switch (*palabra) {
                             case '\'':
                                 p++;
                                 memoria[linea * 3 + arg] = aux[1];
@@ -141,76 +120,66 @@ int traduce(FILE *arch, int muestra)
                                 memoria[linea * 3 + arg] = atoi(p);
                                 break;
                             }
-                        }
-                        else if (strlen(palabra) == 2)
-                        {
+                        } else if (strlen(palabra) == 2) {
                             memoria[linea * 3] |= (1 << ((2 - arg) * 8));
-
-                            memoria[linea * 3 + arg] = strtol(&palabra[0], NULL, 16);
-                        }
-                        else if ((rot = buscarRotulo(rotulos, palabra)) != -1)
-                        {
+                            if(!strcmp(palabra, "AC")) {
+                                memoria[linea * 3 + arg] = 8;
+                            } else {
+                                memoria[linea * 3 + arg] = strtol(&palabra[0], NULL, 16);
+                            }
+                        } else if ((rot = buscarRotulo(rotulos, palabra)) != -1) {
                             memoria[linea * 3 + arg] = rot*3;
-                        }
-                        else
-                        {
-                            if (arg == 0)
-                            {
+                        } else {
+                            if (arg == 0) {
                                 errorsin = 1;
-                                for (int i = 0; i < 3; i++)
-                                {
+                                for (int i = 0; i < 3; i++) {
                                     memoria[linea * 3 + i] = 0xFFFFFFFF;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 errorrot = 1;
                                 memoria[linea * 3 + arg] = 0xFFFFFFFF;
                             }
                         }
                     }
                     arg++;
-                }
-                else
+                } else
                     mostrarLinea = 0;
                 palabra = strtok(NULL, " ,\n");
             }
 
-            if (muestra)
-            {
+            if (muestra) {
                 printf("[");
                 mostrarCelda(linea * 3);
                 printf("]: ");
-                for (int i = 0; i < 3; i++)
-                {
+                for (int i = 0; i < 3; i++) {
                     mostrarCelda(memoria[linea * 3 + i]);
                     printf(" ");
                 }
-                if (mostrarLinea)
-                {
+                if (mostrarLinea) {
                     printf(" %4d:", linea);
                 }
                 printf(" %s", lineaSinFiltrar);
             }
             linea++;
+        }else{
+            if(muestra){
+                printf("%47s%s", "", lineaSinFiltrar);
+            }
         }
     }
 
-    if (errorsin)
-    {
+    if (errorsin) {
         printf("\nError de sintaxis.");
     }
-    if (errorrot)
-    {
+    if (errorrot) {
         printf("\nError: no se encontro el rotulo.");
     }
     registros[2] = linea*3;
     registros[3] = 1000;
-	return (errorsin || errorrot);
+    return (errorsin || errorrot);
 }
 
-void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
-{
+void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
     if (mostrar)
         printf("\nLista de Rotulos:\n-----------------\n");
 
@@ -219,32 +188,25 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
     char next[50];
     rotulo *ult = NULL;
 
-    while (!feof(arch))
-    {
+    while (!feof(arch)) {
         fgets(nextLinea, sizeof(nextLinea), arch);
-        if (esValido(nextLinea))
-        {
+        if (esValido(nextLinea)) {
             sscanf(nextLinea, "%s", next);
-            if (esRotulo(next))
-            {
+            if (esRotulo(next)) {
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
                 nextRotulo->sig = NULL;
                 next[strlen(next) - 1] = '\0';
                 char *s = next;
-                while (*s)
-                {
+                while (*s) {
                     *s = toupper((unsigned char)*s);
                     s++;
                 }
                 strcpy(nextRotulo->rot, next);
                 nextRotulo->pos = linea;
 
-                if (*rotulos == NULL)
-                {
+                if (*rotulos == NULL) {
                     *rotulos = nextRotulo;
-                }
-                else
-                {
+                } else {
                     ult->sig = nextRotulo;
                 }
                 ult = nextRotulo;
@@ -257,11 +219,11 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
     }
 }
 
-void generaImg(FILE* archImg){
-    for(int i=0; i<16; i++){
+void generaImg(FILE* archImg) {
+    for(int i=0; i<16; i++) {
         fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
     }
-    for(int i=0; i<2000; i++){
+    for(int i=0; i<2000; i++) {
         fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
     }
 
