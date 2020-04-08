@@ -7,7 +7,7 @@
 
 char listaMnemonicos[144][5];
 
-char vec[16][5];//aca alcanza con [15][3]
+char vec[16][5];//aca alcanza con [15][3]//vector de registros
 
 int esRotulo(char *string)//si no es comentario y el ultimo caracter es ':'
 {

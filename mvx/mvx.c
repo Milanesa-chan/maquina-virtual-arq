@@ -33,9 +33,11 @@ void jnp(int t1, int t2, int par1, int par2);
 void jnn(int t1, int t2, int par1, int par2);
 void sys(int t1, int t2, int par1, int par2);
 void stop(int t1, int t2, int par1, int par2);
+
 void agregarFunciones(void (*funciones[])(int, int, int, int));
 void cargarArchivo(char[]);
 //"Jn" y "Div" empiezan con mayuscula xd
+div
 
 void (*funciones[144])(int, int, int, int);
 void ejecutar();
@@ -52,7 +54,7 @@ int mostrar = 0;
 int main(int argc, char *args[]) {
     if(argc>1) {
         crearListaMnemonicos();
-        mostrar = contieneArg(argc, args, "-d");
+        mostrar = contieneArg(argc, args, "-d");        //si existe el argumento -d entonces muestra
         crearRegistros();
         srand(time(NULL));
         agregarFunciones(funciones);
@@ -63,15 +65,15 @@ int main(int argc, char *args[]) {
 }
 
 void cargarArchivo(char nombre[]) {
-    FILE *arch = fopen(nombre, "rb");
+    FILE *arch = fopen(nombre, "rb");//abre el archivo binario
     int32_t temp;
     for(int i=0; i<16; i++) {
         fread(&temp, sizeof(temp), 1, arch);
-        registros[i] = temp;
+        registros[i] = temp;            //carga los 16 registros
     }
     for(int i=0; i<registros[2]; i++) {
         fread(&temp, sizeof(temp), 1, arch);
-        memoria[i] = temp;
+        memoria[i] = temp;              //carga las lineas del programa hasta la linea indicada en el registro DS
     }
 }
 
@@ -83,16 +85,16 @@ void ejecutar() {
 
     if(mostrar) {
         printf("\nCode Segment:\n\n");
-        for(int i=0; i<registros[2]; i+=3) {
+        for(int i=0; i<registros[2]; i+=3) {        //RECORRE TODAS LAS LINEAS
             jump = 0;
-
-            celdainst = memoria[registros[4]];
-            param1 = memoria[registros[4]+1];
-            param2 = memoria[registros[4]+2];
-            tipo1 = (celdainst & maskarg1)>>shift1;
-            tipo2 = (celdainst & maskarg2);
-            param1 &= 0x0FFFFFFF;
-            param2 &= 0x0FFFFFFF;
+            //registro[4]=INSTRUCTION POINTER
+            celdainst = memoria[registros[4]];      //celda instruccion
+            param1 = memoria[registros[4]+1];       //parametro 1
+            param2 = memoria[registros[4]+2];       //parametro 2
+            tipo1 = (celdainst & maskarg1)>>shift1; //
+            tipo2 = (celdainst & maskarg2);         //
+            param1 &= 0x0FFFFFFF;                   //
+            param2 &= 0x0FFFFFFF;                   //le quita los primero 4 bits a los parametros
 
             getMnemonico(celdainst>>shiftinst, mnemonico);
 
@@ -120,7 +122,7 @@ void ejecutar() {
 }
 
 void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer2[10]) {
-    char aux[10];
+    char aux[10];//tipo1 tipo2 parametro1 parametro 2 buffer1 buffer2
 
     switch(t1) {
     case 0:

@@ -14,7 +14,7 @@ int traduce(FILE *arch, int muestra);
 void generaImg(FILE*);
 
 int main(int carg, char *args[]) {
-    printf("%d\n", carg);//? osea pake
+    //printf("â™¥%d\n", carg);
 
     if (carg > 1) {//si al menos tiene 2  argumentos traduce
         int mostrar,traducir;
@@ -46,7 +46,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
     int errorsin = 0;               //boolean
     int errorrot = 0;               //boolean
     char lineaSinFiltrar[200];      //cada linea completa de assembler
-    int mostrarLinea;               //boolean para no mostrar los rotulos con dos puntos
+    int mostrarLinea;               //boolean para no mostrar el numero de linea de los rotulos con dos puntos
     int rot;                        //
     // INICIO A LEER ARCHIVO----------------------------------------------------------------------
     while (!feof(arch)) {
@@ -68,7 +68,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                         *s = toupper((unsigned char)*s);        //palabra pasa "a mayuscula"
                         s++;
                     }
-                    pos = esMnemonico(palabra);                 //pos = codigo mnemonico ó -1
+                    pos = esMnemonico(palabra);                 //pos = codigo mnemonico Ã³ -1
                     // SI LA PALABRA ES MNEMONICO----------------------------------------------------------------------
                     if (pos != -1) {
                         memoria[linea * 3] = pos << 16;         //corre el codigo del Mnemonico y lo guarda en memoria
@@ -81,19 +81,19 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                             char *p = aux;
                             aux[strlen(aux) - 1] = '\0';                        //a aux le quito el ultimo caracter se espera que sea ']'
 
-                            if (palabra[1] >= '0' && palabra[1] <= '9') {
-                                p++;
+                            if (palabra[1] >= '0' && palabra[1] <= '9') {//SI PALABRA ES [UnNumero
+                                p++;                                            //si palabra es[numero]entonces *p=numero
                                 memoria[linea * 3 + arg] = atoi(p);
-                                memoria[linea * 3 + arg] |= (2 << 28);
-                            } else { //es un registro
-                                if (palabra[1] == 'D') {
+                                memoria[linea * 3 + arg] |= (2 << 28);          //codigo de registro base... si es numero se presupone[DS:numero]
+                            } else {
+                                if (palabra[1] == 'D') {                 //SI PALABRA ES [D tambien se asume que es [DS:numero]
                                     p += 4;
                                     memoria[linea * 3 + arg] = atoi(p);
-                                    memoria[linea * 3 + arg] |= (2 << 28);
-                                } else {
+                                    memoria[linea * 3 + arg] |= (2 << 28);      //codigo de registro base DS
+                                } else {                                 //SI NO ES [D se asume que es [ES:numero]
                                     p += 4;
                                     memoria[linea * 3 + arg] = atoi(p);
-                                    memoria[linea * 3 + arg] |= (3 << 28);
+                                    memoria[linea * 3 + arg] |= (3 << 28);      //codigo de registro base ES
                                 }
                             }
                         } // SI LA PALABRA ES OPERANDO INMEDIATO----------------------------------------------------------------------
@@ -137,7 +137,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                           else if ((rot = buscarRotulo(rotulos, palabra)) != -1) {
                             memoria[linea * 3 + arg] = rot*3;
                         } else {
-                            // SI LA PALABRA NO NINGUNA DE LAS ANTERIOR SE INTERPRETA COMO ERROR-----------------------------------------------------------                                                   //para este else palabra!=Mnemonico
+                            // SI LA PALABRA NO ES NINGUNA DE LAS ANTERIOR SE INTERPRETA COMO ERROR-----------------------------------------------------------                                                   //para este else palabra!=Mnemonico
                             if (arg == 0) {                                         //arg==0 error de Mnemonico
                                 errorsin = 1;
                                 for (int i = 0; i < 3; i++) {
@@ -151,27 +151,27 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                     }//
                     arg++;
                 } else// SI LA PALABRA ES LA DEFINICION DE UN ROTULO, osea rotulo:---------------------------------------------------------------
-                    mostrarLinea = 0;                                               //los rotulos dos puntos no se muestran
+                    mostrarLinea = 0;                                               //los rotulos dos puntos no muestran el numero de linea
 
                 palabra = strtok(NULL, " ,\n");                                     //avanzo a la siguiente palabra que exista en NextLinea
             }
             // FIN LINEA ----------------------------------------------------------------------
 
-            if (muestra) {
+            if (muestra) {              //[00000003]:
                 printf("[");
                 mostrarCelda(linea * 3);
                 printf("]: ");
                 for (int i = 0; i < 3; i++) {
                     mostrarCelda(memoria[linea * 3 + i]);
                     printf(" ");
-                }
+                }                       //0001 0100 0000 000A 0000 0001
                 if (mostrarLinea) {
-                    printf(" %4d:", linea);
+                    printf(" %4d:", linea); //     1:
                 }
-                printf(" %s", lineaSinFiltrar);
+                printf(" %s", lineaSinFiltrar);     // MOV AX, %0001
             }
             linea++;
-        }else{
+        }else{//SI LINEASINFILTRAR NO ES VALIDA
             if(muestra){
                 printf("%47s%s", "", lineaSinFiltrar);
             }
@@ -184,7 +184,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
     if (errorrot) {
         printf("\nError: no se encontro el rotulo.");
     }
-    registros[2] = linea*3;     //registro DS=("linea final del programa"+1)
+    registros[2] = linea*3;     //registro DS=posicion de memoria donde termina el programa
     registros[3] = 1000;        //registro ES=1000
 
     return (errorsin || errorrot);
@@ -196,30 +196,30 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
     if (mostrar)
         printf("\nLista de Rotulos:\n-----------------\n");
 
-    int linea = 0;//Linea actual del código assembler
+    int linea = 0;                              //Linea actual del cÃ³digo assembler
     char nextLinea[200];
     char next[50];
     rotulo *ult = NULL;
 
     while (!feof(arch)) {
-        fgets(nextLinea, sizeof(nextLinea), arch);      //guarda en nextLinea una linea a la vez hasta terminar el archivo
+        fgets(nextLinea, sizeof(nextLinea), arch);      //nextLinea cada linea completa del assembler
         if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
-            sscanf(nextLinea, "%s", next);
-            if (esRotulo(next)) {
+            sscanf(nextLinea, "%s", next);              //next es la primer palabra de nextLinea
+            if (esRotulo(next)) {                       //si tiene ':' y no es comentario
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
                 nextRotulo->sig = NULL;
                 next[strlen(next) - 1] = '\0';
-                char *s = next;                         //puntero char apunta al primer caracter de next
+                char *s = next;                         //
                 while (*s) {
-                    *s = toupper((unsigned char)*s);
+                    *s = toupper((unsigned char)*s);    //pasa next a mayuscula
                     s++;
-                }                                       //este while pasa todo a mayuscula next
+                }                                       //
                 strcpy(nextRotulo->rot, next);
                 nextRotulo->pos = linea;                //la posicion del rotulo es la linea actual
 
                 if (*rotulos == NULL) {                 //crea la lista de rotulos
-                    *rotulos = nextRotulo
-                } else {//sino
+                    *rotulos = nextRotulo;
+                } else {
                     ult->sig = nextRotulo;
                 }
                 ult = nextRotulo;
@@ -232,11 +232,11 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
     }
 }
 
-void generaImg(FILE* archImg) {
+void generaImg(FILE* archImg) {             //genera el archivo binario en base a los registros y a la memoria
     for(int i=0; i<16; i++) {
         fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
     }
     for(int i=0; i<2000; i++) {
         fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
-    }//borre lo que estaba comentado
+    }
 }
