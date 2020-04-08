@@ -1,6 +1,5 @@
 MOV AX, %0001
-MOV DX, 1
-MOV CX, 1
-SYS 1
-MOV AX, %0008
-SYS 2
+MOV AX, [ES:3]
+MOV AX, [DS:1]
+MOV AX, [1]
+MOV [1], 3
