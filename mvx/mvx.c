@@ -1006,12 +1006,13 @@ void leer() {
         for(int i=0; i<cant; i++) {
             if(!prompt) {
                 printf("[");
-                mostrarCelda(registros[2]+desde+i);
+                mostrarCelda(desde+i);
                 printf("]: ");
             }
 
             switch(modo) {
             case 1:
+            case 0:
                 scanf(" %d", &aux);
                 memoria[registros[2]+desde+i] = aux;
                 break;
@@ -1028,7 +1029,7 @@ void leer() {
     } else {
         if(!prompt) {
             printf("[");
-            mostrarCelda(registros[2]+desde);
+            mostrarCelda(desde);
             printf("]: ");
         }
 
@@ -1055,7 +1056,7 @@ void escribir() {
         for(int i=0; i<cant; i++) {
             if(!prompt) {
                 printf("[");
-                mostrarCelda(registros[2]+desde+i);
+                mostrarCelda(desde+i);
                 printf("]: ");
             }
             switch(modo) {
@@ -1063,21 +1064,22 @@ void escribir() {
                 printf("%d", memoria[registros[2]+desde+i]);
                 break;
             case 4:
-                printf("%o", memoria[registros[2]+desde+i]);
+                printf("@%o", memoria[registros[2]+desde+i]);
                 break;
             case 8:
-                printf("%X", memoria[registros[2]+desde+i]);
+                printf("%c%X", '%', memoria[registros[2]+desde+i]);
                 break;
             }
             if(!endline)
                 printf("\n");
+            else printf(" ");
         }
     } else {
 
         for(int i=0; i<registros[12]; i++) {
             if(!prompt) {
                 printf("[");
-                mostrarCelda(registros[2]+desde+i);
+                mostrarCelda(desde+i);
                 printf("]: ");
             }
             int letra = memoria[registros[2]+desde+i] & 0xFF;
@@ -1087,6 +1089,7 @@ void escribir() {
                 printf(".");
             if(!endline)
                 printf("\n");
+            else printf(" ");
         }
     }
 }

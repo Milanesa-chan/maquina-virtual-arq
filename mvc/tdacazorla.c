@@ -116,9 +116,9 @@ int esMnemonico(char mnemonico[])//regresa el valor decimal del mnemonico, si no
 
 int esValido(char *linea)
 {
-    char string[50];
+    char string[50] = " ";
     sscanf(linea, "%s", string);
-    return (linea[0] != '\t' && linea[0] != ' ' && linea != NULL && linea[0] != '\0' && linea[0] != '\n' && linea[0] != '/')
+    return (string[0] != '\t' && string[0] != ' ' && string != NULL && string[0] != '\0' && string[0] != '\n' && string[0] != '/')
             //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario
         && (esRotulo(string) || esMnemonico(string));//y ademas es Rotulo o nemonico entonces es valido
 }

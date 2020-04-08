@@ -130,7 +130,9 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                             memoria[linea * 3] |= (1 << ((2 - arg) * 8));           //deja en memoria la informacion de que el operando 1 o 2 es un operando de registro
                             if(!strcmp(palabra, "AC")) {
                                 memoria[linea * 3 + arg] = 8;
-                            } else {
+                            }else if(!strcmp(palabra, "CC")){
+                                memoria[linea * 3 + arg] = 9;
+                            }else {
                                 memoria[linea * 3 + arg] = strtol(&palabra[0], NULL, 16);
                             }
                         } // SI LA PALABRA ES LA INVOCACION A UN ROTULO----------------------------------------------------------------------
@@ -173,7 +175,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
             linea++;
         }else{//SI LINEASINFILTRAR NO ES VALIDA
             if(muestra){
-                printf("%47s%s", "", lineaSinFiltrar);
+                if(lineaSinFiltrar[0] != '\n')  printf("%47s%s", "", lineaSinFiltrar);
             }
         }
     }
