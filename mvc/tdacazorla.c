@@ -7,16 +7,16 @@
 
 char listaMnemonicos[144][5];
 
-char vec[16][5];
+char vec[16][5];//aca alcanza con [15][3]
 
-int esRotulo(char *string)
+int esRotulo(char *string)//si no es comentario y el ultimo caracter es ':'
 {
-    if(!string)
+    if(!string)//si en null
         return 0;
 
     int len = strlen(string);
     if(string[0] != '/' && string[len-1] == ':')
-        return 1;
+        return 1;//es rotulo
     return 0;
 }
 
@@ -92,7 +92,7 @@ int buscarRotulo(listaRotulos rotulos, char* rot)
     return -1;
 }
 
-int contieneArg(int argc, char* args[], char* busca)
+int contieneArg(int argc, char* args[], char* busca)//busca en los argumentos si existe el que busca
 {
     for(int i=0; i<argc; i++)
     {
@@ -104,7 +104,7 @@ int contieneArg(int argc, char* args[], char* busca)
     return 0;
 }
 
-int esMnemonico(char mnemonico[])
+int esMnemonico(char mnemonico[])//regresa el valor decimal del mnemonico, si no existe regresa -1
 {
     for(int i=0; i<144; i++)
     {
@@ -119,7 +119,8 @@ int esValido(char *linea)
     char string[50];
     sscanf(linea, "%s", string);
     return (linea[0] != '\t' && linea[0] != ' ' && linea != NULL && linea[0] != '\0' && linea[0] != '\n' && linea[0] != '/')
-        && (esRotulo(string) || esMnemonico(string));
+            //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario
+        && (esRotulo(string) || esMnemonico(string));//y ademas es Rotulo o nemonico entonces es valido
 }
 
 void getMnemonico(int cod, char retorna[10]){

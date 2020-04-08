@@ -4,17 +4,21 @@
 	<ActiveTarget name="Tests" />
 	<File name="mvc.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6199" topLine="57" />
+			<Cursor1 position="2325" topLine="74" />
 		</Cursor>
 	</File>
-	<File name="tdacazorla.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="tdacazorla.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="276" topLine="0" />
+			<Cursor1 position="267" topLine="0" />
 		</Cursor>
+		<Folding>
+			<Collapse line="23" />
+			<Collapse line="45" />
+		</Folding>
 	</File>
-	<File name="tdacazorla.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="tdacazorla.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2308" topLine="78" />
+			<Cursor1 position="95" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
