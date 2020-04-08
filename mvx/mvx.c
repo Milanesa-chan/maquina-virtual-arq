@@ -1073,13 +1073,13 @@ void escribir() {
                 printf("\n");
         }
     } else {
-        if(!prompt) {
-            printf("[");
-            mostrarCelda(registros[2]+desde);
-            printf("]: ");
-        }
 
         for(int i=0; i<registros[12]; i++) {
+            if(!prompt) {
+                printf("[");
+                mostrarCelda(registros[2]+desde+i);
+                printf("]: ");
+            }
             int letra = memoria[registros[2]+desde+i] & 0xFF;
             if(letra<=127 && letra>=0)
                 printf("%c",letra);

@@ -113,11 +113,11 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                                 break;
                             case '%':
                                 p++;
-                                memoria[linea * 3 + arg] = strtol(p, NULL, 16);
+                                memoria[linea * 3 + arg] = strtoul(p, NULL, 16);
                                 break;
                             case '@':
                                 p++;
-                                memoria[linea * 3 + arg] = strtol(p, NULL, 8);
+                                memoria[linea * 3 + arg] = strtoul(p, NULL, 8);
                                 break;
                             case '#':
                                 p++;
