@@ -7,6 +7,7 @@
 
 int32_t memoria[8192];
 int32_t registros[16] = {0};
+int32_t segmentos[3] = {500, 500, 500}; //0 = DATA, 1 = EXTRA, 2 = STACK
 listaRotulos rotulos;
 
 int traduce(FILE *arch, int muestra);
@@ -24,6 +25,7 @@ int main(int carg, char *args[]) {
 
         mostrar = !contieneArg(carg, args, "-o");//boolean mostrar es verdade si exite el argumentos "-o"
         rotulos = NULL;
+
         buscaRotulos(arch, &rotulos, mostrar);
         traducir=traduce(arch, mostrar);//traducir es verdadero si hay algun error
         if (!traducir) {//si no hay errores
@@ -205,8 +207,36 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
 
     while (!feof(arch)) {
         fgets(nextLinea, sizeof(nextLinea), arch);      //nextLinea cada linea completa del assembler
-        if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
-            sscanf(nextLinea, "%s", next);              //next es la primer palabra de nextLinea
+        sscanf(nextLinea, "%s", next);                  //next es la primer palabra de nextLinea
+
+        if(!strcmp(next, "\\\\ASM")){
+            strcpy(nextLinea, strupr(nextLinea));
+            char nextSub[30];
+            strcpy(nextSub, strtok(nextLinea, " =\t\0"));
+            int ind = 0;
+            while(ind != -1){
+                strcpy(nextSub, " ");
+                strcpy(nextSub, strtok(NULL, " =\t\0"));
+                printf("\nNEXTSUB: %s", nextSub);
+                ind = -1;
+
+                if(!strcmp(nextSub, "DATA"))
+                    ind = 0;
+                else if(!strcmp(nextSub, "EXTRA"))
+                    ind = 1;
+                else if(!strcmp(nextSub, "STACK"))
+                    ind = 2;
+
+                if(ind!=-1)
+                    segmentos[ind] = atoi(strtok(NULL, " =\t\n"));
+
+                    printf("\nNUM: %d", segmentos[ind]);
+
+            }
+            //SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR
+            printf("\nDATA: %d EXTRA: %d STACK: %d", segmentos[0], segmentos[1], segmentos[2]);
+        }else if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
+
             if (esRotulo(next)) {                       //si tiene ':' y no es comentario
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
                 nextRotulo->sig = NULL;

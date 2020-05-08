@@ -87,7 +87,7 @@
 	<ctype.h>
 	"tdacazorla.h"
 
-1586382638 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
+1588980275 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -97,7 +97,7 @@
 
 1586039357 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
 
-1588974055 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
+1588980484 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
