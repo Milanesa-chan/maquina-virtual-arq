@@ -26,9 +26,14 @@ void crearRegistros()
     {
         strcpy(vec[i], " ");
     }
+    strcpy(vec[0],"PS");
+    strcpy(vec[1],"CS");
     strcpy(vec[2],"DS");
     strcpy(vec[3],"ES");
     strcpy(vec[4],"IP");
+    strcpy(vec[5],"SS");
+    strcpy(vec[6],"SP");
+    strcpy(vec[7],"BP");
     strcpy(vec[8],"AC");
     strcpy(vec[9],"CC");
     strcpy(vec[10],"AX");

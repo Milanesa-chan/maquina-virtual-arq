@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "tdacazorla.h"
 
-int32_t memoria[2000];
+int32_t memoria[8192];
 int32_t registros[16] = {0};
 listaRotulos rotulos;
 
@@ -58,7 +58,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
         strcpy(nextLinea, strtok(nextLinea, "/"));      //nextLinea="quita comentarios"
 
         if (esValido(lineaSinFiltrar)) {                //
-            palabra = strtok(nextLinea, " ,\n");        //palabra= "la primer palabra" de nextLinea
+            palabra = strtok(nextLinea, " ,\n\t");        //palabra= "la primer palabra" de nextLinea
             // EMPIEZA A DIFERENCIAR PALABRAS-------------------------------------------------------------------------
             while (palabra != NULL) {
                 // SI LA PALABRA NO ES LA DE DEFINICION DE UN ROTULO----------------------------------------------------------
@@ -238,7 +238,7 @@ void generaImg(FILE* archImg) {             //genera el archivo binario en base 
     for(int i=0; i<16; i++) {
         fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
     }
-    for(int i=0; i<2000; i++) {
+    for(int i=0; i<8192; i++) {
         fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
     }
 }

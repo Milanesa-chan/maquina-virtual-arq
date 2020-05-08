@@ -45,7 +45,7 @@ void leer();
 void getBuffer(int, int, int, int, char[], char[]);
 
 int32_t registros[16];
-int32_t memoria[2000];
+int32_t memoria[8192];
 int ejecutando = 1, jump = 0;
 int mostrar = 0;
 
@@ -709,6 +709,16 @@ void shr(int t1, int t2, int par1, int par2) {
     switch(t1) {
     case 1: //Registro
         registros[par1] >>= b;
+
+        //C esta mal hecho y me mete 1's al principio del numero cuando hace shr xd
+        int tempMas = 0;
+        for(int i=0; i<32-b; i++){
+            tempMas <<= 1;
+            tempMas += 1;
+        }
+
+        registros[par1] &= tempMas;
+
         res = registros[par1];
         break;
     case 2: //Directo
@@ -1059,17 +1069,16 @@ void escribir() {
                 mostrarCelda(desde+i);
                 printf("]: ");
             }
-            switch(modo) {
-            case 1:
-                printf("%d", memoria[registros[2]+desde+i]);
-                break;
-            case 4:
-                printf("@%o", memoria[registros[2]+desde+i]);
-                break;
-            case 8:
-                printf("%c%X", '%', memoria[registros[2]+desde+i]);
-                break;
-            }
+
+            if(modo & 0x8)
+                printf("%c%X ", '%', memoria[registros[2]+desde+i]);
+            if(modo & 0x4)
+                printf("@%o ", memoria[registros[2]+desde+i]);
+            if(modo & 0x1)
+                printf("%d ", memoria[registros[2]+desde+i]);
+
+
+
             if(!endline)
                 printf("\n");
             else printf(" ");
@@ -1083,10 +1092,19 @@ void escribir() {
                 printf("]: ");
             }
             int letra = memoria[registros[2]+desde+i] & 0xFF;
-            if(letra<=127 && letra>=0)
-                printf("%c",letra);
+            if(letra<=126 && letra>=33)
+                printf("%c ",letra);
             else
-                printf(".");
+                printf(". ");
+
+
+            if(modo & 0x8)
+                printf("%c%X ", '%', memoria[registros[2]+desde+i]);
+            if(modo & 0x4)
+                printf("@%o ", memoria[registros[2]+desde+i]);
+            if(modo & 0x1)
+                printf("%d ", memoria[registros[2]+desde+i]);
+
             if(!endline)
                 printf("\n");
             else printf(" ");
