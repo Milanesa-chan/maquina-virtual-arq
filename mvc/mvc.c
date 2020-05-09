@@ -207,17 +207,18 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
 
     while (!feof(arch)) {
         fgets(nextLinea, sizeof(nextLinea), arch);      //nextLinea cada linea completa del assembler
+        strcpy(next, " ");
         sscanf(nextLinea, "%s", next);                  //next es la primer palabra de nextLinea
 
         if(!strcmp(next, "\\\\ASM")){
             strcpy(nextLinea, strupr(nextLinea));
             char nextSub[30];
-            strcpy(nextSub, strtok(nextLinea, " =\t\0"));
+            strcat(nextLinea, " END");
+            strcpy(nextSub, strtok(nextLinea, " =\t"));
             int ind = 0;
             while(ind != -1){
                 strcpy(nextSub, " ");
-                strcpy(nextSub, strtok(NULL, " =\t\0"));
-                printf("\nNEXTSUB: %s", nextSub);
+                strcpy(nextSub, strtok(NULL, " =\t"));
                 ind = -1;
 
                 if(!strcmp(nextSub, "DATA"))
@@ -230,11 +231,9 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
                 if(ind!=-1)
                     segmentos[ind] = atoi(strtok(NULL, " =\t\n"));
 
-                    printf("\nNUM: %d", segmentos[ind]);
-
             }
             //SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR
-            printf("\nDATA: %d EXTRA: %d STACK: %d", segmentos[0], segmentos[1], segmentos[2]);
+            printf("\nDATA: %d EXTRA: %d STACK: %d\n", segmentos[0], segmentos[1], segmentos[2]);
         }else if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
 
             if (esRotulo(next)) {                       //si tiene ':' y no es comentario
@@ -268,7 +267,7 @@ void generaImg(FILE* archImg) {             //genera el archivo binario en base 
     for(int i=0; i<16; i++) {
         fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
     }
-    for(int i=0; i<8192; i++) {
+    for(int i=0; i<registros[2]; i++) {
         fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
     }
 }

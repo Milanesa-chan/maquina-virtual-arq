@@ -1,3 +1,5 @@
+#define pija 420
+
 typedef struct rotulo{
     char rot[50];
     int pos;
