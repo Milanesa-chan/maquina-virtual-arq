@@ -8,6 +8,10 @@ typedef struct rotulo{
 
 typedef rotulo *listaRotulos;
 
+//lista de constantes
+
+//buscarConstante(listaconst, string) retorna el struct constante si lo encuentra y null si no
+
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
 int esRotulo(char*);

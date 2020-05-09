@@ -8,6 +8,7 @@
 int32_t memoria[8192];
 int32_t registros[16] = {0};
 int32_t segmentos[3] = {500, 500, 500}; //0 = DATA, 1 = EXTRA, 2 = STACK
+int lineasTotal = 0;
 listaRotulos rotulos;
 
 int traduce(FILE *arch, int muestra);
@@ -99,11 +100,11 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                                 }
                             }
                         } // SI LA PALABRA ES OPERANDO INMEDIATO----------------------------------------------------------------------
-                           else if (*palabra == '\'' ||
-                                   *palabra == '%' ||
-                                   *palabra == '@' ||
-                                   *palabra == '#' ||
-                                   ('0' <= *palabra && '9' >= *palabra)) {
+                        else if (*palabra == '\'' ||
+                                 *palabra == '%' ||
+                                 *palabra == '@' ||
+                                 *palabra == '#' ||
+                                 ('0' <= *palabra && '9' >= *palabra)) {
                             char aux[1000];                                     //en la memoria ya hay un cero asi que no necesita aclararlo
                             strcpy(aux, palabra);
                             char *p = aux;
@@ -128,18 +129,22 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                                 break;
                             }
                         } // SI LA PALABRA ES OPERANDO DE REGISTRO----------------------------------------------------------------------
-                            else if (strlen(palabra) == 2) {
+                        else if (strlen(palabra) == 2) {
                             memoria[linea * 3] |= (1 << ((2 - arg) * 8));           //deja en memoria la informacion de que el operando 1 o 2 es un operando de registro
                             if(!strcmp(palabra, "AC")) {
                                 memoria[linea * 3 + arg] = 8;
-                            }else if(!strcmp(palabra, "CC")){
+                            } else if(!strcmp(palabra, "CC")) {
                                 memoria[linea * 3 + arg] = 9;
-                            }else {
+                            } else {
                                 memoria[linea * 3 + arg] = strtol(&palabra[0], NULL, 16);
                             }
                         } // SI LA PALABRA ES LA INVOCACION A UN ROTULO----------------------------------------------------------------------
-                          else if ((rot = buscarRotulo(rotulos, palabra)) != -1) {
+                        else if ((rot = buscarRotulo(rotulos, palabra)) != -1) {
                             memoria[linea * 3 + arg] = rot*3;
+                        }else if (/*(nodoConst = buscarconstante) != NULL*/){
+                            //se toman dos caminos de acuerdo al tipo de nodo
+                            //si es inmediato se pone el valor directamente en la celda de memoria
+                            //si es directo se pone el valor como una direccion de memoria basada en cs
                         } else {
                             // SI LA PALABRA NO ES NINGUNA DE LAS ANTERIOR SE INTERPRETA COMO ERROR-----------------------------------------------------------                                                   //para este else palabra!=Mnemonico
                             if (arg == 0) {                                         //arg==0 error de Mnemonico
@@ -175,9 +180,10 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
                 printf(" %s", lineaSinFiltrar);     // MOV AX, %0001
             }
             linea++;
-        }else{//SI LINEASINFILTRAR NO ES VALIDA
-            if(muestra){
-                if(lineaSinFiltrar[0] != '\n')  printf("%47s%s", "", lineaSinFiltrar);
+        } else { //SI LINEASINFILTRAR NO ES VALIDA
+            if(muestra) {
+                if(lineaSinFiltrar[0] != '\n')
+                    printf("%47s%s", "", lineaSinFiltrar);
             }
         }
     }
@@ -186,7 +192,7 @@ int traduce(FILE *arch, int muestra) {//ya tenemos la lista de rotulos creada
         printf("\nError de sintaxis.");
     }
     if (errorrot) {
-        printf("\nError: no se encontro el rotulo.");
+        printf("\nError: no se encontro el rotulo o la constante.");
     }
     registros[2] = linea*3;     //registro DS=posicion de memoria donde termina el programa
     registros[3] = 1000;        //registro ES=1000
@@ -210,13 +216,13 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
         strcpy(next, " ");
         sscanf(nextLinea, "%s", next);                  //next es la primer palabra de nextLinea
 
-        if(!strcmp(next, "\\\\ASM")){
+        if(!strcmp(next, "\\\\ASM")) {
             strcpy(nextLinea, strupr(nextLinea));
             char nextSub[30];
             strcat(nextLinea, " END");
             strcpy(nextSub, strtok(nextLinea, " =\t"));
             int ind = 0;
-            while(ind != -1){
+            while(ind != -1) {
                 strcpy(nextSub, " ");
                 strcpy(nextSub, strtok(NULL, " =\t"));
                 ind = -1;
@@ -234,8 +240,7 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
             }
             //SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR
             printf("\nDATA: %d EXTRA: %d STACK: %d\n", segmentos[0], segmentos[1], segmentos[2]);
-        }else if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
-
+        } else if (esValido(nextLinea)) {                      //si es nemonico o rotulo y nada raro
             if (esRotulo(next)) {                       //si tiene ':' y no es comentario
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
                 nextRotulo->sig = NULL;
@@ -259,8 +264,49 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar) {
                     printf("%d: %s\n", linea, next);
             }
             linea++;
+        } else {
+            //Se buscan 3 palabras y se ve si la segunda es EQU
+            //Depende de el primer simbolo de la ultima palabra que tipo es
+            //Si la primera palabra esta en buscarconstantes da error
+            //to be continued en constantesAMemoria
         }
     }
+    lineasTotal = linea;
+    printf("TOTAL DE LINEAS: %d\n", lineasTotal);
+}
+
+void constantesAMemoria() {
+    //recorre la lista de consts y si es directa
+    //hace 2 cosas: pone el dato en memoria y la direccion de memoria en la lista
+}
+
+int stringConSimboloAInt(char* dato) {
+    char aux[100];                                     //en la memoria ya hay un cero asi que no necesita aclararlo
+    strcpy(aux, dato);
+    char *p = aux;
+    int retornar;
+
+    switch (*dato) {
+    case '\'':
+        p++;
+        retornar =  aux[1];
+        break;
+    case '%':
+        p++;
+        retornar =  strtoul(p, NULL, 16);
+        break;
+    case '@':
+        p++;
+        retornar =  strtoul(p, NULL, 8);
+        break;
+    case '#':
+        p++;
+    default:
+        retornar =  atoi(p);
+        break;
+    }
+
+    return retornar;
 }
 
 void generaImg(FILE* archImg) {             //genera el archivo binario en base a los registros y a la memoria
