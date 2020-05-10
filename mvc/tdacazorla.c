@@ -143,3 +143,17 @@ void mostrarCelda(int dato)
     a=a&0x0000FFFF;
     printf("%04X %04X",b,a);
 }
+
+listaConst buscarConstante(listaConst listaconst,char *nombre )
+{
+    listaConst retorno = NULL;
+    listaConst sig = listaconst;
+    while (sig!=NULL){
+        if (!strcmp(sig->nombre,nombre)){
+            retorno = sig;
+            break;
+        }
+        sig=sig->sig;
+    }
+    return retorno;
+}

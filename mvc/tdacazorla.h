@@ -1,5 +1,3 @@
-#define pija 420
-
 typedef struct rotulo{
     char rot[50];
     int pos;
@@ -9,8 +7,17 @@ typedef struct rotulo{
 typedef rotulo *listaRotulos;
 
 //lista de constantes
+typedef struct nodoConst{
+    char dato[100];
+    char nombre[11];
+    int valor;
+    int esDirecto;
+    struct nodoConst* sig;
+} nodoConst;
 
-//buscarConstante(listaconst, string) retorna el struct constante si lo encuentra y null si no
+typedef nodoConst *listaConst;
+
+listaConst buscarConstante(listaConst listaconst,char *nombre); //retorna el struct constante si lo encuentra y null si no
 
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
