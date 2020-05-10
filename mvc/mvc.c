@@ -8,9 +8,9 @@
 int32_t memoria[8192];
 int32_t registros[16] = {0};
 int32_t segmentos[3] = {500, 500, 500}; //0 = DATA, 1 = EXTRA, 2 = STACK
-int lineasTotal = 0;
 int errorsin = 0;               //boolean
 int errorrot = 0;               //boolean
+int errorconst = 0;
 listaRotulos rotulos;
 listaConst constantes;
 
@@ -34,7 +34,14 @@ int main(int carg, char *args[])
         rotulos = NULL;
         constantes = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
+        constantesAMemoria();
+            errorconst = !verificarConstantesYRotulos(constantes,rotulos);// 1 si son todos diferentes, 0 si hay alguno igual
         traducir=traduce(arch, mostrar);//traducir es verdadero si hay algun error
+        /*while (constantes!=NULL)
+        {
+            printf("\n%s %s %d directo %d\n",constantes->nombre,constantes->dato,constantes->valor,constantes->esDirecto);
+            constantes=constantes->sig;
+        }*/
         if (!traducir)  //si no hay errores
         {
             archImg = fopen(args[2], "wb");
@@ -92,8 +99,8 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                     }
                     else
                     {
-                        // SI LA PALABRA ES OPERANDO DIRECTO---------------------------------------------------------------------
-                        if (*palabra == '[')
+                        // SI LA PALABRA ES OPERANDO DIRECTO O INDIRECTO---------------------------------------------------------------------
+                        if (*palabra == '[') //
                         {
                             memoria[linea * 3] |= (2 << ((2 - arg) * 8));       //agrega a la memoria que el operando 1 o 2 es un operando directo
                             char aux[50];
@@ -105,7 +112,7 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                             {
                                 p++;                                            //si palabra es[numero]entonces *p=numero
                                 memoria[linea * 3 + arg] = atoi(p);
-                                memoria[linea * 3 + arg] |= (2 << 28);          //codigo de registro base... si es numero se presupone[DS:numero]
+                                memoria[linea * 3 + arg] |= (2 << 28);          //codigo de registro base...
                             }
                             else
                             {
@@ -173,8 +180,8 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                         else if ((rot = buscarRotulo(rotulos, palabra)) != -1)
                         {
                             memoria[linea * 3 + arg] = rot*3;
-
                         }
+
                         else if (arg!=0 && (nodoconst = buscarConstante(constantes,palabra))!=NULL)
                         {
                             memoria[linea*3+arg] = nodoconst->valor;
@@ -188,7 +195,9 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                         //se toman dos caminos de acuerdo al tipo de nodo
                         //si es inmediato se pone el valor directamente en la celda de memoria
                         //si es directo se pone el valor como una direccion de memoria basada en cs
+
                         else
+                        //
                         {
                             // SI LA PALABRA NO ES NINGUNA DE LAS ANTERIOR SE INTERPRETA COMO ERROR-----------------------------------------------------------                                                   //para este else palabra!=Mnemonico
                             if (arg == 0)                                           //arg==0 error de Mnemonico
@@ -244,17 +253,14 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
     }
     // FIN ARCHIVO----------------------------------------------------------------------
     if (errorsin)
-    {
         printf("\nError de sintaxis.");
-    }
     if (errorrot)
-    {
         printf("\nError: no se encontro el rotulo o la constante.");
-    }
-    registros[2] = linea*3;     //registro DS=posicion de memoria donde termina el programa
-    registros[3] = 1000;        //registro ES=1000
+    if (errorconst)
+        printf("\nError de constante, ya existe.");
 
-    return (errorsin || errorrot);
+    //registros[3] = 1000;        //registro ES=1000
+    return (errorsin || errorrot || errorconst);
 }
 
 
@@ -306,7 +312,6 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
         {
             if (esRotulo(next))                         //si tiene ':' y no es comentario
             {
-
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
                 nextRotulo->sig = NULL;
                 next[strlen(next) - 1] = '\0';
@@ -348,15 +353,19 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                 {
                     nodo = (listaConst)malloc(sizeof(nodoConst));
                     strcpy(nodo->nombre,palabra1);
+                    nodo->sig=NULL;
                     if (palabra3[0]=='"')
                     {
                         memcpy(palabra3,palabra3+1,strlen(palabra3));
                         palabra3[strlen(palabra3)-1] = '\0';
                         nodo->esDirecto=1;
-                        nodo->sig=NULL;
                     }
                     else
+                    {
                         nodo->esDirecto=0;
+                        nodo->valor = stringConSimboloAInt(palabra3);
+                    }
+
                     strcpy(nodo->dato,palabra3);
                     if (constantes==NULL)
                         constantes = nodo;
@@ -371,12 +380,25 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
             //to be continued en constantesAMemoria
         }
     }
-    lineasTotal = linea;
-    printf("TOTAL DE LINEAS: %d\n", lineasTotal);
+    registros[2] = linea*3;     //registro DS=posicion de memoria donde termina el programa
+    printf("TOTAL DE LINEAS: %d\n", linea);
 }
 
 void constantesAMemoria()
 {
+    listaConst aux = constantes;
+    while (aux!=NULL)
+    {
+        if (aux->esDirecto)
+        {
+            aux->valor = registros[2];
+            for (int i=0;i<strlen(aux->dato)+1;i++)
+            {
+                memoria[registros[2]++]=aux->dato[i];
+            }
+        }
+        aux= aux->sig;
+    }
     //recorre la lista de consts y si es directa
     //hace 2 cosas: pone el dato en memoria y la direccion de memoria en la lista
 }

@@ -27,6 +27,8 @@ void crearRegistros();
 
 void getReg(int i,char String[5]);
 
+int getValReg(char String[5]);
+
 int contieneArg(int, char* [], char*);
 
 void mostrarCelda(int dato);
@@ -40,3 +42,9 @@ void getMnemonico(int, char[]);
 int esValido(char[]);
 
 int buscarRotulo(listaRotulos rotulos, char* rot);
+
+int stringConSimboloAInt(char* dato);
+
+void constantesAMemoria();
+
+int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos);

@@ -20,6 +20,7 @@ int esRotulo(char *string)//si no es comentario y el ultimo caracter es ':'
     return 0;
 }
 
+
 void crearRegistros()
 {
     for(int i=0; i<16; i++)
@@ -47,6 +48,15 @@ void getReg(int i ,char String[5])
 {
     strcpy(String,vec[i]);
 }
+
+int getValReg(char String[5])
+{
+    for (int i=0;i<16;i++)
+        if (!strcmp(vec[i],String))
+            return i;
+    return -1;
+}
+
 void crearListaMnemonicos()
 {
     for(int i=0; i<144; i++)
@@ -162,3 +172,23 @@ listaConst buscarConstante(listaConst listaconst,char *nombre )
     }
     return retorno;
 }
+
+int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos) // 1 si son todos diferentes, 0 si hay alguno igual
+{
+    listaConst auxConst = constantes;
+    listaRotulos auxRot;
+    while (auxConst!=NULL)
+    {
+        auxRot = rotulos;
+        while (auxRot!=NULL)
+        {
+            if (!strcmp(auxConst->nombre,auxRot->rot))
+                return 0;
+            auxRot = auxRot->sig;
+
+        }
+        auxConst = auxConst->sig;
+    }
+    return 1;
+}
+

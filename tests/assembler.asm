@@ -1,3 +1,7 @@
-MOV AX, 1
-BASE EQU "chotodemono"
-STOP
+MOV CX,1
+MOV DX,1
+SYS 1
+MOV AX, [1] 
+BASE EQU 10
+BASE: MOV AX, BASE
+STOP 
