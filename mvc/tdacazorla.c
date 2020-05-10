@@ -131,7 +131,7 @@ int esValido(char *linea)
             string[0] != '/' &&
             string[0] != '\\')
             //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario y no es ASM
-        && (esRotulo(string) || esMnemonico(string)); //y ademas es Rotulo o nemonico entonces es valido
+        && (esRotulo(string) || esMnemonico(string)!=-1); //y ademas es Rotulo o nemonico entonces es valido
 }
 
 void getMnemonico(int cod, char retorna[10]){
