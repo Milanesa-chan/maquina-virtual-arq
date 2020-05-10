@@ -123,10 +123,15 @@ int esValido(char *linea)
 {
     char string[50] = " ";
     sscanf(linea, "%s", string);
-    return (string[0] != '\t' && string[0] != ' ' && string != NULL && string[0] != '\0' && string[0] != '\n' && string[0] != '/'
-            && string[0] != '\\')
-            //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario
-        && (esRotulo(string) || esMnemonico(string));//y ademas es Rotulo o nemonico entonces es valido
+    return (string[0] != '\t' &&
+            string[0] != ' ' &&
+            string != NULL &&
+            string[0] != '\0' &&
+            string[0] != '\n' &&
+            string[0] != '/' &&
+            string[0] != '\\')
+            //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario y no es ASM
+        && (esRotulo(string) || esMnemonico(string)); //y ademas es Rotulo o nemonico entonces es valido
 }
 
 void getMnemonico(int cod, char retorna[10]){
