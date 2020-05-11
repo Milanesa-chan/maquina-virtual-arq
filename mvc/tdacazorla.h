@@ -29,6 +29,14 @@ void getReg(int i,char String[5]);
 
 int getValReg(char String[5]);
 
+void registroBase(int, int32_t[], int, char*);
+
+void argumentoIndirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra);
+
+void argumentoDirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra);
+
+void determinarBase(int linea, int32_t memoria[], int arg, char* palabra);
+
 int contieneArg(int, char* [], char*);
 
 void mostrarCelda(int dato);

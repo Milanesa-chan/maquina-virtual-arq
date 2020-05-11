@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdint.h>
 #include "tdacazorla.h"
 //El codigo que incluya esta libreria esta permanentemente cursed.
 
@@ -55,6 +56,68 @@ int getValReg(char String[5])
         if (!strcmp(vec[i],String))
             return i;
     return -1;
+}
+
+//Asume que base es un string de 2 caracteres
+void registroBase(int linea, int32_t memoria[], int arg, char* base){
+    int pos = getValReg(base);
+    memoria[linea*3 + arg] |= pos << 28;
+}
+
+void argumentoIndirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra){
+    //printf("\nARG IND: %s\n", palabra);
+    memoria[linea*3] |= (3 << (2 - arg) * 8);
+    char *strTemp = (char*) malloc(50);
+    strcpy(strTemp, palabra);
+    *(strTemp+2) = '\0';
+    memoria[linea*3+arg] |= getValReg(strTemp);
+    nodoConst *nodoTemp;
+    if((strTemp = strchr(palabra, '+')) != NULL){
+        if((nodoTemp = buscarConstante(constantes, strTemp+1))!=NULL){
+            memoria[linea*3+arg] |= (nodoTemp->valor & 0x00FFFFFF) << 4;
+        }else{
+            memoria[linea*3+arg] |= atoi(strTemp+1) << 4;
+        }
+    }else if((strTemp = strchr(palabra, '-')) != NULL){
+        int valor;
+
+        if((nodoTemp = buscarConstante(constantes, strTemp+1))!=NULL){
+            valor = nodoTemp->valor;
+        }else{
+            valor = atoi(strTemp+1);
+        }
+
+        int compl = (~valor)+1;
+        compl &= 0x00FFFFFF;
+        memoria[linea*3+arg] |= compl << 4;
+    }
+}
+
+//[DS:32] - > 32
+//[CS:32] - > 32
+//[DS:BASE] - > BASE
+//[BASE] - > BASE
+//[32] - > 32
+void argumentoDirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra){
+    memoria[linea*3] |= (2 << (2 - arg) * 8);
+
+    nodoConst *nodoTemp;
+    if((nodoTemp = buscarConstante(constantes, palabra)) != NULL){
+        memoria[linea*3+arg] |= nodoTemp->valor;
+    }else{
+        memoria[linea*3+arg] |= atoi(palabra);
+    }
+}
+
+void determinarBase(int linea, int32_t memoria[], int arg, char* palabra){
+    int numBase = 0, numReg = 0;
+    if((numReg = getValReg(palabra)) != -1){
+        if(numReg >= 10) numBase = 2;
+        else if(numReg == 6 || numReg == 7) numBase = 5;
+        else numBase = 0xF;
+    }else numBase = 2;
+
+    memoria[linea*3+arg] |= numBase << 28;
 }
 
 void crearListaMnemonicos()
