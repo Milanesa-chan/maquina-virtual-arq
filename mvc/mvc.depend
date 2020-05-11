@@ -130,12 +130,13 @@
 	<stdint.h>
 	"tdacazorla.h"
 
-1589152081 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.h
+1589221257 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.h
 
-1589152049 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.c
+1589221257 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<ctype.h>
+	<stdint.h>
 	"tdacazorla.h"
 
