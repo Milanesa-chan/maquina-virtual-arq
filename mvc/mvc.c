@@ -116,11 +116,14 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                             }
                             else
                             {
-                                if (palabra[1] == 'D')                   //SI PALABRA ES [D tambien se asume que es [DS:numero]
+                                if (palabra[1] == 'D' && palabra[1] == 'S')                   //SI PALABRA ES [D tambien se asume que es [DS:numero]
                                 {
                                     p += 4;
-                                    memoria[linea * 3 + arg] = atoi(p);
-                                    memoria[linea * 3 + arg] |= (2 << 28);      //codigo de registro base DS
+                                    if (atoi(p)!=0){
+                                        memoria[linea * 3 + arg] = atoi(p);
+                                        memoria[linea * 3 + arg] |= (2 << 28);
+                                    }
+
                                 }
                                 else                                     //SI NO ES [D se asume que es [ES:numero]
                                 {
