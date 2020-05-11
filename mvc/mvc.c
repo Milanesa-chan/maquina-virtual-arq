@@ -28,6 +28,7 @@ int main(int carg, char *args[])
         int mostrar,traducir;
         FILE *arch, *archImg;
         crearListaMnemonicos();//matriz de caracteres ooo vector de strings
+        crearRegistros();
         arch = fopen(args[1], "rt");
 
         mostrar = !contieneArg(carg, args, "-o");//boolean mostrar es verdade si exite el argumentos "-o"
@@ -35,7 +36,7 @@ int main(int carg, char *args[])
         constantes = NULL;
         buscaRotulos(arch, &rotulos, mostrar);
         constantesAMemoria();
-            errorconst = !verificarConstantesYRotulos(constantes,rotulos);// 1 si son todos diferentes, 0 si hay alguno igual
+        errorconst = !verificarConstantesYRotulos(constantes,rotulos);// 1 si son todos diferentes, 0 si hay alguno igual
         traducir=traduce(arch, mostrar);//traducir es verdadero si hay algun error
         /*while (constantes!=NULL)
         {
@@ -102,6 +103,42 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                         // SI LA PALABRA ES OPERANDO DIRECTO O INDIRECTO---------------------------------------------------------------------
                         if (*palabra == '[') //
                         {
+                            palabra[strlen(palabra)-1] = '\0';
+                            strcpy(palabra, palabra+1);
+                            char *dospuntos;
+                            char *regTemp = (char*) malloc(50);
+                            if((dospuntos = strchr(palabra, ':')) != NULL){
+                                //palabra = [DX:AX]
+                                strcpy(regTemp, palabra);
+                                //regTemp = DX:AX]
+                                *(regTemp+2) = '\0';
+                                //regTemp = DX
+                                registroBase(linea, memoria, arg, regTemp);
+
+                                strcpy(regTemp, dospuntos+1);
+                                if(regTemp[2] == '+' || regTemp[2] == '-')
+                                    regTemp[2] = '\0';
+
+                                if(getValReg(regTemp) != -1){
+                                    argumentoIndirecto(linea, memoria, constantes, arg, dospuntos+1);
+                                }else{
+                                    argumentoDirecto(linea, memoria, constantes, arg, dospuntos+1);
+                                }
+                            }else{
+                                strcpy(regTemp, palabra);
+                                if(regTemp[2] == '+' || regTemp[2] == '-')
+                                    regTemp[2] = '\0';
+
+                                determinarBase(linea, memoria, arg, regTemp);
+
+                                if(getValReg(regTemp) != -1){
+                                    argumentoIndirecto(linea, memoria, constantes, arg, palabra);
+                                }else{
+                                    argumentoDirecto(linea, memoria, constantes, arg, palabra);
+                                }
+                            }
+
+                            /*
                             memoria[linea * 3] |= (2 << ((2 - arg) * 8));       //agrega a la memoria que el operando 1 o 2 es un operando directo
                             char aux[50];
                             strcpy(aux, palabra);
@@ -132,6 +169,7 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                                     memoria[linea * 3 + arg] |= (3 << 28);      //codigo de registro base ES
                                 }
                             }
+                        */
                         } // SI LA PALABRA ES OPERANDO INMEDIATO----------------------------------------------------------------------
                         else if (*palabra == '\'' ||
                                  *palabra == '%' ||
@@ -184,7 +222,6 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                         {
                             memoria[linea * 3 + arg] = rot*3;
                         }
-
                         else if (arg!=0 && (nodoconst = buscarConstante(constantes,palabra))!=NULL)
                         {
                             memoria[linea*3+arg] = nodoconst->valor;
@@ -265,6 +302,8 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
     //registros[3] = 1000;        //registro ES=1000
     return (errorsin || errorrot || errorconst);
 }
+
+
 
 
 void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
