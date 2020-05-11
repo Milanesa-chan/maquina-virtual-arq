@@ -111,7 +111,7 @@ void argumentoDirecto(int linea, int32_t memoria[], listaConst constantes, int a
 
 void determinarBase(int linea, int32_t memoria[], int arg, char* palabra){
     int numBase = 0, numReg = 0;
-    if((numReg = getValReg(palabra)) != -1){// && (numReg== 0 || numReg== 1 ||numReg== 2 || numReg== 0)
+    if((numReg = getValReg(palabra)) != -1){
         if(numReg >= 10) numBase = 2;
         else if(numReg == 6 || numReg == 7) numBase = 5;
         else numBase = 0xF;
@@ -196,15 +196,15 @@ int esValido(char *linea)
 {
     char string[50] = " ";
     sscanf(linea, "%s", string);
-    return (string[0] != '\t' &&        //si no es tabulacion
-            string[0] != ' ' &&         //y no es espacio en blanco
-            string != NULL &&           //y no es nulo
-            string[0] != '\0' &&        //y no es fin de string
-            string[0] != '\n' &&        //y no es salto de linea
-            string[0] != '/' &&         //y no es comentario
-            string[0] != '\\')          //y no es ASM
-        && (esRotulo(string) || esMnemonico(string)!=-1); //y ademas es Rotulo o nemonico entonces
-                                        //entonces es valido
+    return (string[0] != '\t' &&
+            string[0] != ' ' &&
+            string != NULL &&
+            string[0] != '\0' &&
+            string[0] != '\n' &&
+            string[0] != '/' &&
+            string[0] != '\\')
+            //si no es tabulacion y no es espacio en blanco y no es nulo y no es fin de string y no es salto de linea y no es comentario y no es ASM
+        && (esRotulo(string) || esMnemonico(string)!=-1); //y ademas es Rotulo o nemonico entonces es valido
 }
 
 void getMnemonico(int cod, char retorna[10]){
@@ -240,14 +240,14 @@ int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos) // 1
 {
     listaConst auxConst = constantes;
     listaRotulos auxRot;
-    while (auxConst!=NULL)// si al menos hay una constante
+    while (auxConst!=NULL)
     {
         auxRot = rotulos;
-        while (auxRot!=NULL)        //si al menos hay un rotulo
+        while (auxRot!=NULL)
         {
-            if (!strcmp(auxConst->nombre,auxRot->rot))  //si son iguales los nombres
+            if (!strcmp(auxConst->nombre,auxRot->rot))
                 return 0;
-            auxRot = auxRot->sig;                       //recorre ambas listas
+            auxRot = auxRot->sig;
 
         }
         auxConst = auxConst->sig;

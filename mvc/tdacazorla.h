@@ -8,10 +8,10 @@ typedef rotulo *listaRotulos;
 
 //lista de constantes
 typedef struct nodoConst{
-    char dato[100];     //solo directa
+    char dato[100];
     char nombre[11];
-    int valor;          //directas almacenan la direccion de memoria
-    int esDirecto;      //si no es directa es inmediata
+    int valor;
+    int esDirecto;
     struct nodoConst* sig;
 } nodoConst;
 
