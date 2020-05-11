@@ -87,7 +87,7 @@
 	<ctype.h>
 	"tdacazorla.h"
 
-1586382638 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
+1589165038 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -95,13 +95,14 @@
 	<stdint.h>
 	"tdacazorla.h"
 
-1586039357 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
+1589161760 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
 
-1588974055 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
+1589164360 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<ctype.h>
+	<stdint.h>
 	"tdacazorla.h"
 
 1585879150 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\mvc.c
@@ -115,6 +116,23 @@
 1585877779 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.h
 
 1585877779 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-vitual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	"tdacazorla.h"
+
+1589151795 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1589152081 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.h
+
+1589152049 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>

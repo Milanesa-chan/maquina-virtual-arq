@@ -6,6 +6,19 @@ typedef struct rotulo{
 
 typedef rotulo *listaRotulos;
 
+//lista de constantes
+typedef struct nodoConst{
+    char dato[100];
+    char nombre[11];
+    int valor;
+    int esDirecto;
+    struct nodoConst* sig;
+} nodoConst;
+
+typedef nodoConst *listaConst;
+
+listaConst buscarConstante(listaConst listaconst,char *nombre); //retorna el struct constante si lo encuentra y null si no
+
 void buscaRotulos(FILE* arch, listaRotulos *rotulos, int);
 
 int esRotulo(char*);
@@ -13,6 +26,16 @@ int esRotulo(char*);
 void crearRegistros();
 
 void getReg(int i,char String[5]);
+
+int getValReg(char String[5]);
+
+void registroBase(int, int32_t[], int, char*);
+
+void argumentoIndirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra);
+
+void argumentoDirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra);
+
+void determinarBase(int linea, int32_t memoria[], int arg, char* palabra);
 
 int contieneArg(int, char* [], char*);
 
@@ -27,3 +50,9 @@ void getMnemonico(int, char[]);
 int esValido(char[]);
 
 int buscarRotulo(listaRotulos rotulos, char* rot);
+
+int stringConSimboloAInt(char* dato);
+
+void constantesAMemoria();
+
+int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos);
