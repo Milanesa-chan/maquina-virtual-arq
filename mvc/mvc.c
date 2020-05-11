@@ -7,7 +7,7 @@
 
 int32_t memoria[8192];
 int32_t registros[16] = {0};
-int32_t segmentos[3] = {500, 500, 500}; //0 = DATA, 1 = EXTRA, 2 = STACK
+int32_t segmentos[3] = {500, 500, 500}; //0 = DATA, 1 = EXTRA, 2 = STACK//por defecto en 500
 int errorsin = 0;               //boolean
 int errorrot = 0;               //boolean
 int errorconst = 0;
@@ -27,15 +27,15 @@ int main(int carg, char *args[])
     {
         int mostrar,traducir;
         FILE *arch, *archImg;
-        crearListaMnemonicos();//matriz de caracteres ooo vector de strings
-        crearRegistros();
+        crearListaMnemonicos();     //CREA MNEMONICOS-------------------------
+        crearRegistros();           //CREA REGISTROS-------------------------
         arch = fopen(args[1], "rt");
 
         mostrar = !contieneArg(carg, args, "-o");//boolean mostrar es verdade si exite el argumentos "-o"
         rotulos = NULL;
         constantes = NULL;
-        buscaRotulos(arch, &rotulos, mostrar);
-        constantesAMemoria();
+        buscaRotulos(arch, &rotulos, mostrar);  //CREA ROTULOS, CONSTANTES Y COMANDO \\ASM-------------------------
+        constantesAMemoria();                   //GUARDA EN MEMORIA LAS CONSTANTES---------------------------------
         errorconst = !verificarConstantesYRotulos(constantes,rotulos);// 1 si son todos diferentes, 0 si hay alguno igual
         traducir=traduce(arch, mostrar);//traducir es verdadero si hay algun error
         /*while (constantes!=NULL)
@@ -102,17 +102,18 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
                     {
                         // SI LA PALABRA ES OPERANDO DIRECTO O INDIRECTO---------------------------------------------------------------------
                         if (*palabra == '[') //
-                        {
+                        {   //palabra = [DX:AX]
                             palabra[strlen(palabra)-1] = '\0';
-                            strcpy(palabra, palabra+1);
+                            strcpy(palabra, palabra+1);             //quita corchetes
                             char *dospuntos;
                             char *regTemp = (char*) malloc(50);
-                            if((dospuntos = strchr(palabra, ':')) != NULL){
-                                //palabra = [DX:AX]
+                            if((dospuntos = strchr(palabra, ':')) != NULL){     //dospuntos= despues de dos puntos
+                                //palabra = DX:AX       //dospuntos=
                                 strcpy(regTemp, palabra);
-                                //regTemp = DX:AX]
+                                //regTemp = DX:AX
                                 *(regTemp+2) = '\0';
                                 //regTemp = DX
+                                            //12,          , 2 ,dx
                                 registroBase(linea, memoria, arg, regTemp);
 
                                 strcpy(regTemp, dospuntos+1);
@@ -308,7 +309,10 @@ int traduce(FILE *arch, int muestra)  //ya tenemos la lista de rotulos creada
 
 void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 {
+//Esta funcion
 //busca rotulos en arch y los almacena en listaRotulos y si hay que mostrar los muestra
+//trabaja el comando "\\ASM"
+//y busca constantes y las almacena en listaConst
     if (mostrar)
         printf("\nLista de Rotulos:\n-----------------\n");
 
@@ -322,36 +326,38 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
         strcpy(next, " ");
         sscanf(nextLinea, "%s", next);                  //next es la primer palabra de nextLinea
 
-        if(!strcmp(next, "\\\\ASM"))
+        if(!strcmp(next, "\\\\ASM"))                    //si next es igual a "\\ASM"
         {
-            strcpy(nextLinea, strupr(nextLinea));
+        //INTERPRETA EL COMANDO \\ASM-------------------------------------------------------------------
+            strcpy(nextLinea, strupr(nextLinea));       //
             char nextSub[30];
-            strcat(nextLinea, " END");
-            strcpy(nextSub, strtok(nextLinea, " =\t"));
+            strcat(nextLinea, " END");                  //
+            strcpy(nextSub, strtok(nextLinea, " =\t")); //
             int ind = 0;
             while(ind != -1)
             {
-                strcpy(nextSub, " ");
-                strcpy(nextSub, strtok(NULL, " =\t"));
+                strcpy(nextSub, " ");                   //nextSub=" "
+                strcpy(nextSub, strtok(NULL, " =\t"));  //nextSub= la siguiente palabra de nextLinea separada por " =\t"
                 ind = -1;
 
-                if(!strcmp(nextSub, "DATA"))
+                if(!strcmp(nextSub, "DATA"))            //si nextSub="DATA"
                     ind = 0;
-                else if(!strcmp(nextSub, "EXTRA"))
+                else if(!strcmp(nextSub, "EXTRA"))      //si nextSub="EXTRA"
                     ind = 1;
-                else if(!strcmp(nextSub, "STACK"))
+                else if(!strcmp(nextSub, "STACK"))      //si nextSub="STACK"
                     ind = 2;
 
-                if(ind!=-1)
-                    segmentos[ind] = atoi(strtok(NULL, " =\t\n"));
+                if(ind!=-1)                             //si no es ninguno
+                    segmentos[ind] = atoi(strtok(NULL, " =\t\n"));     //guarda en segmentos
 
             }
             //SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR SACAR
-            printf("\nDATA: %d EXTRA: %d STACK: %d\n", segmentos[0], segmentos[1], segmentos[2]);
+            printf("\nDATA: %d EXTRA: %d STACK: %d\n", segmentos[0], segmentos[1], segmentos[2]);//♥
         }
         else
-        if (esValido(nextLinea))                          //si es nemonico o rotulo y nada raro
+        if (esValido(nextLinea))                        //si es nemonico o rotulo y nada raro
         {
+        //CREA LA LISTA ROTULOS Y CUENTA LINEAS-------------------------------------------------------------------
             if (esRotulo(next))                         //si tiene ':' y no es comentario
             {
                 rotulo *nextRotulo = (rotulo *)malloc(sizeof(rotulo));
@@ -381,20 +387,21 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
             }
             linea++;
         }
-        else
-        {
-            char *palabra1,*palabra2,*palabra3;
-            palabra1 = strtok(nextLinea," \t\n");
-            palabra2 = strtok(NULL," \t\n");
-            palabra3 = strtok(NULL," \t\n");
-            if (palabra1!=NULL && palabra2!=NULL && palabra3!=NULL)
+        else    //si no es valido, puede ser ('\t') (' ') ('\0') ('\n') ('/') menos asm porque ya esta arriba
+        {       //o puede ser cualquier palabra que no sea rotulo o mnemonico
+        //CREA LA LISTA CONSTANTES-------------------------------------------------------------------
+            char *palabra1,*palabra2,*palabra3;                 //nextLinea=="//BASE EQU 64"
+            palabra1 = strtok(nextLinea," \t\n");               //palabra1=="//BASE"
+            palabra2 = strtok(NULL," \t\n");                    //palabra2=="EQU"
+            palabra3 = strtok(NULL," \t\n");                    //palabra3=="64"
+            if (palabra1!=NULL && palabra1[0]!='/'&& palabra2!=NULL && palabra3!=NULL)
             {
                 strupr(palabra2);
                 listaConst nodo,ult;
-                if (!strcmp(palabra2,"EQU"))
+                if (!strcmp(palabra2,"EQU"))                    //palabra2=="EQU"
                 {
                     nodo = (listaConst)malloc(sizeof(nodoConst));
-                    strcpy(nodo->nombre,palabra1);
+                    strcpy(nodo->nombre,palabra1);              //nodo->nombre="//BASE"
                     nodo->sig=NULL;
                     if (palabra3[0]=='"')
                     {
@@ -405,12 +412,12 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                     else
                     {
                         nodo->esDirecto=0;
-                        nodo->valor = stringConSimboloAInt(palabra3);
+                        nodo->valor = stringConSimboloAInt(palabra3);   //nodo->valor=64
                     }
 
                     strcpy(nodo->dato,palabra3);
                     if (constantes==NULL)
-                        constantes = nodo;
+                        constantes = nodo;                      //crea en constantes una lista de constante xd
                     else
                         ult->sig = nodo;
                     ult = nodo;
@@ -428,15 +435,15 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
 
 void constantesAMemoria()
 {
-    listaConst aux = constantes;
-    while (aux!=NULL)
+    listaConst aux = constantes;    //hasta este momento registro[2] solo guarda la cantidad de celdas que ocupan las lineas, osea lineas*3
+    while (aux!=NULL)                           //recorre las constantes
     {
-        if (aux->esDirecto)
+        if (aux->esDirecto)                     //cuando son directas
         {
-            aux->valor = registros[2];
+            aux->valor = registros[2];          //guarda en valor la cantidad de celdas que ocupa el programa actualmente
             for (int i=0;i<strlen(aux->dato)+1;i++)
             {
-                memoria[registros[2]++]=aux->dato[i];
+                memoria[registros[2]++]=aux->dato[i];   //guarda en la memoria caracter por caracter de la constante
             }
         }
         aux= aux->sig;
