@@ -381,20 +381,21 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
             }
             linea++;
         }
-        else
-        {
-            char *palabra1,*palabra2,*palabra3;
-            palabra1 = strtok(nextLinea," \t\n");
-            palabra2 = strtok(NULL," \t\n");
-            palabra3 = strtok(NULL," \t\n");
-            if (palabra1!=NULL && palabra2!=NULL && palabra3!=NULL && palabra1[0]!= '\\')
+        else    //si no es valido, puede ser ('\t') (' ') ('\0') ('\n') ('/') menos asm porque ya esta arriba
+        {   //o puede ser cualquier palabra que no sea rotulo o mnemonico
+            //CREA LA LISTA CONSTANTES-------------------------------------------------------------------
+            char *palabra1,*palabra2,*palabra3;     //nextLinea=="//BASE EQU 64"
+            palabra1 = strtok(nextLinea," \t\n");   //palabra1=="//BASE"
+            palabra2 = strtok(NULL," \t\n");        //palabra2=="EQU"
+            palabra3 = strtok(NULL," \t\n");        //palabra3=="64"
+            if (palabra1!=NULL && palabra2!=NULL && palabra3!=NULL && palabra1[0]!= '/')
             {
                 strupr(palabra2);
                 listaConst nodo,ult;
-                if (!strcmp(palabra2,"EQU"))
+                if (!strcmp(palabra2,"EQU"))    //palabra2=="EQU"
                 {
                     nodo = (listaConst)malloc(sizeof(nodoConst));
-                    strcpy(nodo->nombre,palabra1);
+                    strcpy(nodo->nombre,palabra1);           //nodo->nombre="//BASE"
                     nodo->sig=NULL;
                     if (palabra3[0]=='"')
                     {
@@ -405,12 +406,12 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                     else
                     {
                         nodo->esDirecto=0;
-                        nodo->valor = stringConSimboloAInt(palabra3);
+                        nodo->valor = stringConSimboloAInt(palabra3);   //nodo->valor=64
                     }
 
                     strcpy(nodo->dato,palabra3);
                     if (constantes==NULL)
-                        constantes = nodo;
+                        constantes = nodo;  //crea en constantes una lista de constante xd
                     else
                         ult->sig = nodo;
                     ult = nodo;
