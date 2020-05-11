@@ -1,1 +1,0 @@
-MOV AX, [DS:AX]
