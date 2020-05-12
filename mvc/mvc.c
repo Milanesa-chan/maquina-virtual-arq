@@ -424,14 +424,26 @@ int stringConSimboloAInt(char* dato) {
     return retornar;
 }
 
-void generaImg(FILE* archImg) {             //genera el archivo binario en base a los registros y a la memoria
-    if (segmentos[1]!=-1) { //registros: 2=DS 3=ES
+void generaImg(FILE* archImg)               //genera el archivo binario en base a los registros y a la memoria
+{
+    if (segmentos[1]!=-1){ //registros: 2=DS 3=ES
         registros[3]=segmentos[0]+registros[2];
         registros[5]=segmentos[1]+registros[3];
-    } else {
+    }
+    else
+    {
         registros[3]=-1;
         registros[5]=segmentos[1];
     }
     registros[6]=segmentos[2];
     registros[0]=registros[5]+registros[6];
+    for(int i=0; i<16; i++)
+    {
+        fwrite(&registros[i], sizeof(registros[i]), 1, archImg);
+    }
+
+    for(int i=0; i<registros[2]; i++)
+    {
+        fwrite(&memoria[i], sizeof(memoria[i]), 1, archImg);
+    }
 }
