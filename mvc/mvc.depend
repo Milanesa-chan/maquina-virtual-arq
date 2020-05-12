@@ -140,3 +140,21 @@
 	<stdint.h>
 	"tdacazorla.h"
 
+1589311200 source:d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvc\mvc.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1589311200 d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvc\tdacazorla.h
+
+1589311200 source:d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+

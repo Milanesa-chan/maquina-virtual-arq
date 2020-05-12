@@ -29,7 +29,7 @@ void getReg(int i,char String[5]);
 
 int getValReg(char String[5]);
 
-void registroBase(int, int32_t[], int, char*);
+int registroBase(int, int32_t[], int, char*);
 
 void argumentoIndirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra);
 

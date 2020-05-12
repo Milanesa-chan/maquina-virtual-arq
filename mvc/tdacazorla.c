@@ -59,9 +59,16 @@ int getValReg(char String[5])
 }
 
 //Asume que base es un string de 2 caracteres
-void registroBase(int linea, int32_t memoria[], int arg, char* base){
-    int pos = getValReg(base);
+int registroBase(int linea, int32_t memoria[], int arg, char* base){
+    int pos = getValReg(base),retornar=0;
+    if(pos==1 || pos==2 ||pos==3 ||pos==5)
     memoria[linea*3 + arg] |= pos << 28;
+    else
+    {
+        memoria[linea*3 + arg] = 0xffffffff;
+        retornar=1;
+    }
+    return retornar;//1 error 0 todo en orden :)
 }
 
 void argumentoIndirecto(int linea, int32_t memoria[], listaConst constantes, int arg, char* palabra){
@@ -152,6 +159,13 @@ void crearListaMnemonicos()
     strcpy(listaMnemonicos[39], "JNZ");
     strcpy(listaMnemonicos[40], "JNP");
     strcpy(listaMnemonicos[41], "JNN");
+    strcpy(listaMnemonicos[68], "PUSH");//44
+    strcpy(listaMnemonicos[69], "POP");//45
+    strcpy(listaMnemonicos[64], "CALL");//40
+    strcpy(listaMnemonicos[72], "RET");//48
+    strcpy(listaMnemonicos[80], "SLEN");//50
+    strcpy(listaMnemonicos[81], "SMOV");//51
+    strcpy(listaMnemonicos[83], "SCMP");//53
     strcpy(listaMnemonicos[129], "SYS");
     strcpy(listaMnemonicos[143], "STOP");
 }
@@ -169,6 +183,7 @@ int buscarRotulo(listaRotulos rotulos, char* rot)
     }
     return -1;
 }
+
 
 int contieneArg(int argc, char* args[], char* busca)//busca en los argumentos si existe el que busca
 {
