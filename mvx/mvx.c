@@ -43,23 +43,127 @@ void dump();
 void escribir();
 void leer();
 void getBuffer(int, int, int, int, char[], char[]);
+int buscaFlags(int argc,char *args[]);
 
+int preparacion(int cantImagenes,char *args[]);
 int32_t registros[16];
 int32_t memoria[8192];
 int ejecutando = 1, jump = 0;
 int mostrar = 0;
+int flagA=0,flagB=0,flagC=0,flagD=0;
+int ejecutarProcesos=0;
+
 
 int main(int argc, char *args[]) {
     if(argc>1) {
         crearListaMnemonicos();
-        mostrar = contieneArg(argc, args, "-d");
+        int cantImagenes=argc-buscaFlags(argc,args)-1;
+        //mostrar = contieneArg(argc, args, "-d");
         crearRegistros();
         srand(time(NULL));
         agregarFunciones(funciones);
-        cargarArchivo(args[1]);
-        ejecutar();
+        ejecutarProcesos=preparacion(cantImagenes,args);
+        /*for(int i=1;i<=cantImagenes;i++)
+        {
+            cargarArchivo(args[i]);
+            ejecutar();
+        }*/
+        for(int i=0; i<=100;i++)
+        {
+            printf("memoria[%d]=%d\n",i,memoria[i]);
+
+        }
+
+
     }
     return 0;
+}
+
+int buscaFlags(int argc,char *args[])//cantidad de flag papa
+{
+    int cont=0;
+    for (int i=2; i<argc;i++)//if you say, si bo deci
+    {
+        if(*args[i]=='-')
+        {
+            cont++;
+            switch (*(args[i]+1))
+            {
+            case 'a':
+                flagA=1;
+                break;
+            case 'b':
+                flagB=1;
+                break;
+            case 'c':
+                flagC=1;
+                break;
+            case 'd':
+                flagD=1;
+                break;
+            default:
+                //forrazo
+                break;
+            }
+        }
+
+    }
+    return cont;
+}
+
+int preparacion(int cantImagenes,char *args[])
+{
+    memoria[0]=cantImagenes;
+    memoria[1]=0;
+    //int alcanzaMemoria=1;
+    int memoriaDisponible=8190 - 16*cantImagenes;
+    int cantImagenesLeidas=0;
+    while(cantImagenesLeidas<memoria[0] && memoriaDisponible>=0)
+    {
+        //ps=0 , Cs=1 DS=2
+        FILE *arch = fopen(args[cantImagenesLeidas+1], "rb");
+        //rewind(arch);
+        int32_t temp;
+        fread(&temp, sizeof(temp), 1, arch);//temp=PS
+
+        memoriaDisponible-=temp;//memoria disponible - PS
+
+        if(memoriaDisponible>=0){
+            memoria[2+cantImagenesLeidas*16]=temp;
+
+            for(int i=1; i<16; i++) {
+                fread(&temp, sizeof(temp), 1, arch);
+                memoria[2+cantImagenesLeidas*16+i]=temp; //CS 1,,, FX 15
+            }
+            if(cantImagenesLeidas>0)
+            {
+
+                //CS                              =         ps anterior                 +       cs anterior
+                memoria[2+16*cantImagenesLeidas+1]=memoria[2+16*(cantImagenesLeidas-1)]+memoria[2+16*(cantImagenesLeidas-1)+1];
+            }
+            else
+            {   //CS este es el primer caso
+                memoria[2+16*cantImagenesLeidas+1]=2+16*cantImagenes;
+            }
+            //DS
+            memoria[2+16*cantImagenesLeidas+2]+=memoria[2+16*cantImagenesLeidas+1];
+            if(memoria[2+16*cantImagenesLeidas+3]==-1)
+            {       //ES                          =     ES anterior
+                memoria[2+16*cantImagenesLeidas+3]=memoria[2+16*(cantImagenesLeidas-1)+3];
+            }
+            else
+            {           //ES                    +=      CS
+                memoria[2+16*cantImagenesLeidas+3]+=memoria[2+16*cantImagenesLeidas+1];
+            }
+            //SS                              +=        CS
+            memoria[2+16*cantImagenesLeidas+5]+=memoria[2+16*cantImagenesLeidas+1];
+        }
+        fclose(arch);
+        cantImagenesLeidas++;
+        //memoria[1]++;
+    }
+    //se hace el calculo si no alcanza la memoria tirar mensaje y no ejecutar nadita nadal
+    return (memoriaDisponible<0);
 }
 
 void cargarArchivo(char nombre[]) {
@@ -985,6 +1089,9 @@ void jnn(int t1, int t2, int par1, int par2) {
 }
 void sys(int t1, int t2, int par1, int par2) {
     switch(par1) {
+    case 0:
+        //hace cosas
+        break;
     case 1:
         leer();
         break;
@@ -993,6 +1100,15 @@ void sys(int t1, int t2, int par1, int par2) {
         break;
     case 3:
         dump();
+        break;
+    case 10:
+        //tambien hace cosas, pero otras cosas
+        break;
+    case 20:
+        //igual que el 10 pero distinto
+        break;
+    default:
+        printf("TODO MAL sr PELOTUDO");
         break;
     }
 }

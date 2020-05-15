@@ -58,3 +58,21 @@
 	<time.h>
 	"../mvc/tdacazorla.h"
 
+1589316187 source:d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1589312309 d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvc\tdacazorla.h
+
+1589323284 source:d:\pablo\2020 primer cuatri\arquitectura\proyectos arq\maquina-virtual-arq\mvx\mvx.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdint.h>
+	<time.h>
+	"../mvc/tdacazorla.h"
+
