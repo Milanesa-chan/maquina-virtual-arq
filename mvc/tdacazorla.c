@@ -201,7 +201,7 @@ int esMnemonico(char mnemonico[])//regresa el valor decimal del mnemonico, si no
 {
     for(int i=0; i<144; i++)
     {
-        if(!strcmp(listaMnemonicos[i], mnemonico))
+        if(!strcasecmp(listaMnemonicos[i], mnemonico))
             return i;
     }
     return -1;
