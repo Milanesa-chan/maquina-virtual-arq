@@ -1159,7 +1159,8 @@ void Jn(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
@@ -1181,7 +1182,8 @@ void jnz(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
@@ -1203,7 +1205,8 @@ void jnp(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
@@ -1225,7 +1228,8 @@ void jnn(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
@@ -1325,15 +1329,18 @@ void leer() {
             case 1:
             case 0:
                 scanf(" %d", &aux);
-                memoria[registros[2]+desde+i] = aux;
+                setMemoria(registros[2]+desde+i, aux);
+                //memoria[registros[2]+desde+i] = aux;
                 break;
             case 4:
                 scanf(" %o", &aux);
-                memoria[registros[2]+desde+i] = aux;
+                setMemoria(registros[2]+desde+i, aux);
+                //memoria[registros[2]+desde+i] = aux;
                 break;
             case 8:
                 scanf(" %x", &aux);
-                memoria[registros[2]+desde+i] = aux;
+                setMemoria(registros[2]+desde+i, aux);
+                //memoria[registros[2]+desde+i] = aux;
                 break;
             }
         }
