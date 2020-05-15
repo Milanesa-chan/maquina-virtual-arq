@@ -372,6 +372,7 @@ void mov(int t1, int t2, int par1, int par2) {
         break;
     }
 }
+
 void add(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -442,6 +443,7 @@ void sub(int t1, int t2, int par1, int par2) {
     else if(res<0)
         registros[9] |= (1<<31);
 }
+
 void mul(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
