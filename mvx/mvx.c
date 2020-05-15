@@ -78,11 +78,7 @@ int main(int argc, char *args[]) {
             cargarArchivo(args[i]);
             ejecutar();
         }*/
-        for(int i=0; i<=100;i++)
-        {
-            printf("memoria[%d]=%d\n",i,memoria[i]);
 
-        }
         if (!ejecutarProcesos)
         {
             while (memoria[1]<memoria[0])
@@ -94,6 +90,8 @@ int main(int argc, char *args[]) {
                 for (i=0;i<16;i++)
                     memoria[16*memoria[1]+2+i] = registros[i];
                 memoria[1]++;
+                for(int i=0; i<=100;i++)
+                    printf("memoria[%d]=%d\n",i,memoria[i]);
             }
             printf("Ejecucion exitosa de todos los procesos");
         }
@@ -207,7 +205,7 @@ void ejecutar() {
     int maskarg1 = 0x0000FF00, maskarg2 = 0x000000FF;
     int shiftinst = 16, shift1 = 8;
     char mnemonico[10], buffer1[10], buffer2[10];
-
+    int offset;
     if(mostrar) {
         printf("\nCode Segment del proceso %d:\n\n",memoria[0]);
         for(int i=0; i<registros[2]; i+=3) {
@@ -229,19 +227,21 @@ void ejecutar() {
         registros[4] = 0;
         printf("\n-------------------------\n\n");
     }
-
+    offset=registros[1];
     while(ejecutando) {
+
         jump = 0;
-        celdainst = memoria[registros[4]];
-        param1 = memoria[registros[4]+1];
-        param2 = memoria[registros[4]+2];
+        celdainst = memoria[registros[4]+offset];
+        param1 = memoria[registros[4]+offset+1];
+        param2 = memoria[registros[4]+offset+2];
         tipo1 = (celdainst & maskarg1)>>shift1;
         tipo2 = (celdainst & maskarg2);
-        funciones[celdainst>>shiftinst](tipo1, tipo2, param1, param2);
 
+        funciones[celdainst>>shiftinst](tipo1, tipo2, param1, param2);
+        printf("TENTRO MASMASMASMSA %d", offset);
         if(!jump)
             registros[4]+=3; //Si no hubo un salto, aumenta el IP
-        ejecutando = (registros[4] < registros[2])&&ejecutando; //Si IP < DS sigue ejecutando
+        ejecutando = (registros[4]+offset < registros[2])&&ejecutando; //Si IP < DS sigue ejecutando
     }
 }
 
@@ -338,7 +338,7 @@ void mov(int t1, int t2, int par1, int par2) {
     int shift = 28;
     int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
     int regBase, regIndireccion, offset;
-
+    printf("\nTENTRO AL MOV");
     switch(t2) {
     case 0:
         b = par2;
@@ -352,7 +352,7 @@ void mov(int t1, int t2, int par1, int par2) {
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
         regIndireccion = (par2 & 0xF);
-        offset = int24Bits((par2 & 0x0FFFFFF0)>4);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
         b = memoria[registros[regBase]+registros[regIndireccion]+offset];
         break;
     }
@@ -367,7 +367,7 @@ void mov(int t1, int t2, int par1, int par2) {
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
-        offset = int24Bits((par1 & 0x0FFFFFF0)>4);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
         memoria[registros[regBase]+registros[regIndireccion]+offset] = b;
         break;
     }
@@ -376,7 +376,7 @@ void add(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
-
+    int regBase, regIndireccion, offset;
     switch(t2) {
     case 0:
         b = par2;
@@ -386,6 +386,12 @@ void add(int t1, int t2, int par1, int par2) {
         break;
     case 2:
         b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = memoria[registros[regBase]+registros[regIndireccion]+offset];
         break;
     }
 
@@ -397,7 +403,13 @@ void add(int t1, int t2, int par1, int par2) {
     case 2: //Directo
         memoria[registros[basea]+(par1 & ~mask)] += b;
         res = memoria[registros[basea]+(par1 & ~mask)];
-
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        memoria[registros[regBase]+registros[regIndireccion]+offset] += b;
+        res= memoria[registros[regBase]+registros[regIndireccion]+offset];
         break;
     }
 
@@ -1137,8 +1149,8 @@ void slen (int t1, int t2, int par1, int par2){
     int mask = 0xF0000000;// 0x0FFFFFFF
     int shift = 28;
     int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
-    int basec=par2 & 0x0000000F;//
-    int numero= (par2 & 0x0FFFFFF0)>>4;
+//    int basec=par2 & 0x0000000F;//
+//    int numero= (par2 & 0x0FFFFFF0)>>4;
 
     switch(t2) {//aca esta el string
     case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
