@@ -56,3 +56,5 @@ int stringConSimboloAInt(char* dato);
 void constantesAMemoria();
 
 int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos);
+
+int int24Bits(int subInt);

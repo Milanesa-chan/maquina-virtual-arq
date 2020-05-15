@@ -270,3 +270,11 @@ int verificarConstantesYRotulos(listaConst constantes,listaRotulos rotulos) // 1
     return 1;
 }
 
+int int24Bits(int subInt){
+    if(subInt>>23){
+        subInt |= 0xFF000000;
+        return subInt;
+    }else{
+        return subInt;
+    }
+}
