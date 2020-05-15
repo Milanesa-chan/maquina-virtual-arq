@@ -320,6 +320,7 @@ void mov(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -331,6 +332,12 @@ void mov(int t1, int t2, int par1, int par2) {
     case 2:
         b = memoria[registros[baseb]+(par2 & ~mask)];
         break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>4);
+        b = memoria[registros[regBase]+registros[regIndireccion]+offset];
+        break;
     }
 
     switch(t1) {
@@ -339,6 +346,12 @@ void mov(int t1, int t2, int par1, int par2) {
         break;
     case 2: //Directo
         memoria[registros[basea]+(par1 & ~mask)] = b;
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>4);
+        memoria[registros[regBase]+registros[regIndireccion]+offset] = b;
         break;
     }
 }
