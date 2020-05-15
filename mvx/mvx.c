@@ -60,7 +60,7 @@ int32_t registros[16];
 int32_t memoria[8192];
 int ejecutando = 1, jump = 0;
 int mostrar = 0;
-int flagA=0,flagB=0,flagC=0,flagD=0;
+int flagA=0,flagB=0,flagC=0;
 int ejecutarProcesos=0;
 
 
@@ -78,7 +78,6 @@ int main(int argc, char *args[]) {
             cargarArchivo(args[i]);
             ejecutar();
         }*/
-
         if (!ejecutarProcesos)
         {
             while (memoria[1]<memoria[0])
@@ -91,7 +90,7 @@ int main(int argc, char *args[]) {
                     memoria[16*memoria[1]+2+i] = registros[i];
                 memoria[1]++;
                 for(int i=0; i<=100;i++)
-                    printf("memoria[%d]=%d\n",i,memoria[i]);
+                    printf("\nmemoria[%d]=%d",i,memoria[i]);
             }
             printf("Ejecucion exitosa de todos los procesos");
         }
@@ -100,10 +99,10 @@ int main(int argc, char *args[]) {
     return 0;
 }
 
-int buscaFlags(int argc,char *args[])//cantidad de flag papa
+int buscaFlags(int argc,char *args[])
 {
     int cont=0;
-    for (int i=2; i<argc;i++)//if you say, si bo deci
+    for (int i=2; i<argc;i++)
     {
         if(*args[i]=='-')
         {
@@ -120,10 +119,10 @@ int buscaFlags(int argc,char *args[])//cantidad de flag papa
                 flagC=1;
                 break;
             case 'd':
-                flagD=1;
+                mostrar=1;
                 break;
             default:
-                //forrazo
+                //
                 break;
             }
         }
@@ -139,6 +138,7 @@ int preparacion(int cantImagenes,char *args[])
     //int alcanzaMemoria=1;
     int memoriaDisponible=8190 - 16*cantImagenes;
     int cantImagenesLeidas=0;
+    int ds,cs;
     while(cantImagenesLeidas<memoria[0] && memoriaDisponible>=0)
     {
         //ps=0 , Cs=1 DS=2
@@ -157,9 +157,7 @@ int preparacion(int cantImagenes,char *args[])
                 memoria[2+cantImagenesLeidas*16+i]=temp; //CS 1,,, FX 15
             }
             if(cantImagenesLeidas>0)
-            {
-
-                //CS                              =         ps anterior                 +       cs anterior
+            {   //CS                              =         ps anterior                 +       cs anterior
                 memoria[2+16*cantImagenesLeidas+1]=memoria[2+16*(cantImagenesLeidas-1)]+memoria[2+16*(cantImagenesLeidas-1)+1];
             }
             else
@@ -178,10 +176,26 @@ int preparacion(int cantImagenes,char *args[])
             }
             //SS                              +=        CS
             memoria[2+16*cantImagenesLeidas+5]+=memoria[2+16*cantImagenesLeidas+1];
+            cs=memoria[2+16*cantImagenesLeidas+1];
+            ds=memoria[2+16*cantImagenesLeidas+2];
+            while(cs<ds)
+            {
+                fread(&temp, sizeof(temp), 1, arch);
+                memoria[cs]=temp;
+                cs++;
+            }
+
         }
+
         fclose(arch);
         cantImagenesLeidas++;
         //memoria[1]++;
+    }
+    if(memoriaDisponible<0)
+    {
+        FILE *arch = fopen(args[cantImagenesLeidas+1], "rb");
+
+        fclose(arch);
     }
     //se hace el calculo si no alcanza la memoria tirar mensaje y no ejecutar nadita nadal
     return (memoriaDisponible<0);
@@ -236,9 +250,8 @@ void ejecutar() {
         param2 = memoria[registros[4]+offset+2];
         tipo1 = (celdainst & maskarg1)>>shift1;
         tipo2 = (celdainst & maskarg2);
-
         funciones[celdainst>>shiftinst](tipo1, tipo2, param1, param2);
-        printf("TENTRO MASMASMASMSA %d", offset);
+
         if(!jump)
             registros[4]+=3; //Si no hubo un salto, aumenta el IP
         ejecutando = (registros[4]+offset < registros[2])&&ejecutando; //Si IP < DS sigue ejecutando
@@ -338,7 +351,6 @@ void mov(int t1, int t2, int par1, int par2) {
     int shift = 28;
     int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
     int regBase, regIndireccion, offset;
-    printf("\nTENTRO AL MOV");
     switch(t2) {
     case 0:
         b = par2;
