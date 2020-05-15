@@ -62,7 +62,7 @@ int ejecutando = 1, jump = 0;
 int mostrar = 0;
 int flagA=0,flagB=0,flagC=0;
 int ejecutarProcesos=0;
-
+int limiteESActual=0;
 
 int main(int argc, char *args[]) {
     if(argc>1) {
@@ -84,18 +84,38 @@ int main(int argc, char *args[]) {
             {
                 int i;
                 for (i=0;i<16;i++)
-                    registros[i]=memoria[16*memoria[1]+2+i];
-                ejecutar();
+                    registros[i]=memoria[16*memoria[1]+2+i];    //cargas registros de administracion a mv
+                if(registros[3]<registros[1])//entonces comparte el ES
+                {
+                    i=0;
+                    //actualizaLimiES();//es memoria[16*]
+                    while(i<memoria[1]&& (memoria[i*16 + 5]!= registros[3]))
+                    {
+                        i++;
+                    }
+                    if(memoria[i*16 + 5]== registros[3])
+                    {
+                        limiteESActual=memoria[i*16 + 7];
+                    }
+                    else
+                    {
+                        limiteESActual=registros[5];
+                    }
+                }
+                ejecutar();                                     //ejecutas el proceso actual
                 for (i=0;i<16;i++)
-                    memoria[16*memoria[1]+2+i] = registros[i];
+                    memoria[16*memoria[1]+2+i] = registros[i];  //actualizas los registros de la adminis
                 memoria[1]++;
-                for(int i=0; i<=100;i++)
-                    printf("\nmemoria[%d]=%d",i,memoria[i]);
+                //if(memoria[1]==2)
+                //for(int i=0; i<=100;i++)
+                //    printf("\nmemoria[%d]=%d",i,memoria[i]);
             }
             printf("Ejecucion exitosa de todos los procesos");
         }
+        else
             printf("No alcanza la memoria para ejecutar todos los procesos");
     }
+    printf("%d",limiteESActual);
     return 0;
 }
 
@@ -191,12 +211,7 @@ int preparacion(int cantImagenes,char *args[])
         cantImagenesLeidas++;
         //memoria[1]++;
     }
-    if(memoriaDisponible<0)
-    {
-        FILE *arch = fopen(args[cantImagenesLeidas+1], "rb");
 
-        fclose(arch);
-    }
     //se hace el calculo si no alcanza la memoria tirar mensaje y no ejecutar nadita nadal
     return (memoriaDisponible<0);
 }
@@ -346,6 +361,54 @@ void agregarFunciones(void (*funciones[])(int, int, int, int)) {
     funciones[143] = stop;
 }
 
+int getMemoria(int celda)
+{
+    int limiteDS,retorno;
+    if (registros[3]<registros[1])
+    {
+        limiteDS=registros[5];
+    }
+    else{
+        limiteDS=registros[3];
+    }
+
+    if((celda >= registros[1] && celda < limiteDS) ||
+       (celda >= registros[5] && (celda < registros[0]+registros[1])) ||
+       (celda >= registros[3] && celda< limiteESActual))
+    {
+        retorno=memoria[celda];
+    }
+    else
+    {
+        printf("la celda %d no pertenece a este proceso :) ",celda);
+        exit(1);
+    }
+    return retorno;
+}
+void setMemoria(int celda,int valor)
+{
+    int limiteDS;
+    if (registros[3]<registros[1])
+    {
+        limiteDS=registros[5];
+    }
+    else{
+        limiteDS=registros[3];
+    }
+
+    if((celda >= registros[1] && celda < limiteDS) ||
+       (celda >= registros[5] && (celda < registros[0]+registros[1])) ||
+       (celda >= registros[3] && celda< limiteESActual))
+    {
+        memoria[celda]=valor;
+    }
+    else
+    {
+        printf("la celda %d no pertenece a este proceso :) ",celda);
+        exit(1);
+    }
+}
+
 void mov(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -359,13 +422,13 @@ void mov(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
         regIndireccion = (par2 & 0xF);
         offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
-        b = memoria[registros[regBase]+registros[regIndireccion]+offset];
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -374,13 +437,13 @@ void mov(int t1, int t2, int par1, int par2) {
         registros[par1] = b;
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] = b;
+        setMemoria(registros[basea]+(par1 & ~mask),b);
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        memoria[registros[regBase]+registros[regIndireccion]+offset] = b;
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset, b);
         break;
     }
 }
@@ -398,13 +461,13 @@ void add(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
         regIndireccion = (par2 & 0xF);
         offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
-        b = memoria[registros[regBase]+registros[regIndireccion]+offset];
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -414,15 +477,16 @@ void add(int t1, int t2, int par1, int par2) {
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] += b;
+        //memoria[registros[basea]+(par1 & ~mask)] += b;
+        setMemoria(registros[basea]+(par1 & ~mask), b + getMemoria(registros[basea]+(par1 & ~mask)));
         res = memoria[registros[basea]+(par1 & ~mask)];
+
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        memoria[registros[regBase]+registros[regIndireccion]+offset] += b;
-        res= memoria[registros[regBase]+registros[regIndireccion]+offset];
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset, b+getMemoria(registros[regBase]+registros[regIndireccion]+offset));
         break;
     }
 
@@ -431,13 +495,12 @@ void add(int t1, int t2, int par1, int par2) {
         registros[9] += 1;
     else if(res<0)
         registros[9] |= (1<<31);
-
-
 }
 void sub(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -447,7 +510,14 @@ void sub(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
+        break;
     }
 
     switch(t1) {
@@ -456,8 +526,14 @@ void sub(int t1, int t2, int par1, int par2) {
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] -= b;
-        res = memoria[registros[basea]+(par1 & ~mask)];
+        setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))-b);
+        res = getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset,getMemoria(registros[regBase]+registros[regIndireccion]+offset)- b);
         break;
     }
 
@@ -472,6 +548,7 @@ void mul(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -481,7 +558,13 @@ void mul(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
