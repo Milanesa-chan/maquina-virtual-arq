@@ -62,7 +62,7 @@ int main(int argc, char *args[]) {
         crearRegistros();
         srand(time(NULL));
         agregarFunciones(funciones);
-        ejecutarProcesos=preparacion(cantImagenes,args);
+        ejecutarProcesos=preparacion(cantImagenes,args); //Si da 0 es que ejecuta
         /*for(int i=1;i<=cantImagenes;i++)
         {
             cargarArchivo(args[i]);
@@ -73,8 +73,21 @@ int main(int argc, char *args[]) {
             printf("memoria[%d]=%d\n",i,memoria[i]);
 
         }
-
-
+        if (!ejecutarProcesos)
+        {
+            while (memoria[1]<memoria[0])
+            {
+                int i;
+                for (i=0;i<16;i++)
+                    registros[i]=memoria[16*memoria[1]+2+i];
+                ejecutar();
+                for (i=0;i<16;i++)
+                    memoria[16*memoria[1]+2+i] = registros[i];
+                memoria[1]++;
+            }
+            printf("Ejecucion exitosa de todos los procesos");
+        }
+            printf("No alcanza la memoria para ejecutar todos los procesos");
     }
     return 0;
 }
@@ -186,7 +199,7 @@ void ejecutar() {
     char mnemonico[10], buffer1[10], buffer2[10];
 
     if(mostrar) {
-        printf("\nCode Segment:\n\n");
+        printf("\nCode Segment del proceso %d:\n\n",memoria[0]);
         for(int i=0; i<registros[2]; i+=3) {
             jump = 0;
 
