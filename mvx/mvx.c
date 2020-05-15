@@ -31,8 +31,18 @@ void Jn(int t1, int t2, int par1, int par2);
 void jnz(int t1, int t2, int par1, int par2);
 void jnp(int t1, int t2, int par1, int par2);
 void jnn(int t1, int t2, int par1, int par2);
+//
+void push (int t1, int t2, int par1, int par2);
+void pop (int t1, int t2, int par1, int par2);
+void call (int t1, int t2, int par1, int par2);
+void ret (int t1, int t2, int par1, int par2);
+void slen (int t1, int t2, int par1, int par2);
+void smov (int t1, int t2, int par1, int par2);
+void scmp (int t1, int t2, int par1, int par2);
+//
 void sys(int t1, int t2, int par1, int par2);
 void stop(int t1, int t2, int par1, int par2);
+
 void agregarFunciones(void (*funciones[])(int, int, int, int));
 void cargarArchivo(char[]);
 //"Jn" y "Div" empiezan con mayuscula xd
@@ -299,6 +309,13 @@ void agregarFunciones(void (*funciones[])(int, int, int, int)) {
     funciones[39] = jnz;
     funciones[40] = jnp;
     funciones[41] = jnn;
+    funciones[68] = push;
+    funciones[69] = pop;
+    funciones[64] = call;
+    funciones[72] = ret;
+    funciones[80] = slen;
+    funciones[81] = smov;
+    funciones[83] = scmp;
     funciones[129] = sys;
     funciones[143] = stop;
 }
@@ -508,7 +525,6 @@ void mod(int t1, int t2, int par1, int par2) {
 
 
 }
-
 void cmp(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -586,11 +602,7 @@ void swap(int t1, int t2, int par1, int par2) {
         memoria[registros[baseb]+(par2 & ~mask)]=a;
         break;
     }
-
-
-
 }
-
 void rnd(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -718,7 +730,6 @@ void not(int t1, int t2, int par1, int par2) {
         registros[9] |= (1<<31);
 
 }
-
 void xor(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -856,7 +867,6 @@ void jmp(int t1, int t2, int par1, int par2) {
         break;
     }
 }
-
 void je(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -953,7 +963,6 @@ void jl(int t1, int t2, int par1, int par2) {
     if(jump)
         registros[4] = salto;
 }
-
 void jz(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -976,7 +985,6 @@ void jz(int t1, int t2, int par1, int par2) {
         }
     }
 }
-
 void jp(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
@@ -1087,6 +1095,51 @@ void jnn(int t1, int t2, int par1, int par2) {
         }
     }
 }
+void push (int t1, int t2, int par1, int par2){
+
+}
+void pop (int t1, int t2, int par1, int par2){
+    //aqui desarrolle el codigo pertinente
+}
+void call (int t1, int t2, int par1, int par2){
+    //aqui desarrolle el codigo pertinente
+}
+void ret (int t1, int t2, int par1, int par2){
+    //aqui desarrolle el codigo pertinente
+}
+void slen (int t1, int t2, int par1, int par2){
+    int mask = 0xF0000000;// 0x0FFFFFFF
+    int shift = 28;
+    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int basec=par2 & 0x0000000F;//
+    int numero= (par2 & 0x0FFFFFF0)>>4;
+
+    switch(t2) {//aca esta el string
+    case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
+        b = memoria[registros[baseb]+(par2 & ~mask)];
+        break;
+    case 3://indirecto  //[DS:CX+23]=[DS][23][CX]=[4][24][4]
+//        memoria[registros[par2 & ]]
+        break;
+    }
+
+    switch(t1) {//en t1 vamos a guardar la longitud
+    case 1: //Registro
+        registros[par1] = b;
+        break;
+    case 2: //Directo [11] = [DS:11]  oo [ES:11]
+        memoria[registros[basea]+(par1 & ~mask)] = b;
+        break;
+    case 3: //indirecto [AX]
+        break;
+    }
+}
+void smov (int t1, int t2, int par1, int par2){
+    //aqui desarrolle el codigo pertinente
+}
+void scmp (int t1, int t2, int par1, int par2){
+    //aqui desarrolle el codigo pertinente
+}
 void sys(int t1, int t2, int par1, int par2) {
     switch(par1) {
     case 0:
@@ -1112,12 +1165,9 @@ void sys(int t1, int t2, int par1, int par2) {
         break;
     }
 }
-
 void stop(int t1, int t2, int par1, int par2) {
     ejecutando = 0;
 }
-
-
 void leer() {
     int prompt = registros[10]&0x1000;
     int texto = registros[10]&0x0100;
@@ -1168,7 +1218,6 @@ void leer() {
     }
 
 }
-
 void escribir() {
     int prompt = registros[10]&0x1000;
     int endline = registros[10]&0x100;
@@ -1227,7 +1276,6 @@ void escribir() {
         }
     }
 }
-
 void dump() {
     escribir();
     int modo=registros[10]&0xF;
@@ -1259,3 +1307,6 @@ void dump() {
         break;
     }
 }
+
+
+
