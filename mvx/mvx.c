@@ -998,7 +998,8 @@ void jmp(int t1, int t2, int par1, int par2) {
         registros[4] = registros[par1];
         break;
     case 2: //Directo
-        registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+        registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
+        //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
         break;
     }
 }
@@ -1015,7 +1016,8 @@ void je(int t1, int t2, int par1, int par2) {
         salto = registros[par2];
         break;
     case 2:
-        salto = memoria[registros[baseb]+(par2 & ~mask)];
+        salto = getMemoria(registros[baseb]+(par2 & ~mask));
+        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     }
 
@@ -1027,7 +1029,8 @@ void je(int t1, int t2, int par1, int par2) {
         jump = registros[par1] == registros[10];
         break;
     case 2: //Directo
-        jump = memoria[registros[basea]+(par1 & ~mask)] == registros[10];
+        jump = getMemoria(registros[basea]+(par1 & ~mask)) == registros[10];
+        //jump = memoria[registros[basea]+(par1 & ~mask)] == registros[10];
         break;
     }
 
@@ -1047,7 +1050,8 @@ void jg(int t1, int t2, int par1, int par2) {
         salto = registros[par2];
         break;
     case 2:
-        salto = memoria[registros[baseb]+(par2 & ~mask)];
+        salto = getMemoria(registros[baseb]+(par2 & ~mask));
+        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     }
 
@@ -1059,7 +1063,8 @@ void jg(int t1, int t2, int par1, int par2) {
         jump = registros[par1] > registros[10];
         break;
     case 2: //Directo
-        jump = memoria[registros[basea]+(par1 & ~mask)] > registros[10];
+        jump = getMemoria(registros[basea]+(par1 & ~mask)) > registros[10];
+        //jump = memoria[registros[basea]+(par1 & ~mask)] > registros[10];
         break;
     }
 
@@ -1079,7 +1084,8 @@ void jl(int t1, int t2, int par1, int par2) {
         salto = registros[par2];
         break;
     case 2:
-        salto = memoria[registros[baseb]+(par2 & ~mask)];
+        salto = getMemoria(registros[baseb]+(par2 & ~mask));
+        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     }
 
@@ -1091,7 +1097,8 @@ void jl(int t1, int t2, int par1, int par2) {
         jump = registros[par1] < registros[10];
         break;
     case 2: //Directo
-        jump = memoria[registros[basea]+(par1 & ~mask)] < registros[10];
+        jump = getMemoria(registros[basea]+(par1 & ~mask)) < registros[10];
+        //jump = memoria[registros[basea]+(par1 & ~mask)] < registros[10];
         break;
     }
 
@@ -1115,7 +1122,8 @@ void jz(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
@@ -1137,7 +1145,8 @@ void jp(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = memoria[registros[basea]+(par1 & ~mask)];
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
+            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
     }
