@@ -72,7 +72,7 @@ int main(int argc, char *args[]) {
         crearRegistros();
         srand(time(NULL));
         agregarFunciones(funciones);
-        ejecutarProcesos=preparacion(cantImagenes,args);
+        ejecutarProcesos=preparacion(cantImagenes,args); //Si da 0 es que ejecuta
         /*for(int i=1;i<=cantImagenes;i++)
         {
             cargarArchivo(args[i]);
@@ -83,8 +83,21 @@ int main(int argc, char *args[]) {
             printf("memoria[%d]=%d\n",i,memoria[i]);
 
         }
-
-
+        if (!ejecutarProcesos)
+        {
+            while (memoria[1]<memoria[0])
+            {
+                int i;
+                for (i=0;i<16;i++)
+                    registros[i]=memoria[16*memoria[1]+2+i];
+                ejecutar();
+                for (i=0;i<16;i++)
+                    memoria[16*memoria[1]+2+i] = registros[i];
+                memoria[1]++;
+            }
+            printf("Ejecucion exitosa de todos los procesos");
+        }
+            printf("No alcanza la memoria para ejecutar todos los procesos");
     }
     return 0;
 }
@@ -196,7 +209,7 @@ void ejecutar() {
     char mnemonico[10], buffer1[10], buffer2[10];
 
     if(mostrar) {
-        printf("\nCode Segment:\n\n");
+        printf("\nCode Segment del proceso %d:\n\n",memoria[0]);
         for(int i=0; i<registros[2]; i+=3) {
             jump = 0;
 
@@ -324,6 +337,7 @@ void mov(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -335,6 +349,12 @@ void mov(int t1, int t2, int par1, int par2) {
     case 2:
         b = memoria[registros[baseb]+(par2 & ~mask)];
         break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>4);
+        b = memoria[registros[regBase]+registros[regIndireccion]+offset];
+        break;
     }
 
     switch(t1) {
@@ -343,6 +363,12 @@ void mov(int t1, int t2, int par1, int par2) {
         break;
     case 2: //Directo
         memoria[registros[basea]+(par1 & ~mask)] = b;
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>4);
+        memoria[registros[regBase]+registros[regIndireccion]+offset] = b;
         break;
     }
 }
