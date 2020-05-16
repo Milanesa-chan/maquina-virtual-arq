@@ -1639,7 +1639,34 @@ void jnn(int t1, int t2, int par1, int par2)
 }
 void push (int t1, int t2, int par1, int par2)
 {
+    int mask = 0xF0000000;// 0x0FFFFFFF
+    int shift = 28;
+    int b, basea = (par1 & mask)>>shift;
+    int regBase, regIndireccion, offset;
+    switch(t1)  //
+    {
+    case 0:
+        b= par1;
+        break;
+    case 1: //Registro
+        b= registros[par1];
+        break;
+    case 2: //Directo [11] = [DS:11]  oo [ES:11]
+        b= getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3: //indirecto [AX]
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        b= getMemoria(registros[regBase]+registros[regIndireccion]+offset);
+        break;
+    }
 
+    if(registros[6]>0)
+    {
+        setMemoria(registros[5]+registros[6], b);
+        registros[6]--;
+    }
 }
 void pop (int t1, int t2, int par1, int par2)
 {
