@@ -1970,18 +1970,14 @@ void escribir()
             }
 
             if(modo & 0x8)
-                printf("%c%X ", '%', memoria[registros[2]+desde+i]);
+                printf(" %c%X", '%', memoria[registros[2]+desde+i]);
             if(modo & 0x4)
-                printf("@%o ", memoria[registros[2]+desde+i]);
+                printf(" @%o", memoria[registros[2]+desde+i]);
             if(modo & 0x1)
-                printf("%d ", memoria[registros[2]+desde+i]);
-
-
+                printf(" %d ", memoria[registros[2]+desde+i]);
 
             if(!endline)
                 printf("\n");
-            else
-                printf(" ");
         }
     }
     else
