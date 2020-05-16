@@ -1350,7 +1350,7 @@ void je(int t1, int t2, int par1, int par2)
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        jump = etMemoria(registros[regBase]+registros[regIndireccion]+offset) == registros[10];
+        jump = getMemoria(registros[regBase]+registros[regIndireccion]+offset) == registros[10];
     }
 
     if(jump)
@@ -1397,7 +1397,7 @@ void jg(int t1, int t2, int par1, int par2)
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        jump = etMemoria(registros[regBase]+registros[regIndireccion]+offset) > registros[10];
+        jump = getMemoria(registros[regBase]+registros[regIndireccion]+offset) > registros[10];
     }
 
     if(jump)
@@ -1445,7 +1445,7 @@ void jl(int t1, int t2, int par1, int par2)
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        jump = etMemoria(registros[regBase]+registros[regIndireccion]+offset) < registros[10];
+        jump = getMemoria(registros[regBase]+registros[regIndireccion]+offset) < registros[10];
     }
 
     if(jump)
@@ -1657,39 +1657,135 @@ void slen (int t1, int t2, int par1, int par2)
 {
     int mask = 0xF0000000;// 0x0FFFFFFF
     int shift = 28;
-    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
-//    int basec=par2 & 0x0000000F;//
-//    int numero= (par2 & 0x0FFFFFF0)>>4;
-
+    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift,direc,cont=0;
+    int regBase, regIndireccion, offset;
+    char c='\0';
     switch(t2)  //aca esta el string
     {
-    case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+    case 2:
+        //b = memoria[registros[baseb]+(par2 & ~mask)];
+        direc=registros[baseb]+(par2 & ~mask);
+        b = getMemoria(direc);
         break;
-    case 3://indirecto  //[DS:CX+23]=[DS][23][CX]=[4][24][4]
-//        memoria[registros[par2 & ]]
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        direc=registros[regBase]+registros[regIndireccion]+offset;
+        b = getMemoria(direc);
         break;
+    }
+    c=b;
+    while(c!='\0')
+    {
+        cont++;
+        c=getMemoria(direc++);
     }
 
     switch(t1)  //en t1 vamos a guardar la longitud
     {
     case 1: //Registro
-        registros[par1] = b;
+        registros[par1] = cont;
         break;
     case 2: //Directo [11] = [DS:11]  oo [ES:11]
-        memoria[registros[basea]+(par1 & ~mask)] = b;
+        setMemoria(registros[basea]+(par1 & ~mask), cont);//memoria[registros[basea]+(par1 & ~mask)] = cont;
         break;
     case 3: //indirecto [AX]
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset, cont);
         break;
     }
 }
 void smov (int t1, int t2, int par1, int par2)
 {
-    //aqui desarrolle el codigo pertinente
+    int mask = 0xF0000000;// 0x0FFFFFFF
+    int shift = 28;
+    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset,direcO,direcD;//direc=origen
+
+    switch(t2)  //operando 2 direccion origen
+    {
+    case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
+        //b = memoria[registros[baseb]+(par2 & ~mask)];
+        direcO=registros[baseb]+(par2 & ~mask);
+        break;
+    case 3://indirecto
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        direcO=registros[regBase]+registros[regIndireccion]+offset;
+        break;
+    }
+
+    switch(t1)  //operando 1 direccion destino
+    {
+    case 2: //Directo [11] = [DS:11]  oo [ES:11]
+        direcD=registros[basea]+(par1 & ~mask);
+        break;
+    case 3: //indirecto [AX]
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        direcD=registros[regBase]+registros[regIndireccion]+offset;
+        break;
+    }
+    while( (b=getMemoria(direcO) )!='\0')
+    {
+        setMemoria(direcD,b);
+        direcD++;
+        direcO++;
+    }
+
 }
 void scmp (int t1, int t2, int par1, int par2)
 {
-    //aqui desarrolle el codigo pertinente
+    int mask = 0xF0000000;// 0x0FFFFFFF
+    int shift = 28;
+    int basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset,direcO,direcD;//direc=origen
+
+    switch(t2)  //operando 2 direccion origen
+    {
+    case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
+        //b = memoria[registros[baseb]+(par2 & ~mask)];
+        direcO=registros[baseb]+(par2 & ~mask);
+        break;
+    case 3://indirecto
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        direcO=registros[regBase]+registros[regIndireccion]+offset;
+        break;
+    }
+
+    switch(t1)  //operando 1 direccion destino
+    {
+    case 2: //Directo [11] = [DS:11]  oo [ES:11]
+        direcD=registros[basea]+(par1 & ~mask);
+        break;
+    case 3: //indirecto [AX]
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        direcD=registros[regBase]+registros[regIndireccion]+offset;
+        break;
+    }
+    registros[9]=0;
+    while(registros[9]==0 && (getMemoria(direcD)!='\0' && getMemoria(direcO)!='\0' ))
+    {
+        int resta = getMemoria(direcD) - getMemoria(direcO);
+        if(resta>0)
+            registros[9]=1;
+        else if (resta<0)
+            registros[9]=0x80000000;
+        else
+            registros[9]=0;
+        direcD++;
+        direcO++;
+    }
+
 }
 void sys(int t1, int t2, int par1, int par2)
 {
