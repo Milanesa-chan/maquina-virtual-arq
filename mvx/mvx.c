@@ -1667,18 +1667,59 @@ void push (int t1, int t2, int par1, int par2)
         setMemoria(registros[5]+registros[6], b);
         registros[6]--;
     }
+    else
+    {
+        printf("\nNo hay espacio en la pila, stack overflow");
+        exit(1);
+    }
 }
 void pop (int t1, int t2, int par1, int par2)
 {
-    //aqui desarrolle el codigo pertinente
+    int mask = 0xF0000000;// 0x0FFFFFFF
+    int shift = 28;
+    int b, basea = (par1 & mask)>>shift;
+    int regBase, regIndireccion, offset;
+
+    if(registros[5]+registros[6]<registros[0])
+    {
+        b=getMemoria(registros[5]+registros[6]);
+        registros[6]++;
+    }
+    else{//pila vacia
+        printf("\nNo se puede sacar nada de la pila porque esta vacia, stack underflow");
+        exit(1);
+    }
+
+    switch(t1)  //
+    {
+    case 1: //Registro
+        //b= registros[par1];
+        registros[par1]=b;
+        break;
+    case 2: //Directo [11] = [DS:11]  oo [ES:11]
+        setMemoria(registros[basea]+(par1 & ~mask),b);
+        break;
+    case 3: //indirecto [AX]
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset,b);
+        break;
+    }
 }
 void call (int t1, int t2, int par1, int par2)
 {
-    //aqui desarrolle el codigo pertinente
+    int retorno=4;
+    retorno |= 0x30;
+    retorno |= 0x10000000;
+    //guardamos en la pila la direccion actual
+    push(3,0,retorno,0);
+    jmp(t1,t2,par1,par2); // :D
 }
 void ret (int t1, int t2, int par1, int par2)
 {
-    //aqui desarrolle el codigo pertinente
+    pop(1,0,4,0);
+    jump=1;
 }
 void slen (int t1, int t2, int par1, int par2)
 {
