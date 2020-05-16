@@ -273,20 +273,21 @@ void ejecutar() {
     }
 }
 
+/**
+
+*/
 void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer2[10]) {
     char aux[10];
     int32_t reg;
     char registro[5];
+    int regBase, regIndireccion, offset;
 
-    switch(t1) {
-    case 0:
+    if(t1==0){
         itoa(par1, buffer1, 10);
-        break;
-    case 1:
+    }else if(t1==1){
         par1 &= 0x0FFFFFFF;
         getReg(par1, buffer1);
-        break;
-    case 2:
+    }else if(t1==2){
         reg = par1&0xF0000000;
         reg >>= 28;
         par1 &= 0x0FFFFFFF;
@@ -297,19 +298,33 @@ void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer
         itoa(par1, aux, 10);
         strcat(buffer1, aux);
         strcat(buffer1, "]");
-        break;
+    }else if(t1==3){
+        regBase = (par1&0xF0000000)>>28;
+        regIndireccion = par1&0x0000000F;
+        offset = int24Bits((par1&0x0FFFFFF0)>>4);
+        strcpy(buffer1, "[");
+        getReg(regBase, registro);
+        strcat(buffer1, registro);
+        strcat(buffer1, ":");
+        getReg(regIndireccion, registro);
+        strcat(buffer1, registro);
+        if(offset<0){
+            itoa(offset, aux, 10);
+            strcat(buffer1, aux);
+        }else if(offset>0){
+            strcat(buffer1, "+");
+            itoa(offset, aux, 10);
+            strcat(buffer1, aux);
+        }
+        strcat(buffer1, "]");
     }
 
-    switch(t2) {
-    case 0:
-
+    if(t2==0){
         itoa(par2, buffer2, 10);
-        break;
-    case 1:
+    }else if(t2==1){
         par2 &= 0x0FFFFFFF;
         getReg(par2, buffer2);
-        break;
-    case 2:
+    }else if(t2==2){
         reg = par2&0xF0000000;
         reg >>= 28;
         par2 &= 0x0FFFFFFF;
@@ -318,9 +333,27 @@ void getBuffer(int t1, int t2, int par1, int par2, char buffer1[10], char buffer
         strcat(buffer2,registro);
         strcat(buffer2,":");
         itoa(par2, aux, 10);
-        strcat(buffer2, aux); //concatena
+        strcat(buffer2, aux);
         strcat(buffer2, "]");
-        break;
+    }else if(t2==3){
+        regBase = (par2&0xF0000000)>>28;
+        regIndireccion = par2&0x0000000F;
+        offset = int24Bits((par2&0x0FFFFFF0)>>4);
+        strcpy(buffer2, "[");
+        getReg(regBase, registro);
+        strcat(buffer2, registro);
+        strcat(buffer2, ":");
+        getReg(regIndireccion, registro);
+        strcat(buffer2, registro);
+        if(offset<0){
+            itoa(offset, aux, 10);
+            strcat(buffer2, aux);
+        }else if(offset>0){
+            strcat(buffer2, "+");
+            itoa(offset, aux, 10);
+            strcat(buffer2, aux);
+        }
+        strcat(buffer2, "]");
     }
 }
 
@@ -1275,7 +1308,7 @@ void jz(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
             //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
@@ -1321,7 +1354,7 @@ void Jn(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
             //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
@@ -1344,7 +1377,7 @@ void jnz(int t1, int t2, int par1, int par2) {
             registros[4] = registros[par1];
             break;
         case 2: //Directo
-            registros[4] = getMemoria(registros[basea]+(par1 & ~mask)]);
+            registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
             //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         }
