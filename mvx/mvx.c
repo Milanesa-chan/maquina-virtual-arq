@@ -49,6 +49,7 @@ void cargarArchivo(char[]);
 
 void (*funciones[144])(int, int, int, int);
 void ejecutar();
+void breakPoint();
 void leerString();
 void escribirString();
 void dump();
@@ -1355,7 +1356,7 @@ void je(int t1, int t2, int par1, int par2)
     }
 
     if(jump)
-        registros[4] = salto+ registros[1];
+        registros[4] = salto;
 }
 void jg(int t1, int t2, int par1, int par2)
 {
@@ -1402,7 +1403,7 @@ void jg(int t1, int t2, int par1, int par2)
     }
 
     if(jump)
-        registros[4] = salto + registros[1];
+        registros[4] = salto;
 }
 void jl(int t1, int t2, int par1, int par2)
 {
@@ -1450,7 +1451,7 @@ void jl(int t1, int t2, int par1, int par2)
     }
 
     if(jump)
-        registros[4] = salto + registros[1];
+        registros[4] = salto;
 }
 void jz(int t1, int t2, int par1, int par2)
 {
@@ -1861,7 +1862,7 @@ void sys(int t1, int t2, int par1, int par2)
     switch(par1)
     {
     case 0:
-        //hace cosas
+        breakPoint();
         break;
     case 1:
         leer();
@@ -1888,6 +1889,19 @@ void stop(int t1, int t2, int par1, int par2)
     ejecutando = 0;
 }
 
+void breakPoint()
+{
+    if(flagB)// 1 cuando hay -b
+    {
+
+
+    }
+    else if(flagC)
+    {
+        system("cls");
+    }
+
+}
 void escribirString()
 {
     int prompt = registros[10]&0x1000;//Ax
