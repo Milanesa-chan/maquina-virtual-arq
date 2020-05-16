@@ -68,7 +68,6 @@ int main(int argc, char *args[]) {
     if(argc>1) {
         crearListaMnemonicos();
         int cantImagenes=argc-buscaFlags(argc,args)-1;
-        //mostrar = contieneArg(argc, args, "-d");
         crearRegistros();
         srand(time(NULL));
         agregarFunciones(funciones);
