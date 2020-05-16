@@ -789,19 +789,19 @@ void swap(int t1, int t2, int par1, int par2) {
         break;
     }
     switch(t1+(t2<<2)) {
-    case 5: //registro registro 0101
+    case 0b0101: //registro registro 0101
         registros[par2]=a;
         registros[par1]=b;
         break;
-    case 6://memoria registro 0110
+    case 0b0110://memoria registro 0110
         registros[par2]=a;
         setMemoria(registros[basea]+(par1 & ~mask),b);//memoria[registros[basea]+(par1 & ~mask)]=b;
         break;
-    case 9://registro memoria 1001
+    case 0b1001://registro memoria 1001
         setMemoria(registros[baseb]+(par2 & ~mask),a);//memoria[registros[baseb]+(par2 & ~mask)]=a;
         registros[par1]=b;
         break;
-    case 10://memoria memoria 1010//memoria[registros[basea]+(par1 & ~mask)]=b;
+    case 0b1010://memoria memoria 1010//memoria[registros[basea]+(par1 & ~mask)]=b;
         setMemoria(registros[basea]+(par1 & ~mask),b);//memoria[registros[baseb]+(par2 & ~mask)]=a;
         setMemoria(registros[baseb]+(par2 & ~mask),a);
         break;
@@ -871,6 +871,7 @@ void and(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -880,7 +881,14 @@ void and(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        //b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -890,9 +898,17 @@ void and(int t1, int t2, int par1, int par2) {
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] &= b;
-        res = memoria[registros[basea]+(par1 & ~mask)];
-
+        //memoria[registros[basea]+(par1 & ~mask)] &= b;
+        setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))&b);
+        //res = memoria[registros[basea]+(par1 & ~mask)];
+        res = getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset,getMemoria(registros[regBase]+registros[regIndireccion]+offset)&b);
+        res=getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -909,6 +925,7 @@ void or(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -918,7 +935,14 @@ void or(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        //b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -928,11 +952,20 @@ void or(int t1, int t2, int par1, int par2) {
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] |= b;
-        res = memoria[registros[basea]+(par1 & ~mask)];
-
+        //memoria[registros[basea]+(par1 & ~mask)] &= b;
+        setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))|b);
+        //res = memoria[registros[basea]+(par1 & ~mask)];
+        res = getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset,getMemoria(registros[regBase]+registros[regIndireccion]+offset)|b);
+        res=getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
+
 
     registros[9] = 0;
     if(res==0)
@@ -946,6 +979,7 @@ void not(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, basea = (par1 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t1) {
     case 1: //Registro
@@ -953,8 +987,15 @@ void not(int t1, int t2, int par1, int par2) {
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] = ~memoria[registros[basea]+(par1 & ~mask)];
-        res = memoria[registros[basea]+(par1 & ~mask)];
+        memoria[registros[basea]+(par1 & ~mask)] = ~getMemoria(registros[basea]+(par1 & ~mask));
+        res = getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset, ~getMemoria(registros[regBase]+registros[regIndireccion]+offset));
+        res = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
     registros[9] = 0;
@@ -968,6 +1009,7 @@ void xor(int t1, int t2, int par1, int par2) {
     int mask = 0xF0000000;
     int shift = 28;
     int res, b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift;
+    int regBase, regIndireccion, offset;
 
     switch(t2) {
     case 0:
@@ -977,7 +1019,13 @@ void xor(int t1, int t2, int par1, int par2) {
         b = registros[par2];
         break;
     case 2:
-        b = memoria[registros[baseb]+(par2 & ~mask)];
+        b = getMemoria(registros[baseb]+(par2 & ~mask));
+        break;
+    case 3:
+        regBase = (par2 & 0xF0000000)>>28;
+        regIndireccion = (par2 & 0xF);
+        offset = int24Bits((par2 & 0x0FFFFFF0)>>4);
+        b = getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
@@ -988,8 +1036,14 @@ void xor(int t1, int t2, int par1, int par2) {
         break;
     case 2: //Directo
         memoria[registros[basea]+(par1 & ~mask)] ^= b;
-        res = memoria[registros[basea]+(par1 & ~mask)];
-
+        res = getMemoria(registros[basea]+(par1 & ~mask));
+        break;
+    case 3:
+        regBase = (par1 & 0xF0000000)>>28;
+        regIndireccion = (par1 & 0xF);
+        offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
+        setMemoria(registros[regBase]+registros[regIndireccion]+offset,getMemoria(registros[regBase]+registros[regIndireccion]+offset)^b);
+        res=getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 
