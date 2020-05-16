@@ -1896,10 +1896,8 @@ void breakPoint()
 
 
     }
-    else if(flagC)
-    {
+    if(flagC)
         system("cls");
-    }
 
 }
 void escribirString()
