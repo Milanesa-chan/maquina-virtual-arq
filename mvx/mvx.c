@@ -49,6 +49,8 @@ void cargarArchivo(char[]);
 
 void (*funciones[144])(int, int, int, int);
 void ejecutar();
+void leerString();
+void escribirString();
 void dump();
 void escribir();
 void leer();
@@ -1872,13 +1874,13 @@ void sys(int t1, int t2, int par1, int par2)
         dump();
         break;
     case 10:
-        //tambien hace cosas, pero otras cosas
+        leerString();
         break;
     case 20:
-        //igual que el 10 pero distinto
+        escribirString();
         break;
     default:
-        printf("TODO MAL sr PELOTUDO");
+        printf("no existe sys %d",par1);
         break;
     }
 }
@@ -1886,6 +1888,56 @@ void stop(int t1, int t2, int par1, int par2)
 {
     ejecutando = 0;
 }
+
+void escribirString()
+{
+    int prompt = registros[10]&0x1000;//Ax
+    int endline = registros[10]&0x0100;
+    int base = registros[11];       //BX
+    int desde = registros[13]; // DX
+    int celda= registros[base] + desde;
+    char *strin =NULL;
+    if(!prompt)
+    {
+        printf("[");
+        mostrarCelda(celda);
+        printf("]: ");
+    }
+    while(*strin!='\0')
+    {
+        *strin=getMemoria(celda++);
+        if(*strin!='\0')
+            printf("%c", *strin);
+    }
+    if(!endline)
+        printf("\n");
+}
+
+void leerString()
+{
+    int prompt = registros[10]&0x1000;//Ax
+    int base = registros[11];       //BX
+    int desde = registros[13]; // DX
+    int celda= registros[base] + desde;
+    char *strin=NULL;
+    scanf(" %s ",strin);
+    if(!prompt)
+    {
+        printf("[");
+        mostrarCelda(celda);
+        printf("]: %s",strin);
+    }
+    int fin=0;
+    while(!fin)
+    {
+        setMemoria(celda++,*strin);
+        if(*strin=='\0')
+            fin=1;
+        else
+            strin++;
+    }
+}
+
 void leer()
 {
     int prompt = registros[10]&0x1000;
