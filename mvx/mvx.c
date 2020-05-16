@@ -113,12 +113,11 @@ int main(int argc, char *args[])
                 //for(int i=0; i<=100;i++)
                 //    printf("\nmemoria[%d]=%d",i,memoria[i]);
             }
-            printf("Ejecucion exitosa de todos los procesos");
+            printf("\nEjecucion exitosa de todos los procesos");
         }
         else
-            printf("No alcanza la memoria para ejecutar todos los procesos");
+            printf("\nNo alcanza la memoria para ejecutar todos los procesos");
     }
-    printf("%d",limiteESActual);
     return 0;
 }
 
@@ -1307,7 +1306,7 @@ void jmp(int t1, int t2, int par1, int par2)
         regBase = (par1 & 0xF0000000)>>28;
         regIndireccion = (par1 & 0xF);
         offset = int24Bits((par1 & 0x0FFFFFF0)>>4);
-        registros[4]= getMemoria(registros[regBase]+registros[regIndireccion]+offset);
+        registros[4]=getMemoria(registros[regBase]+registros[regIndireccion]+offset);
         break;
     }
 }
@@ -2045,22 +2044,20 @@ void escribir()
             }
             int letra = memoria[registros[2]+desde+i] & 0xFF;
             if(letra<=126 && letra>=33)
-                printf("%c ",letra);
+                printf("%c",letra);
             else
                 printf(". ");
 
 
             if(modo & 0x8)
-                printf("%c%X ", '%', memoria[registros[2]+desde+i]);
+                printf(" %c%X", '%', memoria[registros[2]+desde+i]);
             if(modo & 0x4)
-                printf("@%o ", memoria[registros[2]+desde+i]);
+                printf(" @%o", memoria[registros[2]+desde+i]);
             if(modo & 0x1)
-                printf("%d ", memoria[registros[2]+desde+i]);
+                printf(" %d", memoria[registros[2]+desde+i]);
 
             if(!endline)
                 printf("\n");
-            else
-                printf(" ");
         }
     }
 }
