@@ -1,0 +1,7 @@
+- creado este archivo jaja xd
+- creada funcion mostrarMemoriaYRegistros
+- agregada call a la funcion si mostrar=1
+- cambiado comportamiento de mostrar al inicio de la ejecucion a la nueva funcion
+- cambiado el mostrarCelda de breakPoint por un printf normal
+- agregado cls al principio de la ejecucion si hay -c
+- cambiado cls del breakPoint al principio de la funcion

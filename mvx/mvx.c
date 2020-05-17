@@ -250,6 +250,11 @@ void ejecutar()
     int shiftinst = 16, shift1 = 8;
     //char mnemonico[10], buffer1[10], buffer2[10];     < se usaban para el algoritmo anterior
     int offset;
+
+    if(flagC){
+        system("cls");
+    }
+
     if(mostrar)
     {
         mostrarMemoriaYRegistros();
@@ -1901,6 +1906,9 @@ void stop(int t1, int t2, int par1, int par2)
 
 void breakPoint()
 {
+    if(flagC)
+        system("cls");
+
     if(mostrar)
     {
             mostrarMemoriaYRegistros();
@@ -1908,11 +1916,16 @@ void breakPoint()
 
     char a[50];
     int b=0,c=0;
-    if(flagB)// 1 cuando hay -b
+    if(flagB) // 1 cuando hay -b
     {
+        /*
         printf("[");
         mostrarCelda(registros[4]);
         printf("] cmd: ");
+        */
+
+        printf("[%04d] cmd: ", registros[4]/3);
+
         fgets(a,50,stdin);
         if(*a!='\n')
         {
@@ -1926,8 +1939,6 @@ void breakPoint()
         //scanf("");
         // TODO
     }
-    if(flagC)
-        system("cls");
 
 }
 void escribirString()
