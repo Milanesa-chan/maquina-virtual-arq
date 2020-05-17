@@ -216,6 +216,10 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                         else if (strlen(palabra) == 2)
                         {
                             memoria[linea * 3] |= (1 << ((2 - arg) * 8));           //deja en memoria la informacion de que el operando 1 o 2 es un operando de registro
+
+                            memoria[linea*3+arg] = getValReg(palabra);
+
+                            /*
                             if(!strcmp(palabra, "AC"))
                             {
                                 memoria[linea * 3 + arg] = 8;
@@ -227,7 +231,7 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                             else
                             {
                                 memoria[linea * 3 + arg] = strtol(&palabra[0], NULL, 16);
-                            }
+                            }*/
                         } // SI LA PALABRA ES LA INVOCACION A UN ROTULO----------------------------------------------------------------------
                         else if ((rot = buscarRotulo(rotulos, palabra)) != -1)
                         {

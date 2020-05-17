@@ -1751,7 +1751,6 @@ void call (int t1, int t2, int par1, int par2)
 void ret (int t1, int t2, int par1, int par2)
 {
     pop(1,0,4,0);
-    registros[6]--;
     jump=1;
 }
 void slen (int t1, int t2, int par1, int par2)
@@ -1941,6 +1940,7 @@ void breakPoint()
         */
 
         printf("[%04d] cmd: ", registros[4]/3);
+        getchar();
         fgets(a,50,stdin);
         while(*a!='\n')
         {
@@ -1951,6 +1951,7 @@ void breakPoint()
             }
             mostrarCeldaMemoria(b, c);
             printf("[%04d] cmd: ", registros[4]/3);
+            b = c = 0;
             fgets(a,50,stdin);
         }
     }
