@@ -1,0 +1,17 @@
+\\ASM EXTRA=1000
+MOV [ES:1], 6
+MOV [ES:2], 4
+MOV [ES:3], 7
+MOV [ES:4], 4
+MOV [ES:5] 10
+MOV [ES:6] 13
+MOV [ES:7] 2
+MOV [ES:8] -1
+MOV [ES:9] -1
+MOV [ES:10] 1
+MOV [ES:11] -1
+MOV [ES:12] -1
+MOV [ES:13] 3
+MOV [ES:14] -1
+MOV [ES:15] -1
+STOP
