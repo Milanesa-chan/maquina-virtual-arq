@@ -117,11 +117,9 @@ int main(int argc, char *args[])
                 //for(int i=0; i<=100;i++)
                 //    printf("\nmemoria[%d]=%d",i,memoria[i]);
             }
-            printf("\nEjecucion exitosa de todos los procesos");
             if (flagA)
-            {
                 mostrarProcesosYRegistros();
-            }
+            printf("\nEjecucion exitosa de todos los procesos");
         }
         else
             printf("\nNo alcanza la memoria para ejecutar todos los procesos");
@@ -1928,7 +1926,7 @@ void breakPoint()
     if(flagC)
         system("cls");
 
-    if(mostrar)
+    if(mostrar)//-d
     {
         mostrarMemoriaYRegistros();
     }
@@ -2228,7 +2226,11 @@ void mostrarMemoriaYRegistros()
         for(int col=0; col<4; col++)
         {
             getReg(fila*4+col, nomReg);
-            printf("%s = %*d |", nomReg, 10, registros[fila*4+col]);
+            if(!strcmp(nomReg,"IP"))
+                printf("%s = %*d |", nomReg, 10, ip);
+            else
+                printf("%s = %*d |", nomReg, 10, registros[fila*4+col]);
+
         }
         printf("\n");
     }
