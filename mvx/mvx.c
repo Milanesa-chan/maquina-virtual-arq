@@ -579,9 +579,8 @@ void add(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        //memoria[registros[basea]+(par1 & ~mask)] += b;
         setMemoria(registros[basea]+(par1 & ~mask), b + getMemoria(registros[basea]+(par1 & ~mask)));
-        res = memoria[registros[basea]+(par1 & ~mask)];
+        res = getMemoria(registros[basea]+(par1 & ~mask));
 
         break;
     case 3:
@@ -715,7 +714,6 @@ void Div(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -734,9 +732,7 @@ void Div(int t1, int t2, int par1, int par2)
             res = registros[par1];
             break;
         case 2: //Directo
-            //memoria[registros[basea]+(par1 & ~mask)] /= b;
             setMemoria(registros[basea]+(par1 & ~mask), getMemoria(registros[basea]+(par1 & ~mask))/b);
-            //res = memoria[registros[basea]+(par1 & ~mask)];
             res = getMemoria(registros[basea]+(par1 & ~mask));
             break;
         case 3:
@@ -776,7 +772,6 @@ void mod(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -795,9 +790,7 @@ void mod(int t1, int t2, int par1, int par2)
             registros[par1] %= b;
             break;
         case 2: //Directo
-            //division = memoria[registros[basea]+(par1 & ~mask)]/b;
             division= getMemoria(registros[basea]+(par1 & ~mask))/b;
-            //memoria[registros[basea]+(par1 & ~mask)] %= b;
             setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))% b);
             break;
         case 3:
@@ -840,7 +833,6 @@ void cmp(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b= getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -857,7 +849,6 @@ void cmp(int t1, int t2, int par1, int par2)
         res = registros[par1] - b;
         break;
     case 2: //Directo
-        //res = memoria[registros[basea]+(par1 & ~mask)] - b;
         res = getMemoria(registros[basea]+(par1 & ~mask)) - b;
         break;
     case 3:
@@ -888,7 +879,6 @@ void swap(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -905,7 +895,7 @@ void swap(int t1, int t2, int par1, int par2)
         a = registros[par1];
         break;
     case 2: //Directo
-        a = memoria[registros[basea]+(par1 & ~mask)];
+        a = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
         regBaseA = (par1 & 0xF0000000)>>28;
@@ -922,14 +912,14 @@ void swap(int t1, int t2, int par1, int par2)
         break;
     case 0b0110://memoria registro 0110
         registros[par2]=a;
-        setMemoria(registros[basea]+(par1 & ~mask),b);//memoria[registros[basea]+(par1 & ~mask)]=b;
+        setMemoria(registros[basea]+(par1 & ~mask),b);
         break;
     case 0b1001://registro memoria 1001
-        setMemoria(registros[baseb]+(par2 & ~mask),a);//memoria[registros[baseb]+(par2 & ~mask)]=a;
+        setMemoria(registros[baseb]+(par2 & ~mask),a);
         registros[par1]=b;
         break;
-    case 0b1010://memoria memoria 1010//memoria[registros[basea]+(par1 & ~mask)]=b;
-        setMemoria(registros[basea]+(par1 & ~mask),b);//memoria[registros[baseb]+(par2 & ~mask)]=a;
+    case 0b1010:
+        setMemoria(registros[basea]+(par1 & ~mask),b);
         setMemoria(registros[baseb]+(par2 & ~mask),a);
         break;
     case 0b1101://t2 indirecto t1 registro
@@ -986,7 +976,6 @@ void rnd(int t1, int t2, int par1, int par2)
         registros[par1] = rand() % (num + 1);
         break;
     case 2:
-        //memoria[registros[basea]+(par1 & ~mask)] = rand() % (num + 1);
         setMemoria(registros[basea]+(par1 & ~mask), getMemoria(registros[basea]+(par1 & ~mask))% (num +1) );
         break;
     case 3:
@@ -1013,7 +1002,6 @@ void and(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -1031,9 +1019,7 @@ void and(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        //memoria[registros[basea]+(par1 & ~mask)] &= b;
         setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))&b);
-        //res = memoria[registros[basea]+(par1 & ~mask)];
         res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
@@ -1070,7 +1056,6 @@ void or(int t1, int t2, int par1, int par2)
         b = registros[par2];
         break;
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         b = getMemoria(registros[baseb]+(par2 & ~mask));
         break;
     case 3:
@@ -1088,9 +1073,7 @@ void or(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        //memoria[registros[basea]+(par1 & ~mask)] &= b;
         setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))|b);
-        //res = memoria[registros[basea]+(par1 & ~mask)];
         res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
@@ -1125,7 +1108,7 @@ void not(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] = ~getMemoria(registros[basea]+(par1 & ~mask));
+        setMemoria(registros[basea]+(par1 & ~mask) , ~getMemoria(registros[basea]+(par1 & ~mask)));
         res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
@@ -1176,7 +1159,7 @@ void xor(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] ^= b;
+        setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask)) ^b  );
         res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
@@ -1230,8 +1213,8 @@ void shl(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        memoria[registros[basea]+(par1 & ~mask)] <<= b;
-        res = memoria[registros[basea]+(par1 & ~mask)];
+        setMemoria(registros[basea]+(par1 & ~mask), getMemoria(registros[basea]+(par1 & ~mask)) << b);
+        res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
@@ -1289,7 +1272,6 @@ void shr(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        //memoria[registros[basea]+(par1 & ~mask)] >>= b;
         setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))>>b);
         setMemoria(registros[basea]+(par1 & ~mask),getMemoria(registros[basea]+(par1 & ~mask))&tempMas);
         res = getMemoria(registros[basea]+(par1 & ~mask));
@@ -1328,7 +1310,6 @@ void jmp(int t1, int t2, int par1, int par2)
         break;
     case 2: //Directo
         registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-        //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
@@ -1355,7 +1336,6 @@ void je(int t1, int t2, int par1, int par2)
         break;
     case 2:
         salto = getMemoria(registros[baseb]+(par2 & ~mask));
-        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
@@ -1373,7 +1353,6 @@ void je(int t1, int t2, int par1, int par2)
         break;
     case 2: //Directo
         jump = getMemoria(registros[basea]+(par1 & ~mask)) == registros[10];
-        //jump = memoria[registros[basea]+(par1 & ~mask)] == registros[10];
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
@@ -1402,7 +1381,6 @@ void jg(int t1, int t2, int par1, int par2)
         break;
     case 2:
         salto = getMemoria(registros[baseb]+(par2 & ~mask));
-        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
@@ -1420,7 +1398,6 @@ void jg(int t1, int t2, int par1, int par2)
         break;
     case 2: //Directo
         jump = getMemoria(registros[basea]+(par1 & ~mask)) > registros[10];
-        //jump = memoria[registros[basea]+(par1 & ~mask)] > registros[10];
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
@@ -1449,7 +1426,6 @@ void jl(int t1, int t2, int par1, int par2)
         break;
     case 2:
         salto = getMemoria(registros[baseb]+(par2 & ~mask));
-        //salto = memoria[registros[baseb]+(par2 & ~mask)];
         break;
     case 3:
         regBase = (par2 & 0xF0000000)>>28;
@@ -1468,7 +1444,6 @@ void jl(int t1, int t2, int par1, int par2)
         break;
     case 2: //Directo
         jump = getMemoria(registros[basea]+(par1 & ~mask)) < registros[10];
-        //jump = memoria[registros[basea]+(par1 & ~mask)] < registros[10];
         break;
     case 3:
         regBase = (par1 & 0xF0000000)>>28;
@@ -1501,7 +1476,6 @@ void jz(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1532,7 +1506,6 @@ void jp(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1563,7 +1536,6 @@ void Jn(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1594,7 +1566,6 @@ void jnz(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1625,7 +1596,6 @@ void jnp(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1656,7 +1626,6 @@ void jnn(int t1, int t2, int par1, int par2)
             break;
         case 2: //Directo
             registros[4] = getMemoria(registros[basea]+(par1 & ~mask));
-            //registros[4] = memoria[registros[basea]+(par1 & ~mask)];
             break;
         case 3:
             regBase = (par1 & 0xF0000000)>>28;
@@ -1764,7 +1733,6 @@ void slen (int t1, int t2, int par1, int par2)
     switch(t2)  //aca esta el string
     {
     case 2:
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         direc=registros[baseb]+(par2 & ~mask);
         b = getMemoria(direc);
         break;
@@ -1789,7 +1757,7 @@ void slen (int t1, int t2, int par1, int par2)
         registros[par1] = cont;
         break;
     case 2: //Directo [11] = [DS:11]  oo [ES:11]
-        setMemoria(registros[basea]+(par1 & ~mask), cont);//memoria[registros[basea]+(par1 & ~mask)] = cont;
+        setMemoria(registros[basea]+(par1 & ~mask), cont);
         break;
     case 3: //indirecto [AX]
         regBase = (par1 & 0xF0000000)>>28;
@@ -1809,7 +1777,6 @@ void smov (int t1, int t2, int par1, int par2)
     switch(t2)  //operando 2 direccion origen
     {
     case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         direcO=registros[baseb]+(par2 & ~mask);
         break;
     case 3://indirecto
@@ -1850,7 +1817,6 @@ void scmp (int t1, int t2, int par1, int par2)
     switch(t2)  //operando 2 direccion origen
     {
     case 2://directo    [11] = [DS:11]  oo [ES:11] // [base][numero]=[4][28]
-        //b = memoria[registros[baseb]+(par2 & ~mask)];
         direcO=registros[baseb]+(par2 & ~mask);
         break;
     case 3://indirecto
@@ -2033,17 +1999,14 @@ void leer()
             case 0:
                 scanf(" %d", &aux);
                 setMemoria(registros[2]+desde+i, aux);
-                //memoria[registros[2]+desde+i] = aux;
                 break;
             case 4:
                 scanf(" %o", &aux);
                 setMemoria(registros[2]+desde+i, aux);
-                //memoria[registros[2]+desde+i] = aux;
                 break;
             case 8:
                 scanf(" %x", &aux);
                 setMemoria(registros[2]+desde+i, aux);
-                //memoria[registros[2]+desde+i] = aux;
                 break;
             }
         }
@@ -2061,9 +2024,9 @@ void leer()
         int max = strlen(buffer)>(cant-1) ? (cant-1) : strlen(buffer);
         for(int i=0; i<max; i++)
         {
-            memoria[registros[2]+desde + i] = buffer[i];
+            setMemoria(registros[2]+desde + i,buffer[i]);
         }
-        memoria[registros[2]+desde + max] = '\0';
+        setMemoria(registros[2]+desde + max, '\0');
     }
 
 }
@@ -2089,11 +2052,11 @@ void escribir()
             }
 
             if(modo & 0x8)
-                printf(" %c%X", '%', memoria[registros[2]+desde+i]);
+                printf(" %c%X", '%', getMemoria(registros[2]+desde+i));
             if(modo & 0x4)
-                printf(" @%o", memoria[registros[2]+desde+i]);
+                printf(" @%o", getMemoria(registros[2]+desde+i));
             if(modo & 0x1)
-                printf(" %d ", memoria[registros[2]+desde+i]);
+                printf(" %d ", getMemoria(registros[2]+desde+i));
 
             if(!endline)
                 printf("\n");
@@ -2110,7 +2073,8 @@ void escribir()
                 mostrarCelda(desde+i);
                 printf("]: ");
             }
-            int letra = memoria[registros[2]+desde+i] & 0xFF;
+            setMemoria(registros[2]+desde+i, getMemoria(registros[2]+desde+i)& 0xFF);
+            int letra = getMemoria(registros[2]+desde+i);
             if(letra<=126 && letra>=33)
                 printf("%c",letra);
             else
@@ -2118,11 +2082,11 @@ void escribir()
 
 
             if(modo & 0x8)
-                printf(" %c%X", '%', memoria[registros[2]+desde+i]);
+                printf(" %c%X", '%', getMemoria(registros[2]+desde+i));
             if(modo & 0x4)
-                printf(" @%o", memoria[registros[2]+desde+i]);
+                printf(" @%o", getMemoria(registros[2]+desde+i));
             if(modo & 0x1)
-                printf(" %d", memoria[registros[2]+desde+i]);
+                printf(" %d", getMemoria(registros[2]+desde+i));
 
             if(!endline)
                 printf("\n");
