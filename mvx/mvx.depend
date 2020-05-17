@@ -78,3 +78,21 @@
 	<time.h>
 	"../mvc/tdacazorla.h"
 
+1589571069 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<stdint.h>
+	"tdacazorla.h"
+
+1589569629 c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvc\tdacazorla.h
+
+1589727301 source:c:\users\lucia\desktop\facultad\este cuatrimestre\arquitectura\maquina-virtual-arq\mvx\mvx.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdint.h>
+	<time.h>
+	"../mvc/tdacazorla.h"
+

@@ -48,6 +48,7 @@ void cargarArchivo(char[]);
 //"Jn" y "Div" empiezan con mayuscula xd
 void mostrarMemoriaYRegistros();
 void mostrarCeldaMemoria(int inicio, int fin);
+void mostrarProcesosYRegistros();
 
 void (*funciones[144])(int, int, int, int);
 void ejecutar();
@@ -117,6 +118,10 @@ int main(int argc, char *args[])
                 //    printf("\nmemoria[%d]=%d",i,memoria[i]);
             }
             printf("\nEjecucion exitosa de todos los procesos");
+            if (flagA)
+            {
+                mostrarProcesosYRegistros();
+            }
         }
         else
             printf("\nNo alcanza la memoria para ejecutar todos los procesos");
@@ -251,7 +256,8 @@ void ejecutar()
     //char mnemonico[10], buffer1[10], buffer2[10];     < se usaban para el algoritmo anterior
     int offset;
 
-    if(flagC){
+    if(flagC)
+    {
         system("cls");
     }
 
@@ -467,7 +473,9 @@ int getMemoria(int celda)
     }
     else
     {
-        printf("la celda %d no pertenece a este proceso :) ",celda);
+        printf("Error:La celda %d no pertenece a este proceso :) ",celda);
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
     return retorno;
@@ -492,7 +500,9 @@ void setMemoria(int celda,int valor)
     }
     else
     {
-        printf("la celda %d no pertenece a este proceso :) ",celda);
+        printf("Error:La celda %d no pertenece a este proceso :) ",celda);
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
 }
@@ -740,7 +750,9 @@ void Div(int t1, int t2, int par1, int par2)
         }
     else
     {
-        printf("division por cero");
+        printf("Error:Division por cero");
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
 
@@ -800,7 +812,9 @@ void mod(int t1, int t2, int par1, int par2)
         }
     else
     {
-        printf("division por cero");
+        printf("Error:Division por cero");
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
 
@@ -1686,7 +1700,9 @@ void push (int t1, int t2, int par1, int par2)
     }
     else
     {
-        printf("\nNo hay espacio en la pila, stack overflow");
+        printf("\nError:No hay espacio en la pila, stack overflow");
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
 }
@@ -1702,8 +1718,11 @@ void pop (int t1, int t2, int par1, int par2)
         b=getMemoria(registros[5]+registros[6]);
         registros[6]++;
     }
-    else{//pila vacia
-        printf("\nNo se puede sacar nada de la pila porque esta vacia, stack underflow");
+    else //pila vacia
+    {
+        printf("\nError:No se puede sacar nada de la pila porque esta vacia, stack underflow");
+        if (flagA)
+            mostrarProcesosYRegistros();
         exit(1);
     }
 
@@ -1895,7 +1914,7 @@ void sys(int t1, int t2, int par1, int par2)
         escribirString();
         break;
     default:
-        printf("no existe sys %d",par1);
+        printf("No existe sys %d",par1);
         break;
     }
 }
@@ -1911,7 +1930,7 @@ void breakPoint()
 
     if(mostrar)
     {
-            mostrarMemoriaYRegistros();
+        mostrarMemoriaYRegistros();
     }
 
     char a[50];
@@ -2153,7 +2172,8 @@ void dump()
     }
 }
 
-void mostrarMemoriaYRegistros(){
+void mostrarMemoriaYRegistros()
+{
     int sobrante = 5; //cantidad de lineas mostradas despues del breakpoint
     int ds = registros[2];
     int cs = registros[1];
@@ -2166,7 +2186,8 @@ void mostrarMemoriaYRegistros(){
     printf("====================================================================\n");
     printf("Codigo:\n");
 
-    for(int celda=cs ; celda<ip+(sobrante*3); celda+=3){
+    for(int celda=cs ; celda<ip+(sobrante*3); celda+=3)
+    {
         if(celda==ip) printf(">");
         else printf(" ");
 
@@ -2202,8 +2223,10 @@ void mostrarMemoriaYRegistros(){
 
     char nomReg[3];
     //Avanza como si fuera una matriz, en todo momento el numero de registro es (fila*4+columna)
-    for(int fila=0; fila<4; fila++){
-        for(int col=0; col<4; col++){
+    for(int fila=0; fila<4; fila++)
+    {
+        for(int col=0; col<4; col++)
+        {
             getReg(fila*4+col, nomReg);
             printf("%s = %*d |", nomReg, 10, registros[fila*4+col]);
         }
@@ -2212,12 +2235,14 @@ void mostrarMemoriaYRegistros(){
     printf("====================================================================\n");
 }
 
-void mostrarCeldaMemoria(int inicio, int fin){
+void mostrarCeldaMemoria(int inicio, int fin)
+{
     if(fin==-1) fin=inicio+1;
     int celda;
     char car;
 
-    for(celda=inicio; celda<fin; celda++){
+    for(celda=inicio; celda<fin; celda++)
+    {
         printf("[%04d]: ", celda);
         mostrarCelda(memoria[celda]);
 
@@ -2232,3 +2257,38 @@ void mostrarCeldaMemoria(int inicio, int fin){
     }
 }
 
+void mostrarProcesosYRegistros() //Si hay flag A
+{
+    char nomReg[3];
+    //Avanza como si fuera una matriz, en todo momento el numero de registro es (fila*4+columna)
+    printf("\nCantidad total de procesos = %d\n",memoria[0]); //acá si o si van a tener que haber terminado todos
+    printf("Cantidad de procesos finalizados correctamente = %d\n",memoria[1]);
+    if (memoria[1]==0) //Hay una manera mas optima de hacer esto pero no tenia ganas xd
+    {
+        printf("\nProceso %d\n",1);
+        for(int fila=0; fila<4; fila++)
+        {
+            for(int col=0; col<4; col++)
+            {
+                getReg(fila*4+col, nomReg);
+                printf("%s = %*d |", nomReg, 10, memoria[fila*4+col+2]);
+            }
+            printf("\n");
+        }
+        printf("====================================================================\n");
+    }
+    for(int i=0; i<memoria[1]; i++)
+    {
+        printf("\nProceso %d\n",i+1);
+        for(int fila=0; fila<4; fila++)
+        {
+            for(int col=0; col<4; col++)
+            {
+                getReg(fila*4+col, nomReg);
+                printf("%s = %*d |", nomReg, 10, memoria[fila*4+col+(2+(16*i))]);
+            }
+            printf("\n");
+        }
+        printf("====================================================================\n");
+    }
+}
