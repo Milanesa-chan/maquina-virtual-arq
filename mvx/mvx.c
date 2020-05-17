@@ -1893,6 +1893,11 @@ void stop(int t1, int t2, int par1, int par2)
 
 void breakPoint()
 {
+    if(flagD)
+    {
+            mostrarMemoriaYRegistros();
+    }
+
     char a[50];
     int b=0,c=0;
     if(flagB)// 1 cuando hay -b
@@ -2131,16 +2136,18 @@ void dump()
 }
 
 void mostrarMemoriaYRegistros(){
-    int radio = 4; //Cuantas lineas de codigo adicionales se muestran hacia arriba y abajo
+    int sobrante = 5; //cantidad de lineas mostradas despues del breakpoint
     int cs = registros[1];
     int ip = registros[4]+cs;
 
+    if(sobrante+ip>ds) sobrante = ds; //si sobrante se pasa del codigo frenarlo ahi
+
     printf("Codigo:\n");
 
-    for(int linea=ip-radio ; linea<linea+radio*2 ; linea++){
+    for(int linea=cs ; linea<ip+sobrante; linea+=3){
         if(linea==ip) printf(">");
 
-        mostrarCelda(linea-cs);
+        printf("[%04d]")
     }
 }
 
