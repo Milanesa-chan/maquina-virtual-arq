@@ -2214,6 +2214,23 @@ void mostrarMemoriaYRegistros(){
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
+    printf("\n");
+    if(fin==-1) fin=inicio+1;
+    int celda;
+    char car;
 
+    for(celda=inicio; celda<fin; celda++){
+        printf("[%04d]: ", celda);
+        mostrarCelda(memoria[celda]);
+
+        car = celda & 0x000000FF;
+        if(car>=32 && car<=126)
+            printf(" %c ", car);
+        else
+            printf(" . ");
+
+        printf("%d", memoria[celda]);
+        printf("\n");
+    }
 }
 
