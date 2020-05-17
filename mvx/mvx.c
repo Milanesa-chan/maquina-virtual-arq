@@ -248,10 +248,16 @@ void ejecutar()
     int celdainst, param1, param2, tipo1, tipo2;
     int maskarg1 = 0x0000FF00, maskarg2 = 0x000000FF;
     int shiftinst = 16, shift1 = 8;
-    char mnemonico[10], buffer1[10], buffer2[10];
+    //char mnemonico[10], buffer1[10], buffer2[10];     < se usaban para el algoritmo anterior
     int offset;
     if(mostrar)
     {
+        mostrarMemoriaYRegistros();
+
+        /* WHO WOULD WIN? 20 lineas de algoritmo o 1 call a una funcion?
+
+        la segunda
+
         printf("\nCode Segment del proceso %d:\n\n",memoria[0]);
         for(int i=0; i<registros[2]; i+=3)
         {
@@ -272,7 +278,9 @@ void ejecutar()
         }
         registros[4] = 0;
         printf("\n-------------------------\n\n");
+        */
     }
+
     offset=registros[1];
     while(ejecutando)
     {
@@ -2193,7 +2201,6 @@ void mostrarMemoriaYRegistros(){
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
-    //Muestra las celdas de inicio a fin
-    //Si fin es -1 muestra la celda inicio
+
 }
 
