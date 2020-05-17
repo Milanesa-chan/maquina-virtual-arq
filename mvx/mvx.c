@@ -1743,16 +1743,15 @@ void pop (int t1, int t2, int par1, int par2)
 }
 void call (int t1, int t2, int par1, int par2)
 {
-    int retorno=4;
-    retorno |= 0x30;
-    retorno |= 0x10000000;
+    int retorno=registros[4]+3;
     //guardamos en la pila la direccion actual
-    push(3,0,retorno,0);
+    push(0,0,retorno,0);
     jmp(t1,t2,par1,par2); // :D
 }
 void ret (int t1, int t2, int par1, int par2)
 {
     pop(1,0,4,0);
+    registros[6]--;
     jump=1;
 }
 void slen (int t1, int t2, int par1, int par2)
