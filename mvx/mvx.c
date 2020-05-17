@@ -46,6 +46,8 @@ void stop(int t1, int t2, int par1, int par2);
 void agregarFunciones(void (*funciones[])(int, int, int, int));
 void cargarArchivo(char[]);
 //"Jn" y "Div" empiezan con mayuscula xd
+void mostrarMemoriaYRegistros();
+void mostrarCeldaMemoria(int inicio, int fin);
 
 void (*funciones[144])(int, int, int, int);
 void ejecutar();
@@ -2128,5 +2130,11 @@ void dump()
     }
 }
 
+void mostrarMemoriaYRegistros(){
+}
 
+void mostrarCeldaMemoria(int inicio, int fin){
+    //Muestra las celdas de inicio a fin
+    //Si fin es -1 muestra la celda inicio
+}
 
