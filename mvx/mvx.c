@@ -2213,7 +2213,6 @@ void mostrarMemoriaYRegistros(){
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
-    printf("\n");
     if(fin==-1) fin=inicio+1;
     int celda;
     char car;
