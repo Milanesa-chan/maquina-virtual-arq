@@ -186,7 +186,8 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                                  *palabra == '%' ||
                                  *palabra == '@' ||
                                  *palabra == '#' ||
-                                 ('0' <= *palabra && '9' >= *palabra))
+                                 ('0' <= *palabra && '9' >= *palabra) ||
+                                 *palabra=='-' || *palabra=='+')
                         {
                             char aux[1000];                                     //en la memoria ya hay un cero asi que no necesita aclararlo
                             strcpy(aux, palabra);

@@ -92,21 +92,22 @@ int main(int argc, char *args[])
                 int i;
                 for (i=0; i<16; i++)
                     registros[i]=memoria[16*memoria[1]+2+i];    //cargas registros de administracion a mv
+
+
+                limiteESActual = registros[5];
                 if(registros[3]<registros[1])//entonces comparte el ES
                 {
                     i=0;
                     //actualizaLimiES();//es memoria[16*]
-                    while(i<memoria[1]&& (memoria[i*16 + 5]!= registros[3]))
+                    while(i<memoria[1] && (memoria[i*16 + 5]!=registros[3]))
                     {
                         i++;
                     }
-                    if(memoria[i*16 + 5]== registros[3])
+
+                    if(memoria[i*16 + 5]==registros[3])
                     {
+
                         limiteESActual=memoria[i*16 + 7];
-                    }
-                    else
-                    {
-                        limiteESActual=registros[5];
                     }
                 }
                 ejecutar();                                     //ejecutas el proceso actual
@@ -291,6 +292,7 @@ void ejecutar()
     }
 
     offset=registros[1];
+    ejecutando = 1;
     while(ejecutando)
     {
 
@@ -490,6 +492,7 @@ void setMemoria(int celda,int valor)
         limiteDS=registros[3];
     }
 
+
     if((celda >= registros[1] && celda <= limiteDS) ||
             (celda >= registros[5] && (celda <= registros[0]+registros[1])) ||
             (celda >= registros[3] && celda<= limiteESActual))
@@ -498,7 +501,7 @@ void setMemoria(int celda,int valor)
     }
     else
     {
-        printf("Error:La celda %d no pertenece a este proceso :) ",celda);
+        printf("Error:La celda %d no pertenece a este proceso :( ",celda);
         if (flagA)
             mostrarProcesosYRegistros();
         exit(1);
@@ -1906,7 +1909,6 @@ void breakPoint()
         */
 
         printf("[%04d] cmd: ", registros[4]/3);
-        getchar();
         fgets(a,50,stdin);
         while(*a!='\n')
         {
