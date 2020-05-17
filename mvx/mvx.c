@@ -2153,6 +2153,7 @@ void mostrarMemoriaYRegistros(){
 
     if(sobrante+ip>ds) sobrante = ds-cs; //si sobrante se pasa del codigo frenarlo ahi
 
+    printf("====================================================================\n");
     printf("Codigo:\n");
 
     for(int celda=cs ; celda<ip+(sobrante*3); celda+=3){
@@ -2198,6 +2199,7 @@ void mostrarMemoriaYRegistros(){
         }
         printf("\n");
     }
+    printf("====================================================================\n");
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
