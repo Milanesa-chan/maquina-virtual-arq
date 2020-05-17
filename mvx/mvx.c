@@ -2178,6 +2178,18 @@ void mostrarMemoriaYRegistros(){
 
         printf("\n");
     }
+
+    printf("Registros:\n");
+
+    char nomReg[3];
+    //Avanza como si fuera una matriz, en todo momento el numero de registro es (fila*4+columna)
+    for(int fila=0; fila<4; fila++){
+        for(int col=0; col<4; col++){
+            getReg(fila*4+col, nomReg);
+            printf("%s = %*d |", nomReg, 10, registros[fila*4+col]);
+        }
+        printf("\n");
+    }
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
