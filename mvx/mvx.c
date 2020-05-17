@@ -848,6 +848,9 @@ void cmp(int t1, int t2, int par1, int par2)
 
     switch(t1)
     {
+    case 0:
+        res = par1-b;
+        break;
     case 1: //Registro
         res = registros[par1] - b;
         break;

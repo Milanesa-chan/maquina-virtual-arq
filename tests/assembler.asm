@@ -13,21 +13,6 @@ MOV [12], [ES:12]
 MOV [13], [ES:13]
 MOV [14], [ES:14]
 MOV [15], [ES:15]
-MOV [1], 6
-MOV [2], 4
-MOV [3], 7
-MOV [4], 4
-MOV [5], 10
-MOV [6], 13
-MOV [7], 2
-MOV [8], -1
-MOV [9], -1
-MOV [10], 1
-MOV [11], -1
-MOV [12], -1
-MOV [13], 3
-MOV [14], -1
-MOV [15], -1
 PUSH 1
 CALL COMPA
 ADD SP, 1
@@ -38,7 +23,6 @@ MOV DX 420
 MOV CX 1
 SYS 2
 STOP
-
 
 IZQ EQU 1
 DER EQU 2
@@ -76,15 +60,15 @@ JZ FIN1
 // al valor del nodo
 CMP [CX], BX
 JNZ FIN2
-// Si lleg√≥ ac√° entonces el padre es igual
+// Si llegÛ ac· entonces el padre es igual
 // a la suma de los hijos.
 // Entonces hay que verificar que se cumpla
-// tambi√©n para los hijos.
+// tambiÈn para los hijos.
 // Invoca para la rama izquierda
 PUSH [CX+IZQ]
 CALL COMPA
 ADD SP, 1
-// Si fall√≥ corta la recursividad
+// Si fallÛ corta la recursividad
 CMP AX,FALSE
 JZ FIN
 // (si sigue ok) Invoca para la rama derecha
