@@ -463,9 +463,9 @@ int getMemoria(int celda)
         limiteDS=registros[3];
     }
 
-    if((celda >= registros[1] && celda < limiteDS) ||
-            (celda >= registros[5] && (celda < registros[0]+registros[1])) ||
-            (celda >= registros[3] && celda< limiteESActual))
+    if((celda >= registros[1] && celda <= limiteDS) ||
+            (celda >= registros[5] && (celda <= registros[0]+registros[1])) ||
+            (celda >= registros[3] && celda<= limiteESActual))
     {
         retorno=memoria[celda];
     }
@@ -490,9 +490,9 @@ void setMemoria(int celda,int valor)
         limiteDS=registros[3];
     }
 
-    if((celda >= registros[1] && celda < limiteDS) ||
-            (celda >= registros[5] && (celda < registros[0]+registros[1])) ||
-            (celda >= registros[3] && celda< limiteESActual))
+    if((celda >= registros[1] && celda <= limiteDS) ||
+            (celda >= registros[5] && (celda <= registros[0]+registros[1])) ||
+            (celda >= registros[3] && celda<= limiteESActual))
     {
         memoria[celda]=valor;
     }
@@ -1693,8 +1693,8 @@ void push (int t1, int t2, int par1, int par2)
 
     if(registros[6]>0)
     {
-        setMemoria(registros[5]+registros[6], b);
         registros[6]--;
+        setMemoria(registros[5]+registros[6], b);
     }
     else
     {
@@ -1711,7 +1711,7 @@ void pop (int t1, int t2, int par1, int par2)
     int b, basea = (par1 & mask)>>shift;
     int regBase, regIndireccion, offset;
 
-    if(registros[5]+registros[6]<registros[0])
+    if(registros[5]+registros[6]<registros[0]+registros[1]) //SS + SP < PS +CS
     {
         b=getMemoria(registros[5]+registros[6]);
         registros[6]++;

@@ -88,7 +88,7 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                 if (!esRotulo(palabra))                 //
                 {
                     char *s = palabra;
-                    while (*s)
+                    while ((*s) && ((*s)!='\'') )
                     {
                         *s = toupper((unsigned char)*s);        //palabra pasa "a mayuscula"
                         s++;
