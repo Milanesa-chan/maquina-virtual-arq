@@ -5,3 +5,8 @@
 - cambiado el mostrarCelda de breakPoint por un printf normal
 - agregado cls al principio de la ejecucion si hay -c
 - cambiado cls del breakPoint al principio de la funcion
+- creada funcion mostrarCeldaMemoria
+- agregada call a esta funcion desde breakPoint
+- agregado while a breakPoint para que te pregunte hasta que pongas enter
+- antes de ejecutar tener en cuenta que: the game
+- xoxo

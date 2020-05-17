@@ -1925,9 +1925,8 @@ void breakPoint()
         */
 
         printf("[%04d] cmd: ", registros[4]/3);
-
         fgets(a,50,stdin);
-        if(*a!='\n')
+        while(*a!='\n')
         {
             sscanf(a,"%d %d",&b,&c);
             if(c==0)
@@ -1935,6 +1934,8 @@ void breakPoint()
                 c=-1;
             }
             mostrarCeldaMemoria(b, c);
+            printf("[%04d] cmd: ", registros[4]/3);
+            fgets(a,50,stdin);
         }
     }
 
@@ -2221,7 +2222,7 @@ void mostrarCeldaMemoria(int inicio, int fin){
         printf("[%04d]: ", celda);
         mostrarCelda(memoria[celda]);
 
-        car = celda & 0x000000FF;
+        car = memoria[celda] & 0x000000FF;
         if(car>=32 && car<=126)
             printf(" %c ", car);
         else
