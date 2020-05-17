@@ -1891,15 +1891,28 @@ void stop(int t1, int t2, int par1, int par2)
 
 void breakPoint()
 {
+    char a[50];
+    int b=0,c=0;
     if(flagB)// 1 cuando hay -b
     {
-
-
+        printf("[");
+        mostrarCelda(registros[4]);
+        printf("] cmd: ");
+        fgets(a,50,stdin);
+        if(*a!='\n')
+        {
+            sscanf(a,"%d %d",&b,&c);
+            if(c==0)
+            {
+                c=-1;
+            }
+            // TODO llamar funcion de luca
+        }
+        //scanf("");
+        // TODO
     }
-    else if(flagC)
-    {
+    if(flagC)
         system("cls");
-    }
 
 }
 void escribirString()
