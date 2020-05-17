@@ -1934,10 +1934,8 @@ void breakPoint()
             {
                 c=-1;
             }
-            // TODO llamar funcion de luca
+            mostrarCeldaMemoria(b, c);
         }
-        //scanf("");
-        // TODO
     }
 
 }
