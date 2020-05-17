@@ -2131,6 +2131,17 @@ void dump()
 }
 
 void mostrarMemoriaYRegistros(){
+    int radio = 4; //Cuantas lineas de codigo adicionales se muestran hacia arriba y abajo
+    int cs = registros[1];
+    int ip = registros[4]+cs;
+
+    printf("Codigo:\n");
+
+    for(int linea=ip-radio ; linea<linea+radio*2 ; linea++){
+        if(linea==ip) printf(">");
+
+        mostrarCelda(linea-cs);
+    }
 }
 
 void mostrarCeldaMemoria(int inicio, int fin){
