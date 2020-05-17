@@ -1893,7 +1893,7 @@ void stop(int t1, int t2, int par1, int par2)
 
 void breakPoint()
 {
-    if(flagD)
+    if(mostrar)
     {
             mostrarMemoriaYRegistros();
     }
@@ -2137,17 +2137,46 @@ void dump()
 
 void mostrarMemoriaYRegistros(){
     int sobrante = 5; //cantidad de lineas mostradas despues del breakpoint
+    int ds = registros[2];
     int cs = registros[1];
     int ip = registros[4]+cs;
+    int linea, t1, t2, par1, par2;
+    char mnemonico[5], arg1[20], arg2[20];
 
-    if(sobrante+ip>ds) sobrante = ds; //si sobrante se pasa del codigo frenarlo ahi
+    if(sobrante+ip>ds) sobrante = ds-cs; //si sobrante se pasa del codigo frenarlo ahi
 
     printf("Codigo:\n");
 
-    for(int linea=cs ; linea<ip+sobrante; linea+=3){
-        if(linea==ip) printf(">");
+    for(int celda=cs ; celda<ip+(sobrante*3); celda+=3){
+        if(celda==ip) printf(">");
+        else printf(" ");
 
-        printf("[%04d]")
+        printf("[%04d] ", celda);
+
+        //Muestra celdas de memoria en hexa
+        //Aca uso memoria[] porque soy el programador y hago lo que quiero
+        mostrarCelda(memoria[celda]);
+        printf(" ");
+        mostrarCelda(memoria[celda+1]);
+        printf(" ");
+        mostrarCelda(memoria[celda+2]);
+
+
+        linea = ((celda-cs)/3)+1; //Linea del codigo assembler actual
+
+        getMnemonico(memoria[celda]>>16, mnemonico); //Mnemonico de la linea actual
+
+        t1 = (memoria[celda] & 0x0000FF00)>>8;
+        t2 = memoria[celda] & 0x000000FF;
+        par1 = memoria[celda+1];
+        par2 = memoria[celda+2];
+
+        getBuffer(t1, t2, par1, par2, arg1, arg2);
+
+        printf(" %*d: ", 4, linea);
+        printf("%s %*s, %s", mnemonico, 12, arg1, arg2);
+
+        printf("\n");
     }
 }
 

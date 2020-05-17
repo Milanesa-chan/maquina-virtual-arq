@@ -42,16 +42,17 @@
 	<time.h>
 	"../mvc/tdacazorla.h"
 
-1586378490 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
+1589696109 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<ctype.h>
+	<stdint.h>
 	"tdacazorla.h"
 
-1586039357 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
+1589569058 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
 
-1588973267 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvx\mvx.c
+1589698410 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvx\mvx.c
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
