@@ -13,7 +13,7 @@ echo ====================
 echo TRADUCCION TERMINADA
 echo EJECUCION
 echo ====================
-::mvx.exe aritmetica.img -d -a 
+::mvx.exe aritmetica.img -a 
 mvx.exe codigo1.img codigo2.img codigo3.img -a
 echo.
 pause

@@ -4,7 +4,7 @@ MAX     EQU %7FFFFFFF
 UNO     EQU 1
 dmin    EQU 0
 dmax    EQU 1
-start EQU 2
+start   EQU 2
         mov Dx, start
         mov Cx, [ES:Dx]
         add Cx, Dx

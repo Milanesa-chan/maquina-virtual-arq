@@ -108,7 +108,7 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                             palabra[strlen(palabra)-1] = '\0';
                             strcpy(palabra, palabra+1);             //quita corchetes
                             char *dospuntos;
-                            char *regTemp = (char*) malloc(50);
+                            char *regTemp = (char*) malloc(50*sizeof(char));
                             if((dospuntos = strchr(palabra, ':')) != NULL)      //dospuntos= despues de dos puntos
                             {
                                 //palabra = DX:AX       //dospuntos=
@@ -243,8 +243,8 @@ int traduce(FILE *arch, int muestra)   //ya tenemos la lista de rotulos creada
                             memoria[linea*3+arg] = nodoconst->valor;
                             if (nodoconst->esDirecto)
                             {
-                                memoria[linea * 3] |= (2 << ((2 - arg) * 8));
-                                memoria[linea*3+arg] |= (1 << 28);
+                                //memoria[linea * 3] |= (2 << ((2 - arg) * 8));
+                                //memoria[linea*3+arg] |= (1 << 28);
                             }
                         }
                         /*(nodoConst = buscarconstante) != NULL*/
@@ -415,7 +415,7 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                 palabra3=strtok(NULL," /\t\n");
             else
             {
-                palabra3=(char*)malloc(sizeof(100));
+                palabra3=(char*)malloc(100*sizeof(char));
                 do
                 {
                     palabra3[i]=*aux;
@@ -430,16 +430,15 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                 if(strlen(palabra1)>=3 &&((palabra1[0]>='A' &&palabra1[0]<='Z')|| (palabra1[0]>='a' &&palabra1[0]<='z')))
                 {
                     strupr(palabra2);
-                    listaConst nodo,ult;
+                    listaConst nodo = NULL,ult;
                     if (!strcmp(palabra2,"EQU"))                    //palabra2=="EQU"
                     {
-                        nodo = (listaConst)malloc(sizeof(nodoConst));
+                        nodo = (nodoConst*)malloc(sizeof(nodoConst));
                         strcpy(nodo->nombre,palabra1);              //nodo->nombre="//BASE"
                         nodo->sig=NULL;
                         if (palabra3[0]=='"')
                         {
                             memcpy(palabra3,palabra3+1,strlen(palabra3));
-                            printf("\nPALABRA 3: %s STRLEN DE PALABRA 3 %d\n",palabra3,strlen(palabra3));
                             nodo->esDirecto=1;
                         }
                         else

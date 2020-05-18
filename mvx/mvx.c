@@ -1959,7 +1959,10 @@ void leerString()
     int desde = registros[13]; // DX
     int celda= registros[base] + desde;
     char *strin=NULL;
-    scanf(" %s ",strin);
+    strin = (char*)malloc(100*sizeof(char));
+    //scanf(" %s ",strin);
+    fgets(strin, 50, stdin);
+    //printf("\nAAAAA:%s\n", strin);
     if(!prompt)
     {
         printf("[");
@@ -1969,11 +1972,16 @@ void leerString()
     int fin=0;
     while(!fin)
     {
-        setMemoria(celda++,*strin);
+        setMemoria(celda,*strin);
         if(*strin=='\0')
             fin=1;
-        else
+        else if(*strin=='\n'){
+            *strin = '\0';
+            setMemoria(celda,*strin);
+            fin = 1;
+        } else
             strin++;
+        celda++;
     }
 }
 

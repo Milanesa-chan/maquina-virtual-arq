@@ -88,7 +88,7 @@
 	<stdint.h>
 	"tdacazorla.h"
 
-1589746353 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
+1589837739 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\mvc.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
@@ -96,9 +96,9 @@
 	<stdint.h>
 	"tdacazorla.h"
 
-1589746082 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
+1589832531 c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.h
 
-1589746082 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
+1589831263 source:c:\users\lucag\desktop\chotodemono\maquina-virtual-arq\mvc\tdacazorla.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
