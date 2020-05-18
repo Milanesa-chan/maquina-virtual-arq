@@ -342,7 +342,6 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
         fgets(nextLinea, sizeof(nextLinea), arch);      //nextLinea cada linea completa del assembler
         strcpy(next, " ");
         sscanf(nextLinea, "%s", next);                  //next es la primer palabra de nextLinea
-
         if(!strcmp(next, "\\\\ASM"))                    //si next es igual a "\\ASM"
         {
             //INTERPRETA EL COMANDO \\ASM-------------------------------------------------------------------
@@ -407,10 +406,25 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
         {
             //o puede ser cualquier palabra que no sea rotulo o mnemonico
             //CREA LA LISTA CONSTANTES-------------------------------------------------------------------
-            char *palabra1,*palabra2,*palabra3;                 //nextLinea=="//BASE EQU 64"
-            palabra1 = strtok(nextLinea," \t\n");               //palabra1=="//BASE"
-            palabra2 = strtok(NULL," \t\n");                    //palabra2=="EQU"
-            palabra3 = strtok(NULL," \t\n");                    //palabra3=="64"
+            char *palabra1,*palabra2,*palabra3,*aux;
+            int i=0;
+            aux=strchr(nextLinea,'"');
+            palabra1=strtok(nextLinea," \t\n");
+            palabra2=strtok(NULL," \t\n");
+            if(aux==NULL)
+                palabra3=strtok(NULL," /\t\n");
+            else
+            {
+                palabra3=(char*)malloc(sizeof(100));
+                do
+                {
+                    palabra3[i]=*aux;
+                    aux++;
+                    i++;
+                }
+                while(*aux!='"');
+                palabra3[i]='\0';
+            }
             if (palabra1!=NULL && palabra1[0]!='/'&& palabra2!=NULL && palabra3!=NULL)
             {
                 if(strlen(palabra1)>=3 &&((palabra1[0]>='A' &&palabra1[0]<='Z')|| (palabra1[0]>='a' &&palabra1[0]<='z')))
@@ -425,7 +439,7 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                         if (palabra3[0]=='"')
                         {
                             memcpy(palabra3,palabra3+1,strlen(palabra3));
-                            palabra3[strlen(palabra3)-1] = '\0';
+                            printf("\nPALABRA 3: %s STRLEN DE PALABRA 3 %d\n",palabra3,strlen(palabra3));
                             nodo->esDirecto=1;
                         }
                         else
@@ -442,7 +456,8 @@ void buscaRotulos(FILE *arch, listaRotulos *rotulos, int mostrar)
                         ult = nodo;
                     }
                 }
-                else{
+                else
+                {
                     errorconst=1;
                 }
             }
@@ -507,7 +522,8 @@ int stringConSimboloAInt(char* dato)
 }
 
 void generaImg(FILE* archImg)               //genera el archivo binario en base a los registros y a la memoria
-{//segmentos 0 = DATA, 1 = EXTRA, 2 = STACK//por defecto en 500
+{
+    //segmentos 0 = DATA, 1 = EXTRA, 2 = STACK//por defecto en 500
     //registro PS=0, CS=1, DS=2, ES=3 SS=5 SP=6
     if (segmentos[1]!=-1)  //registros: 2=DS 3=ES
     {

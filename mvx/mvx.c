@@ -1114,7 +1114,7 @@ void not(int t1, int t2, int par1, int par2)
         res = registros[par1];
         break;
     case 2: //Directo
-        setMemoria(registros[basea]+(par1 & ~mask) , ~getMemoria(registros[basea]+(par1 & ~mask)));
+        setMemoria(registros[basea]+(par1 & ~mask), ~getMemoria(registros[basea]+(par1 & ~mask)));
         res = getMemoria(registros[basea]+(par1 & ~mask));
         break;
     case 3:
@@ -1732,7 +1732,7 @@ void slen (int t1, int t2, int par1, int par2)
 {
     int mask = 0xF0000000;// 0x0FFFFFFF
     int shift = 28;
-    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift,direc,cont=0;
+    int b, basea = (par1 & mask)>>shift, baseb = (par2 & mask)>>shift,direc,cont=-1;
     int regBase, regIndireccion, offset;
     char c='\0';
     switch(t2)  //aca esta el string
@@ -1935,18 +1935,18 @@ void escribirString()
     int base = registros[11];       //BX
     int desde = registros[13]; // DX
     int celda= registros[base] + desde;
-    char *strin =NULL;
+    char strin ='a';
     if(!prompt)
     {
         printf("[");
         mostrarCelda(celda);
         printf("]: ");
     }
-    while(*strin!='\0')
+    while(strin!='\0')
     {
-        *strin=getMemoria(celda++);
-        if(*strin!='\0')
-            printf("%c", *strin);
+        strin=getMemoria(celda++);
+        if(strin!='\0')
+            printf("%c", strin);
     }
     if(!endline)
         printf("\n");
@@ -2148,15 +2148,18 @@ void mostrarMemoriaYRegistros()
     int linea, t1, t2, par1, par2;
     char mnemonico[5], arg1[20], arg2[20];
 
-    if(sobrante+ip>ds) sobrante = ds-cs; //si sobrante se pasa del codigo frenarlo ahi
+    if(sobrante+ip>ds)
+        sobrante = ds-cs; //si sobrante se pasa del codigo frenarlo ahi
 
     printf("====================================================================\n");
     printf("Codigo:\n");
 
     for(int celda=cs ; celda<ip+(sobrante*3); celda+=3)
     {
-        if(celda==ip) printf(">");
-        else printf(" ");
+        if(celda==ip)
+            printf(">");
+        else
+            printf(" ");
 
         printf("[%04d] ", celda);
 
@@ -2208,7 +2211,8 @@ void mostrarMemoriaYRegistros()
 
 void mostrarCeldaMemoria(int inicio, int fin)
 {
-    if(fin==-1) fin=inicio+1;
+    if(fin==-1)
+        fin=inicio+1;
     int celda;
     char car;
 
