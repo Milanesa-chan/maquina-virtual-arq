@@ -7,7 +7,7 @@ strC  equ "Torre C"
 torreA equ 0
 torreB equ 1
 torreC equ 2
-str    equ 1 // ubicación de los str    
+str    equ 1 // ubicaciÃ³n de los str    
 step   equ 4
         mov     [step], 0
         smov    [ES:10], [CS:titulo]

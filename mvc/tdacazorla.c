@@ -242,7 +242,7 @@ listaConst buscarConstante(listaConst listaconst,char *nombre )
     listaConst retorno = NULL;
     listaConst sig = listaconst;
     while (sig!=NULL){
-        if (!strcmp(sig->nombre,nombre)){
+        if (!strcasecmp(sig->nombre,nombre)){
             retorno = sig;
             break;
         }
